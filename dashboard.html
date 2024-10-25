@@ -257,9 +257,140 @@
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
         }
+
+        /* Yeni eklenen stiller */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+        }
+
+        .notification.success {
+            background-color: #2ecc71;
+        }
+
+        .notification.error {
+            background-color: #e74c3c;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .user-info {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .user-type {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .user-profession {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .cart-count {
+            background: #e74c3c;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-size: 12px;
+            position: absolute;
+            top: -8px;
+            right: -8px;
+        }
+
+        .header-right a {
+            position: relative;
+        }
+
+        .specs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .spec-item {
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading::after {
+            content: '';
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stock-info {
+            font-size: 12px;
+            color: #666;
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+
+        .rating {
+            color: #f1c40f;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
+    <!-- Loading indicator -->
+    <div class="loading" style="display: none;"></div>
+
     <!-- Header -->
     <header class="header">
         <div class="logo">IndustryHub</div>
@@ -267,8 +398,21 @@
             <input type="text" placeholder="Ürün ara...">
         </div>
         <div class="header-right">
-            <a href="#"><i class="fas fa-shopping-cart"></i> Sepet</a>
-            <a href="#"><i class="fas fa-user"></i> Hesabım</a>
+            <a href="#" class="cart-link">
+                <i class="fas fa-shopping-cart"></i> 
+                Sepet
+                <span class="cart-count">0</span>
+            </a>
+            <div class="user-menu">
+                <a href="#" class="user-link">
+                    <i class="fas fa-user"></i> 
+                    <span class="user-name">Hesabım</span>
+                </a>
+                <div class="user-dropdown" style="display: none;">
+                    <div class="user-info"></div>
+                    <a href="#" onclick="logout()">Çıkış Yap</a>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -276,29 +420,25 @@
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
+            <div class="user-info"></div>
+            
             <h3 class="category-title">Kategoriler</h3>
             <ul class="category-list">
-                <li><a href="#">Endüstriyel Parçalar</a></li>
-                <li><a href="#">Makine Ekipmanları</a></li>
-                <li><a href="#">Otomasyon Sistemleri</a></li>
-                <li><a href="#">Elektrik Malzemeleri</a></li>
-                <li><a href="#">Hidrolik Sistemler</a></li>
+                <!-- Kategoriler dinamik olarak yüklenecek -->
             </ul>
 
             <div class="filters">
                 <div class="filter-group">
                     <h4 class="filter-title">Fiyat Aralığı</h4>
                     <div class="price-range">
-                        <input type="number" placeholder="Min">
-                        <input type="number" placeholder="Max">
+                        <input type="number" placeholder="Min" id="minPrice">
+                        <input type="number" placeholder="Max" id="maxPrice">
                     </div>
                 </div>
                 <div class="filter-group">
                     <h4 class="filter-title">3D Model Formatı</h4>
-                    <ul class="category-list">
-                        <li><a href="#">STL</a></li>
-                        <li><a href="#">OBJ</a></li>
-                        <li><a href="#">STEP</a></li>
+                    <ul class="format-list">
+                        <!-- Format listesi dinamik olarak yüklenecek -->
                     </ul>
                 </div>
             </div>
@@ -307,222 +447,273 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="products-grid">
-                <!-- Product Card 1 -->
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/250" alt="Ürün" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-title">Endüstriyel Motor Parçası</h3>
-                        <div class="price-container">
-                            <span class="product-price">₺1,500</span>
-                            <span class="model-price">3D: ₺200</span>
-                        </div>
-                        <div class="product-details">
-                            Yüksek kaliteli endüstriyel motor parçası
-                            <span class="model-format">Format: STL, OBJ</span>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="add-to-cart">Sepete Ekle</button>
-                            <button class="download-model">3D Model</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Product Card 2 -->
-                <div class="product-card">
-                    <img src="https://via.placeholder.com/250" alt="Ürün" class="product-image">
-                    <div class="product-info">
-                        <h3 class="product-title">Hidrolik Sistem Parçası</h3>
-                        <div class="price-container">
-                            <span class="product-price">₺2,300</span>
-                            <span class="model-price">3D: ₺300</span>
-                        </div>
-                        <div class="product-details">
-                            Dayanıklı hidrolik sistem parçası
-                            <span class="model-format">Format: STL, STEP</span>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="add-to-cart">Sepete Ekle</button>
-                            <button class="download-model">3D Model</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Daha fazla ürün kartı eklenebilir -->
+                <!-- Ürünler dinamik olarak yüklenecek -->
             </div>
         </div>
     </div>
+
+    <script>
+        // API URL'i
+        const API_URL = 'https://eticaret-glif.onrender.com/api';
+        let currentUser = null;
+
+        // Sayfa yüklendiğinde çalışacak fonksiyonlar
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (checkAuth()) {
+                showLoading();
+                try {
+                    await Promise.all([
+                        loadProducts(),
+                        getUserInfo(),
+                        updateCartCount()
+                    ]);
+                } catch (error) {
+                    showError('Veriler yüklenirken bir hata oluştu');
+                } finally {
+                    hideLoading();
+                }
+                setupEventListeners();
+            }
+        });
+
+        // Loading göster/gizle
+        function showLoading() {
+            document.querySelector('.loading').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.querySelector('.loading').style.display = 'none';
+        }
+
+        // Ürünleri yükleme
+        async function loadProducts(filters = {}) {
+            try {
+                let url = `${API_URL}/products`;
+                if (Object.keys(filters).length > 0) {
+                    const params = new URLSearchParams(filters);
+                    url += `?${params.toString()}`;
+                }
+
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Ürünler yüklenemedi');
+                
+                const products = await response.json();
+                displayProducts(products);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        // Ürünleri görüntüleme
+        function displayProducts(products) {
+            const productsGrid = document.querySelector('.products-grid');
+            productsGrid.innerHTML = '';
+
+            if (products.length === 0) {
+                productsGrid.innerHTML = '<div class="no-products">Ürün bulunamadı</div>';
+                return;
+            }
+
+            products.forEach(product => {
+                const productCard = `
+                    <div class="product-card" data-id="${product._id}">
+                        <img src="${API_URL}${product.image}" alt="${product.title}" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-title">${product.title}</h3>
+                            <div class="price-container">
+                                <span class="product-price">₺${product.price.toLocaleString('tr-TR')}</span>
+                                <span class="stock-info">Stok: ${product.stock}</span>
+                            </div>
+                            <div class="product-details">
+                                <p>${product.description}</p>
+                                <div class="specs">
+                                    ${product.specs ? product.specs.map(spec => 
+                                        `<span class="spec-item">${spec}</span>`).join('') : ''}
+                                </div>
+                                ${product.modelFormats ? 
+                                    `<span class="model-format">3D Format: ${product.modelFormats.join(', ')}</span>` : ''}
+                            </div>
+                            <div class="rating">
+                                ${'★'.repeat(Math.floor(product.rating))}${'☆'.repeat(5-Math.floor(product.rating))}
+                                ${product.rating.toFixed(1)}/5
+                            </div>
+                            <div class="action-buttons">
+                                <button class="add-to-cart" onclick="addToCart('${product._id}')">
+                                    Sepete Ekle
+                                </button>
+                                ${product.modelFormats ? 
+                                    `<button class="download-model" onclick="downloadModel('${product._id}')">
+                                        3D Model
+                                    </button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                productsGrid.innerHTML += productCard;
+            });
+        }
+
+        // Sepete ekleme
+        async function addToCart(productId) {
+            try {
+                showLoading();
+                const response = await fetch(`${API_URL}/cart/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ productId, quantity: 1 })
+                });
+
+                if (!response.ok) throw new Error('Ürün sepete eklenemedi');
+
+                const result = await response.json();
+                showNotification('Ürün sepete eklendi');
+                updateCartCount();
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Sepet sayısını güncelle
+        async function updateCartCount() {
+            try {
+                const response = await fetch(`${API_URL}/cart`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Sepet bilgisi alınamadı');
+
+                const cart = await response.json();
+                const count = cart.items.reduce((total, item) => total + item.quantity, 0);
+                document.querySelector('.cart-count').textContent = count;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        // Kullanıcı bilgilerini getir
+        async function getUserInfo() {
+            try {
+                const response = await fetch(`${API_URL}/auth/me`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('Kullanıcı bilgileri alınamadı');
+
+                currentUser = await response.json();
+                displayUserInfo(currentUser);
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        // Kullanıcı bilgilerini görüntüle
+        function displayUserInfo(user) {
+            const userInfoElements = document.querySelectorAll('.user-info');
+            userInfoElements.forEach(element => {
+                element.innerHTML = `
+                    <div class="user-name">${user.name}</div>
+                    <div class="user-type">${user.userType}</div>
+                    ${user.profession ? `<div class="user-profession">${user.profession}</div>` : ''}
+                `;
+            });
+            
+            document.querySelector('.user-name').textContent = user.name;
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Arama
+            const searchInput = document.querySelector('.search-bar input');
+            searchInput.addEventListener('input', debounce(async (e) => {
+                const searchTerm = e.target.value.trim();
+                if (searchTerm) {
+                    await loadProducts({ search: searchTerm });
+                } else {
+                    await loadProducts();
+                }
+            }, 300));
+
+            // Fiyat filtresi
+            const minPrice = document.getElementById('minPrice');
+            const maxPrice = document.getElementById('maxPrice');
+            
+            [minPrice, maxPrice].forEach(input => {
+                input.addEventListener('change', async () => {
+                    const filters = {};
+                    if (minPrice.value) filters.minPrice = minPrice.value;
+                    if (maxPrice.value) filters.maxPrice = maxPrice.value;
+                    await loadProducts(filters);
+                });
+            });
+
+            // Kategori filtreleme
+            document.querySelectorAll('.category-list a').forEach(link => {
+                link.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const category = e.target.dataset.category;
+                    await loadProducts({ category });
+                });
+            });
+        }
+
+        // Yardımcı fonksiyonlar
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Bildirimler
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function showError(message) {
+            showNotification(message, 'error');
+        }
+
+        // Auth kontrolü
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Çıkış yap
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/login.html';
+        }
+    </script>
 </body>
 </html>
-<script>
-// API URL'i
-const API_URL = 'https://eticaret-glif.onrender.com/api';
-
-// Sayfa yüklendiğinde çalışacak fonksiyonlar
-document.addEventListener('DOMContentLoaded', () => {
-    if (checkAuth()) {
-        loadProducts();
-        setupEventListeners();
-    }
-});
-
-// Ürünleri yükleme
-async function loadProducts() {
-    try {
-        const response = await fetch(`${API_URL}/products`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-        
-        const products = await response.json();
-        displayProducts(products);
-    } catch (error) {
-        console.error('Ürünler yüklenirken hata:', error);
-        showError('Ürünler yüklenemedi');
-    }
-}
-
-// Ürünleri görüntüleme
-function displayProducts(products) {
-    const productsGrid = document.querySelector('.products-grid');
-    productsGrid.innerHTML = '';
-
-    products.forEach(product => {
-        const productCard = `
-            <div class="product-card" data-id="${product._id}">
-                <img src="${API_URL}/${product.image}" alt="${product.title}" class="product-image">
-                <div class="product-info">
-                    <h3 class="product-title">${product.title}</h3>
-                    <div class="price-container">
-                        <span class="product-price">₺${product.price}</span>
-                        <span class="stock-info">Stok: ${product.stock}</span>
-                    </div>
-                    <div class="product-details">
-                        <p>${product.description}</p>
-                        <div class="specs">
-                            ${product.specs ? product.specs.map(spec => `<span class="spec-item">${spec}</span>`).join('') : ''}
-                        </div>
-                        ${product.modelFormats ? 
-                            `<span class="model-format">3D Format: ${product.modelFormats.join(', ')}</span>` : ''}
-                    </div>
-                    <div class="rating">Rating: ${product.rating}/5</div>
-                    <div class="action-buttons">
-                        <button class="add-to-cart" onclick="addToCart('${product._id}')">Sepete Ekle</button>
-                        ${product.modelFormats ? 
-                            `<button class="download-model" onclick="downloadModel('${product._id}')">3D Model</button>` : ''}
-                    </div>
-                </div>
-            </div>
-        `;
-        productsGrid.innerHTML += productCard;
-    });
-}
-
-// Kullanıcı bilgilerini getir
-async function getUserInfo() {
-    try {
-        const response = await fetch(`${API_URL}/auth/me`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-        const userData = await response.json();
-        displayUserInfo(userData);
-    } catch (error) {
-        console.error('Kullanıcı bilgileri alınamadı:', error);
-    }
-}
-
-// Kullanıcı bilgilerini görüntüle
-function displayUserInfo(user) {
-    const userInfoElement = document.querySelector('.user-info');
-    if (userInfoElement) {
-        userInfoElement.innerHTML = `
-            <div class="user-name">${user.name}</div>
-            <div class="user-type">${user.userType}</div>
-            ${user.profession ? `<div class="user-profession">${user.profession}</div>` : ''}
-        `;
-    }
-}
-
-// Auth kontrolü
-function checkAuth() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = '/login.html';
-        return false;
-    }
-    return true;
-}
-
-// Event Listeners
-function setupEventListeners() {
-    // Arama
-    const searchInput = document.querySelector('.search-bar input');
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce((e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            filterProducts(searchTerm);
-        }, 300));
-    }
-
-    // Kategori filtreleme
-    const categoryLinks = document.querySelectorAll('.category-list a');
-    categoryLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const category = e.target.dataset.category;
-            filterByCategory(category);
-        });
-    });
-}
-
-// Ürünleri filtrele (client-side)
-function filterProducts(searchTerm) {
-    const productCards = document.querySelectorAll('.product-card');
-    productCards.forEach(card => {
-        const title = card.querySelector('.product-title').textContent.toLowerCase();
-        const description = card.querySelector('.product-details').textContent.toLowerCase();
-        
-        if (title.includes(searchTerm) || description.includes(searchTerm)) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-
-// Yardımcı fonksiyonlar
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Bildirimler
-function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
-
-function showError(message) {
-    showNotification(message, 'error');
-}
-
-// Sayfa yüklendiğinde auth kontrolü ve kullanıcı bilgilerini getir
-if (checkAuth()) {
-    getUserInfo();
-}
-</script>
