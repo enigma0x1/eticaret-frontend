@@ -354,22 +354,22 @@
 </body>
 </html>
 <script>
-// Ana API URL'i
-const API_URL = 'https://eticaret-glif.onrender.com';
+// API URL'i
+const API_URL = 'https://eticaret-glif.onrender.com/api';
 
 // Sayfa yüklendiğinde çalışacak fonksiyonlar
 document.addEventListener('DOMContentLoaded', () => {
-    loadProducts();
-    setupEventListeners();
+    if (checkAuth()) {
+        loadProducts();
+        setupEventListeners();
+    }
 });
 
 // Ürünleri yükleme
-async function loadProducts(filters = {}) {
+async function loadProducts() {
     try {
-        const response = await fetch(`${API_URL}/api/products`, {
-            method: 'GET',
+        const response = await fetch(`${API_URL}/products`, {
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
@@ -385,25 +385,31 @@ async function loadProducts(filters = {}) {
 // Ürünleri görüntüleme
 function displayProducts(products) {
     const productsGrid = document.querySelector('.products-grid');
-    productsGrid.innerHTML = ''; // Mevcut ürünleri temizle
+    productsGrid.innerHTML = '';
 
     products.forEach(product => {
         const productCard = `
             <div class="product-card" data-id="${product._id}">
-                <img src="${API_URL}/${product.image}" alt="${product.name}" class="product-image">
+                <img src="${API_URL}/${product.image}" alt="${product.title}" class="product-image">
                 <div class="product-info">
-                    <h3 class="product-title">${product.name}</h3>
+                    <h3 class="product-title">${product.title}</h3>
                     <div class="price-container">
                         <span class="product-price">₺${product.price}</span>
-                        <span class="model-price">3D: ₺${product.modelPrice || 'N/A'}</span>
+                        <span class="stock-info">Stok: ${product.stock}</span>
                     </div>
                     <div class="product-details">
-                        ${product.description}
-                        <span class="model-format">Format: ${product.fileFormat || 'N/A'}</span>
+                        <p>${product.description}</p>
+                        <div class="specs">
+                            ${product.specs ? product.specs.map(spec => `<span class="spec-item">${spec}</span>`).join('') : ''}
+                        </div>
+                        ${product.modelFormats ? 
+                            `<span class="model-format">3D Format: ${product.modelFormats.join(', ')}</span>` : ''}
                     </div>
+                    <div class="rating">Rating: ${product.rating}/5</div>
                     <div class="action-buttons">
                         <button class="add-to-cart" onclick="addToCart('${product._id}')">Sepete Ekle</button>
-                        <button class="download-model" onclick="downloadModel('${product._id}')">3D Model</button>
+                        ${product.modelFormats ? 
+                            `<button class="download-model" onclick="downloadModel('${product._id}')">3D Model</button>` : ''}
                     </div>
                 </div>
             </div>
@@ -412,55 +418,78 @@ function displayProducts(products) {
     });
 }
 
-// Sepete ekleme
-async function addToCart(productId) {
+// Kullanıcı bilgilerini getir
+async function getUserInfo() {
     try {
-        const response = await fetch(`${API_URL}/api/cart/add`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({ productId, quantity: 1 })
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            showNotification('Ürün sepete eklendi');
-            updateCartCount();
-        }
-    } catch (error) {
-        console.error('Sepete eklenirken hata:', error);
-        showError('Ürün sepete eklenemedi');
-    }
-}
-
-// Arama işlemi
-function setupEventListeners() {
-    const searchInput = document.querySelector('.search-bar input');
-    searchInput.addEventListener('input', debounce((e) => {
-        const searchTerm = e.target.value;
-        if (searchTerm) {
-            searchProducts(searchTerm);
-        } else {
-            loadProducts();
-        }
-    }, 500));
-}
-
-// Ürün arama
-async function searchProducts(searchTerm) {
-    try {
-        const response = await fetch(`${API_URL}/api/products/search?q=${searchTerm}`, {
+        const response = await fetch(`${API_URL}/auth/me`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         });
-        const products = await response.json();
-        displayProducts(products);
+        const userData = await response.json();
+        displayUserInfo(userData);
     } catch (error) {
-        console.error('Arama yapılırken hata:', error);
+        console.error('Kullanıcı bilgileri alınamadı:', error);
     }
+}
+
+// Kullanıcı bilgilerini görüntüle
+function displayUserInfo(user) {
+    const userInfoElement = document.querySelector('.user-info');
+    if (userInfoElement) {
+        userInfoElement.innerHTML = `
+            <div class="user-name">${user.name}</div>
+            <div class="user-type">${user.userType}</div>
+            ${user.profession ? `<div class="user-profession">${user.profession}</div>` : ''}
+        `;
+    }
+}
+
+// Auth kontrolü
+function checkAuth() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+        return false;
+    }
+    return true;
+}
+
+// Event Listeners
+function setupEventListeners() {
+    // Arama
+    const searchInput = document.querySelector('.search-bar input');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce((e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            filterProducts(searchTerm);
+        }, 300));
+    }
+
+    // Kategori filtreleme
+    const categoryLinks = document.querySelectorAll('.category-list a');
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = e.target.dataset.category;
+            filterByCategory(category);
+        });
+    });
+}
+
+// Ürünleri filtrele (client-side)
+function filterProducts(searchTerm) {
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        const title = card.querySelector('.product-title').textContent.toLowerCase();
+        const description = card.querySelector('.product-details').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
 }
 
 // Yardımcı fonksiyonlar
@@ -476,10 +505,10 @@ function debounce(func, wait) {
     };
 }
 
-// Bildirim gösterme
-function showNotification(message) {
+// Bildirimler
+function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
-    notification.className = 'notification';
+    notification.className = `notification ${type}`;
     notification.textContent = message;
     document.body.appendChild(notification);
     
@@ -488,63 +517,12 @@ function showNotification(message) {
     }, 3000);
 }
 
-// Hata gösterme
 function showError(message) {
-    const error = document.createElement('div');
-    error.className = 'error-notification';
-    error.textContent = message;
-    document.body.appendChild(error);
-    
-    setTimeout(() => {
-        error.remove();
-    }, 3000);
+    showNotification(message, 'error');
 }
 
-// Auth kontrolü
-function checkAuth() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = '/login.html';
-        return false;
-    }
-    return true;
-}
-
-// Sayfa yüklendiğinde auth kontrolü
-if (!checkAuth()) {
-    window.location.href = '/login.html';
+// Sayfa yüklendiğinde auth kontrolü ve kullanıcı bilgilerini getir
+if (checkAuth()) {
+    getUserInfo();
 }
 </script>
-
-<style>
-/* Bildirim stilleri */
-.notification, .error-notification {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 15px 25px;
-    border-radius: 5px;
-    color: white;
-    z-index: 1000;
-    animation: slideIn 0.5s ease;
-}
-
-.notification {
-    background-color: #2ecc71;
-}
-
-.error-notification {
-    background-color: #e74c3c;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-</style>
