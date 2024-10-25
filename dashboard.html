@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndustryHub Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+        }
+
+        /* Header Styles */
+        .header {
+            background: #24243e;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-right a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            margin: 20px;
+            gap: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .category-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .category-list {
+            list-style: none;
+        }
+
+        .category-list li {
+            margin-bottom: 10px;
+        }
+
+        .category-list a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            padding: 8px 10px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .category-list a:hover {
+            background: #f5f5f5;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .price-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2ecc71;
+        }
+
+        .model-price {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .product-details {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .model-format {
+            display: block;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .add-to-cart {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .download-model {
+            background: #3498db;
+            color: white;
+        }
+
+        .add-to-cart:hover {
+            background: #27ae60;
+        }
+
+        .download-model:hover {
+            background: #2980b9;
+        }
+
+        /* Filters */
+        .filters {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .price-range {
+            display: flex;
+            gap: 10px;
+        }
+
+        .price-range input {
+            flex: 1;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">IndustryHub</div>
+        <div class="search-bar">
+            <input type="text" placeholder="Ürün ara...">
+        </div>
+        <div class="header-right">
+            <a href="#"><i class="fas fa-shopping-cart"></i> Sepet</a>
+            <a href="#"><i class="fas fa-user"></i> Hesabım</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h3 class="category-title">Kategoriler</h3>
+            <ul class="category-list">
+                <li><a href="#">Endüstriyel Parçalar</a></li>
+                <li><a href="#">Makine Ekipmanları</a></li>
+                <li><a href="#">Otomasyon Sistemleri</a></li>
+                <li><a href="#">Elektrik Malzemeleri</a></li>
+                <li><a href="#">Hidrolik Sistemler</a></li>
+            </ul>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <h4 class="filter-title">Fiyat Aralığı</h4>
+                    <div class="price-range">
+                        <input type="number" placeholder="Min">
+                        <input type="number" placeholder="Max">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <h4 class="filter-title">3D Model Formatı</h4>
+                    <ul class="category-list">
+                        <li><a href="#">STL</a></li>
+                        <li><a href="#">OBJ</a></li>
+                        <li><a href="#">STEP</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="products-grid">
+                <!-- Product Card 1 -->
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/250" alt="Ürün" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">Endüstriyel Motor Parçası</h3>
+                        <div class="price-container">
+                            <span class="product-price">₺1,500</span>
+                            <span class="model-price">3D: ₺200</span>
+                        </div>
+                        <div class="product-details">
+                            Yüksek kaliteli endüstriyel motor parçası
+                            <span class="model-format">Format: STL, OBJ</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="add-to-cart">Sepete Ekle</button>
+                            <button class="download-model">3D Model</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 -->
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/250" alt="Ürün" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">Hidrolik Sistem Parçası</h3>
+                        <div class="price-container">
+                            <span class="product-price">₺2,300</span>
+                            <span class="model-price">3D: ₺300</span>
+                        </div>
+                        <div class="product-details">
+                            Dayanıklı hidrolik sistem parçası
+                            <span class="model-format">Format: STL, STEP</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="add-to-cart">Sepete Ekle</button>
+                            <button class="download-model">3D Model</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daha fazla ürün kartı eklenebilir -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+// Ana API URL'i
+const API_URL = 'https://eticaret-glif.onrender.com';
+
+// Sayfa yüklendiğinde çalışacak fonksiyonlar
+document.addEventListener('DOMContentLoaded', () => {
+    loadProducts();
+    setupEventListeners();
+});
+
+// Ürünleri yükleme
+async function loadProducts(filters = {}) {
+    try {
+        const response = await fetch(`${API_URL}/api/products`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        const products = await response.json();
+        displayProducts(products);
+    } catch (error) {
+        console.error('Ürünler yüklenirken hata:', error);
+        showError('Ürünler yüklenemedi');
+    }
+}
+
+// Ürünleri görüntüleme
+function displayProducts(products) {
+    const productsGrid = document.querySelector('.products-grid');
+    productsGrid.innerHTML = ''; // Mevcut ürünleri temizle
+
+    products.forEach(product => {
+        const productCard = `
+            <div class="product-card" data-id="${product._id}">
+                <img src="${API_URL}/${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">${product.name}</h3>
+                    <div class="price-container">
+                        <span class="product-price">₺${product.price}</span>
+                        <span class="model-price">3D: ₺${product.modelPrice || 'N/A'}</span>
+                    </div>
+                    <div class="product-details">
+                        ${product.description}
+                        <span class="model-format">Format: ${product.fileFormat || 'N/A'}</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="add-to-cart" onclick="addToCart('${product._id}')">Sepete Ekle</button>
+                        <button class="download-model" onclick="downloadModel('${product._id}')">3D Model</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        productsGrid.innerHTML += productCard;
+    });
+}
+
+// Sepete ekleme
+async function addToCart(productId) {
+    try {
+        const response = await fetch(`${API_URL}/api/cart/add`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({ productId, quantity: 1 })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            showNotification('Ürün sepete eklendi');
+            updateCartCount();
+        }
+    } catch (error) {
+        console.error('Sepete eklenirken hata:', error);
+        showError('Ürün sepete eklenemedi');
+    }
+}
+
+// Arama işlemi
+function setupEventListeners() {
+    const searchInput = document.querySelector('.search-bar input');
+    searchInput.addEventListener('input', debounce((e) => {
+        const searchTerm = e.target.value;
+        if (searchTerm) {
+            searchProducts(searchTerm);
+        } else {
+            loadProducts();
+        }
+    }, 500));
+}
+
+// Ürün arama
+async function searchProducts(searchTerm) {
+    try {
+        const response = await fetch(`${API_URL}/api/products/search?q=${searchTerm}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        const products = await response.json();
+        displayProducts(products);
+    } catch (error) {
+        console.error('Arama yapılırken hata:', error);
+    }
+}
+
+// Yardımcı fonksiyonlar
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Bildirim gösterme
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// Hata gösterme
+function showError(message) {
+    const error = document.createElement('div');
+    error.className = 'error-notification';
+    error.textContent = message;
+    document.body.appendChild(error);
+    
+    setTimeout(() => {
+        error.remove();
+    }, 3000);
+}
+
+// Auth kontrolü
+function checkAuth() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+        return false;
+    }
+    return true;
+}
+
+// Sayfa yüklendiğinde auth kontrolü
+if (!checkAuth()) {
+    window.location.href = '/login.html';
+}
+</script>
+
+<style>
+/* Bildirim stilleri */
+.notification, .error-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    color: white;
+    z-index: 1000;
+    animation: slideIn 0.5s ease;
+}
+
+.notification {
+    background-color: #2ecc71;
+}
+
+.error-notification {
+    background-color: #e74c3c;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+</style>
