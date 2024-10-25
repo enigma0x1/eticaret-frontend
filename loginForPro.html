@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profesyonel Portal - IndustryHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0f0c29;
+            background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            min-height: 700px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .auth-image {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=600') center/cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .auth-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 12, 41, 0.8);
+        }
+
+        .image-content {
+            position: relative;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .image-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .image-content p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .auth-forms {
+            flex: 1;
+            padding: 40px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-container.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #a7a7a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 16px;
+        }
+
+        .form-group select option {
+            background: #24243e;
+            color: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .file-upload {
+            margin-bottom: 20px;
+        }
+
+        .file-upload label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            overflow: hidden;
+        }
+
+        .file-upload-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #4facfe;
+        }
+
+        .file-upload-btn i {
+            font-size: 1.2em;
+        }
+
+        .file-upload-btn.highlight {
+            border-color: #4facfe;
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-switch {
+            display: inline-block;
+            color: #4facfe;
+            cursor: pointer;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: rgba(79, 172, 254, 0.1);
+        }
+
+        .form-switch:hover {
+            background: rgba(79, 172, 254, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .social-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-button:hover {
+            background: #4facfe;
+            transform: translateY(-2px);
+        }
+
+        .other-profession {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .other-profession.active {
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                margin: 10px;
+            }
+
+            .auth-container {
+                min-height: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+
+            .auth-image {
+                display: none;
+            }
+
+            .auth-forms {
+                padding: 20px;
+            }
+
+            .form-header h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+            }
+
+            .auth-forms {
+                padding: 15px;
+            }
+
+            .social-buttons {
+                gap: 10px;
+            }
+
+            .social-button {
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-container">
+            <div class="auth-image">
+                <div class="image-content">
+                    <h2>IndustryHub</h2>
+                    <p>Tasarımcılar, Endüstri Mühendisleri ve Mimarlar için Profesyonel Platform</p>
+                </div>
+            </div>
+            <div class="auth-forms">
+                <!-- Login Form -->
+                <div class="form-container active" id="loginForm">
+                    <div class="form-header">
+                        <h3>Giriş Yap</h3>
+                        <p>Profesyonel hesabınıza giriş yapın</p>
+                    </div>
+                    <form onsubmit="return handleLogin(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">E-posta</label>
+                            <input type="email" id="loginEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Şifre</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="auth-button">Giriş Yap</button>
+                        <div class="form-footer">
+                            <p>Hesabınız yok mu? <span class="form-switch" onclick="toggleForm()">Kayıt Ol</span></p>
+                        </div>
+                        <div class="social-login">
+                            <p>Veya şununla giriş yapın:</p>
+                            <div class="social-buttons">
+                                <a href="#" class="social-button"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#" class="social-button"><i class="fab fa-google"></i></a>
+                                <a href="#" class="social-button"><i class="fab fa-github"></i></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Signup Form -->
+                <div class="form-container" id="signupForm">
+                    <div class="form-header">
+                        <h3>Kayıt Ol</h3>
+                        <p>Profesyonel hesabınızı oluşturun</p>
+                    </div>
+                    <form onsubmit="return handleSignup(event)">
+                        <div class="form-group">
+                            <label for="signupName">Ad Soyad</label>
+                            <input type="text" id="signupName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profession">Meslek</label>
+                            <select id="profession" onchange="toggleOtherProfession()" required>
+                                <option value="">Seçiniz</option>
+                                <option value="designer">Tasarımcı</option>
+                                <option value="engineer">Endüstri Mühendisi</option>
+                                <option value="architect">Mimar</option>
+                                <option value="other">Diğer</option>
+                            </select>
+                        </div>
+                        <div class="form-group other-profession" id="otherProfessionGroup">
+                            <label for="otherProfession">Mesleğinizi Belirtin</label>
+                            <input type="text" id="otherProfession">
+                        </div>
+                        <div class="form-group">
+                            <label for="signupEmail">E-posta</label>
+                            <input type="email" id="signupEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword">Şifre</label>
+                            <input type="password" id="signupPassword" required>
+                        </div>
+                        <div class="file-upload">
+                            <label>Diploma veya Yeterlilik Belgesi</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" id="diplomaFile" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(event)" required>
+                                <label for="diplomaFile" class="file-upload-btn">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <span>Dosya Seç veya Sürükle Bırak</span>
+                                </label>
+                                <div class="file-name" id="fileName"></div>
+                            </div>
+                            <small style="color: rgba(255,255,255,0.6); display: block; margin-top: 5px;">
+                                * PDF, JPG veya PNG formatında diploma veya yeterlilik belgenizi yükleyin.
+                            </small>
+                        </div>
+                        <button type="submit" class="auth-button">Kayıt Ol</button>
+                        <div class="form-footer">
+                            <p>Zaten hesabınız var mı? <span class="form-switch" onclick="toggleForm()">Giriş Yap</span></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            
+            if (loginForm.classList.contains('active')) {
+                loginForm.classList.remove('active');
+                signupForm.classList.add('active');
+            } else {
+                signupForm.classList.remove('active');
+                loginForm.classList.add('active');
+            }
+        }
+
+        function toggleOtherProfession() {
+            const profession = document.getElementById('profession');
+            const otherProfessionGroup = document.getElementById('otherProfessionGroup');
+            const otherProfessionInput = document.getElementById('otherProfession');
+
+            if (profession.value === 'other') {
+                otherProfessionGroup.classList.add('active');
+                otherProfessionInput.required = true;
+            } else {
+                otherProfessionGroup.classList.remove('active');
+                otherProfessionInput.required = false;
+            }
+        }
+
+        function handleFileSelect(event) {
+            const fileName = event.target.files[0]?.name;
+            document.getElementById('fileName').textContent = fileName || '';
+        }
+
+        function initializeFileUpload() {
+            const dropZone = document.querySelector('.file-upload-btn');
+            const fileInput = document.getElementById('diplomaFile');
+
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight(e) {
+                dropZone.classList.add('highlight');
+            }
+
+            function unhighlight(e) {
+                dropZone.classList.remove('highlight');
+            }
+
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFileSelect({target: fileInput});
+            }
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            // Login işlemleri burada yapılacak
+            console.log('Login attempt');
+            return false;
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            // Signup işlemleri burada yapılacak
+            console.log('Signup attempt');
+            return false;
+        }
+
+        // Sayfa yüklendiğinde initialize et
+        document.addEventListener('DOMContentLoaded', initializeFileUpload);
+    </script>
+</body>
+</html>
