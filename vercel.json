@@ -1,15 +1,16 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
-    }
+  "redirects": [
+    { "source": "/dashboard.html", "destination": "/dashboard", "permanent": true },
+    { "source": "/loginForPro.html", "destination": "/login", "permanent": true },
+    { "source": "/manufacturer-dashboard.html", "destination": "/manufacturer", "permanent": true },
+    { "source": "/ureticiLogin.html", "destination": "/manufacturer/login", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/login", "destination": "/loginForPro.html" },
+    { "source": "/manufacturer", "destination": "/manufacturer-dashboard.html" },
+    { "source": "/manufacturer/login", "destination": "/ureticiLogin.html" }
   ]
 }
