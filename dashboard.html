@@ -784,6 +784,66 @@
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
+        // Dashboard sayfasında:
+        document.addEventListener('DOMContentLoaded', function() {
+            // Önce mevcut URL'i kontrol et
+            const currentPage = window.location.pathname;
+            
+            // Token kontrolü
+            const token = localStorage.getItem('token');
+            const userType = localStorage.getItem('userType');
+        
+            if (currentPage.includes('dashboard')) {
+                // Dashboard sayfasındayız
+                if (!token || userType !== 'professional') {
+                    // Token yoksa veya kullanıcı tipi uygun değilse
+                    localStorage.setItem('redirectFrom', 'dashboard');
+                    window.location.href = 'loginForPro.html';
+                } else {
+                    // Token varsa geçerliliğini kontrol et
+                    fetch(`${API_URL}/auth/verify-token`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success || data.userType !== 'professional') {
+                            throw new Error('Invalid token');
+                        }
+                        // Token geçerliyse normal işleme devam et
+                        initializeDashboard();
+                    })
+                    .catch(() => {
+                        localStorage.clear();
+                        localStorage.setItem('redirectFrom', 'dashboard');
+                        window.location.href = 'loginForPro.html';
+                    });
+                }
+            }
+        });
+        
+        // Login sayfasında:
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            const userType = localStorage.getItem('userType');
+            const redirectFrom = localStorage.getItem('redirectFrom');
+        
+            // Eğer geçerli token varsa ve dashboard'dan yönlendirilmediyse
+            if (token && userType === 'professional' && redirectFrom !== 'dashboard') {
+                window.location.href = 'dashboard.html';
+            }
+        
+            // redirectFrom'u temizle
+            localStorage.removeItem('redirectFrom');
+        });
+        
+        // Login başarılı olduğunda:
+        function handleSuccessfulLogin(response) {
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('userType', response.userType);
+            // redirectFrom'u temizle
+            localStorage.removeItem('redirectFrom');
+            window.location.href = 'dashboard.html';
+        }
         // İlk kontrol
         if (!localStorage.getItem('token') || localStorage.getItem('userType') !== 'professional') {
             window.location.href = 'loginForPro.html';
