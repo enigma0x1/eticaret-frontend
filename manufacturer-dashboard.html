@@ -305,7 +305,7 @@ async function verifyAuth() {
     const userType = localStorage.getItem('userType');
 
     if (!token || userType !== 'manufacturer') {
-        window.location.href = 'login.html';
+        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
         return false;
     }
 
@@ -323,7 +323,7 @@ async function verifyAuth() {
         return true;
     } catch (error) {
         console.error('Auth error:', error);
-        window.location.href = 'login.html';
+        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
         return false;
     }
 }
@@ -343,7 +343,7 @@ async function authenticatedFetch(url, options = {}) {
         });
 
         if (response.status === 401) {
-            window.location.href = 'login.html';
+            window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
             return null;
         }
 
@@ -701,11 +701,11 @@ async function logout() {
         if (response && response.ok) {
             localStorage.removeItem('token');
             localStorage.removeItem('userType');
-            window.location.href = 'login.html';
+            window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
         }
     } catch (error) {
         console.error('Logout error:', error);
-        window.location.href = 'login.html';
+        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
     }
 }
 
