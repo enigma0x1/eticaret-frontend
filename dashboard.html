@@ -687,7 +687,78 @@
 
             this.init();
         }
-
+        addActiveFilter(type, value) {
+            this.activeFilters.add(`${type}:${value}`);
+            this.updateActiveFiltersUI();
+            this.saveToLocalStorage(); // Yeni eklendi
+        }
+        
+        removeActiveFilter(type) {
+            Array.from(this.activeFilters)
+                .filter(filter => filter.startsWith(`${type}:`))
+                .forEach(filter => this.activeFilters.delete(filter));
+            this.updateActiveFiltersUI();
+            this.saveToLocalStorage(); // Yeni eklendi
+        }
+        
+        clearAllFilters() {
+            this.activeFilters.clear();
+            this.updateActiveFiltersUI();
+            this.resetFilterInputs();
+            this.filterProducts();
+            this.saveToLocalStorage(); // Yeni eklendi
+        }
+        
+        handleSorting(sortValue) {
+            switch (sortValue) {
+                case 'priceAsc':
+                    this.filteredProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'priceDesc':
+                    this.filteredProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'newest':
+                    this.filteredProducts.sort((a, b) => b.id - a.id);
+                    break;
+                case 'bestSelling':
+                    this.filteredProducts.sort((a, b) => (b.bestSeller ? 1 : 0) - (a.bestSeller ? 1 : 0));
+                    break;
+                default:
+                    this.filteredProducts.sort((a, b) => b.rating - a.rating);
+            }
+            this.loadProducts();
+            this.saveToLocalStorage(); // Yeni eklendi
+        }
+        // ProductManager sınıfı içine ekleyin
+        loadFromLocalStorage() {
+            // Aktif filtreleri yükle
+            const savedFilters = localStorage.getItem('activeFilters');
+            if (savedFilters) {
+                this.activeFilters = new Set(JSON.parse(savedFilters));
+                this.updateActiveFiltersUI();
+            }
+        
+            // Sıralama tercihini yükle
+            const savedSort = localStorage.getItem('sortPreference');
+            if (savedSort) {
+                document.getElementById('sorting').value = savedSort;
+                this.handleSorting(savedSort);
+            }
+        
+            // Kategori seçimini yükle
+            const savedCategory = localStorage.getItem('selectedCategory');
+            if (savedCategory) {
+                document.getElementById('mainCategory').value = savedCategory;
+                this.handleMainCategoryChange(savedCategory);
+            }
+        }
+        
+        // Ayrıca, filtreleri kaydeden bir fonksiyon ekleyelim
+        saveToLocalStorage() {
+            localStorage.setItem('activeFilters', JSON.stringify([...this.activeFilters]));
+            localStorage.setItem('sortPreference', document.getElementById('sorting').value);
+            localStorage.setItem('selectedCategory', document.getElementById('mainCategory').value);
+        }
         async init() {
             try {
                 await this.verifyToken();
