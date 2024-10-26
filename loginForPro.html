@@ -543,24 +543,24 @@
         
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
-
+    
         try {
-            const response = await fetch(`${API_URL}/auth/login`, {
+            const response = await fetch(`${API_URL}/auth/professional/login`, { // URL güncellendi
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     email,
-                    password,
-                    userType: 'professional'
+                    password
                 })
             });
-
+    
             const data = await response.json();
-
-            if (response.ok) {
+    
+            if (data.success) {
                 localStorage.setItem('token', data.token);
+                localStorage.setItem('userType', 'professional');
                 localStorage.setItem('user', JSON.stringify(data.user));
                 
                 showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
@@ -578,37 +578,35 @@
             button.classList.remove('loading');
         }
     }
-
     // Signup İşlemi
     async function handleSignup(event) {
         event.preventDefault();
         const button = event.target.querySelector('.auth-button');
         button.classList.add('loading');
         
-        const name = document.getElementById('signupName').value;
+        const fullName = document.getElementById('signupName').value;
         const email = document.getElementById('signupEmail').value;
         const password = document.getElementById('signupPassword').value;
         const profession = document.getElementById('profession').value;
         const otherProfession = document.getElementById('otherProfession').value;
         const diplomaFile = document.getElementById('diplomaFile').files[0];
-
+    
         const formData = new FormData();
-        formData.append('name', name);
+        formData.append('fullName', fullName);
         formData.append('email', email);
         formData.append('password', password);
         formData.append('profession', profession === 'other' ? otherProfession : profession);
-        formData.append('userType', 'professional');
         formData.append('diploma', diplomaFile);
-
+    
         try {
-            const response = await fetch(`${API_URL}/auth/register`, {
+            const response = await fetch(`${API_URL}/auth/professional/register`, { // URL güncellendi
                 method: 'POST',
                 body: formData
             });
-
+    
             const data = await response.json();
-
-            if (response.ok) {
+    
+            if (data.success) {
                 showToast('Kayıt başarılı! Giriş yapabilirsiniz.', 'success');
                 toggleForm();
             } else {
