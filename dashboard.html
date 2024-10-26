@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndustryHub - Modern Endüstriyel Çözümler</title>
+    <title>IndustryHub - Modern E-ticaret</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Swiper.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <style>
+        :root {
+            --primary: #4facfe;
+            --secondary: #00f2fe;
+            --dark: #1a1a2e;
+            --gray: #6c757d;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --header-height: 80px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,62 +26,91 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        :root {
-            --primary-color: #4facfe;
-            --secondary-color: #00f2fe;
-            --dark-bg: #1a1a2e;
-            --light-text: #ffffff;
-            --gray-text: #a0a0a0;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --header-height: 80px;
-        }
-
         body {
-            background: var(--dark-bg);
-            color: var(--light-text);
-            min-height: 100vh;
+            background: var(--light);
+            color: var(--dark);
             line-height: 1.6;
         }
 
         /* Header Styles */
         .header {
-            background: rgba(26, 26, 46, 0.95);
-            backdrop-filter: blur(10px);
+            background: var(--white);
             position: fixed;
-            width: 100%;
             top: 0;
+            left: 0;
+            width: 100%;
             z-index: 1000;
-            height: var(--header-height);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-top {
+            background: var(--dark);
+            color: var(--white);
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .header-top-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 20px;
+        }
+
+        .contact-info a {
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-top-right {
+            display: flex;
+            gap: 20px;
+        }
+
+        .header-main {
+            padding: 15px 0;
+            background: var(--white);
         }
 
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
-            height: 100%;
-            display: flex;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
             align-items: center;
-            justify-content: space-between;
+            gap: 40px;
         }
 
+        /* Logo Styles */
         .logo {
             display: flex;
             align-items: center;
             gap: 15px;
             text-decoration: none;
-            color: var(--light-text);
+            color: var(--dark);
         }
 
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
+            color: var(--white);
             transform: rotate(45deg);
             transition: transform 0.3s ease;
         }
@@ -81,185 +122,231 @@
         .logo-text {
             font-size: 1.5rem;
             font-weight: 600;
-            background: linear-gradient(to right, var(--light-text), var(--gray-text));
+            background: linear-gradient(to right, var(--dark), var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Navigation */
-        .nav-menu {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-link {
-            color: var(--light-text);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
+        /* Search Bar */
+        .search-container {
             position: relative;
-        }
-
-        .nav-link:hover {
-            color: var(--primary-color);
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover::after {
+            max-width: 600px;
             width: 100%;
         }
 
-        /* Header Right */
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .search-bar {
-            position: relative;
-        }
-
         .search-input {
-            padding: 0.75rem 1rem 0.75rem 3rem;
-            border: none;
+            width: 100%;
+            padding: 12px 20px;
+            padding-right: 50px;
+            border: 2px solid #eee;
             border-radius: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--light-text);
-            width: 300px;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
         .search-input:focus {
             outline: none;
-            background: rgba(255, 255, 255, 0.15);
-            width: 350px;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
 
-        .search-icon {
+        .search-btn {
             position: absolute;
-            left: 1rem;
+            right: 5px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray-text);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: var(--white);
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        /* Header Actions */
         .header-actions {
             display: flex;
-            gap: 1rem;
+            gap: 20px;
+            align-items: center;
         }
 
         .action-btn {
+            position: relative;
             background: none;
             border: none;
-            color: var(--light-text);
-            font-size: 1.2rem;
+            color: var(--dark);
+            font-size: 1.5rem;
             cursor: pointer;
-            position: relative;
             transition: color 0.3s ease;
         }
 
         .action-btn:hover {
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
-        .cart-count {
+        .badge {
             position: absolute;
             top: -8px;
             right: -8px;
-            background: var(--primary-color);
-            color: var(--light-text);
+            background: var(--primary);
+            color: var(--white);
             font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
+            padding: 2px 6px;
             border-radius: 10px;
             font-weight: 600;
         }
 
-        /* Hero Section */
-        .hero {
-            margin-top: var(--header-height);
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(26, 26, 46, 0.7)),
-                        url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158');
-            background-size: cover;
-            background-position: center;
-            height: 500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 2rem;
+        /* Navigation */
+        .nav {
+            background: var(--white);
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
         }
 
-        .hero-content {
-            max-width: 800px;
-        }
-
-        .hero-title {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, var(--light-text), var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: var(--gray-text);
-            margin-bottom: 2rem;
-        }
-
-        .hero-btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 25px;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: var(--light-text);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .hero-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
-        }
-
-        /* Main Content */
-        .main-container {
+        .nav-content {
             max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        /* Categories Section */
-        .categories {
-            margin-bottom: 3rem;
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--dark);
+            text-decoration: none;
+            padding: 15px 0;
+            display: block;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+                /* Mega Menu */
+        .mega-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .nav-item:hover .mega-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Hero Slider */
+        .hero-slider {
+            margin-top: var(--header-height);
+            position: relative;
+            height: 500px;
+        }
+
+        .swiper-slide {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-content {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            max-width: 500px;
+            color: var(--white);
+            z-index: 2;
+        }
+
+        .slide-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .slide-description {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .slide-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .slide-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .slide-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.3));
+        }
+
+        /* Featured Categories */
+        .featured-categories {
+            padding: 60px 0;
         }
 
         .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
             font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            color: var(--light-text);
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .section-title p {
+            color: var(--gray);
         }
 
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            gap: 30px;
+            padding: 0 20px;
         }
 
         .category-card {
@@ -270,71 +357,53 @@
             cursor: pointer;
         }
 
-        .category-img {
+        .category-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
         }
 
-        .category-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-            display: flex;
-            align-items: flex-end;
-            padding: 1.5rem;
-        }
-
-        .category-name {
-            color: var(--light-text);
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .category-card:hover .category-img {
+        .category-card:hover .category-image {
             transform: scale(1.1);
         }
 
-        /* Products Section */
-        .products {
-            margin-bottom: 3rem;
+        .category-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: var(--white);
         }
 
-        .products-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
+        .category-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
         }
 
-        .filter-dropdown {
-            position: relative;
+        .category-count {
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
-        .filter-btn {
-            padding: 0.75rem 1.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            border-radius: 25px;
-            color: var(--light-text);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        /* Featured Products */
+        .featured-products {
+            padding: 60px 0;
+            background: #f8f9fa;
         }
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
         }
 
         .product-card {
-            background: var(--card-bg);
+            background: var(--white);
             border-radius: 15px;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -342,95 +411,187 @@
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .product-img {
-            width: 100%;
+        .product-image {
+            position: relative;
             height: 250px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
-        .product-info {
-            padding: 1.5rem;
-        }
-
-        .product-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--light-text);
-        }
-
-        .product-description {
-            color: var(--gray-text);
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .product-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
         }
 
         .product-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
             display: flex;
-            gap: 1rem;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
         }
 
-        .add-to-cart-btn {
-            flex: 2;
-            padding: 0.75rem;
+        .product-card:hover .product-actions {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .product-action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--white);
             border: none;
-            border-radius: 25px;
-            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-            color: var(--light-text);
+            color: var(--dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-action-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-category {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
             font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .current-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .old-price {
+            color: var(--gray);
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+
+        .add-to-cart {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: var(--white);
+            border-radius: 25px;
+            font-weight: 500;
             cursor: pointer;
             transition: transform 0.3s ease;
         }
 
-        .wishlist-btn {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid var(--primary-color);
-            border-radius: 25px;
-            background: transparent;
-            color: var(--primary-color);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .add-to-cart-btn:hover {
+        .add-to-cart:hover {
             transform: translateY(-2px);
         }
 
-        .wishlist-btn:hover {
-            background: rgba(79, 172, 254, 0.1);
+        /* Newsletter Section */
+        .newsletter {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--dark) 0%, #2a2a4a 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .newsletter-content {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .newsletter-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-description {
+            margin-bottom: 30px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+        }
+
+        .newsletter-btn {
+            padding: 15px 30px;
+            border: none;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: var(--white);
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
         }
 
         /* Footer */
         .footer {
-            background: rgba(26, 26, 46, 0.95);
-            padding: 4rem 0 2rem;
-            margin-top: 4rem;
+            background: var(--dark);
+            color: var(--white);
+            padding: 60px 0 30px;
         }
 
         .footer-content {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
+            gap: 40px;
         }
 
         .footer-section h3 {
-            color: var(--light-text);
-            margin-bottom: 1.5rem;
             font-size: 1.2rem;
+            margin-bottom: 20px;
         }
 
         .footer-links {
@@ -438,71 +599,48 @@
         }
 
         .footer-links li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 10px;
         }
 
         .footer-links a {
-            color: var(--gray-text);
+            color: rgba(255,255,255,0.8);
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .footer-links a:hover {
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
         .footer-bottom {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
             text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--gray-text);
+            color: rgba(255,255,255,0.6);
         }
 
         /* Responsive Design */
-        @media (max-width: 1024px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .search-input {
-                width: 250px;
-            }
-            
-            .search-input:focus {
-                width: 300px;
-            }
-        }
-
         @media (max-width: 768px) {
-            .nav-menu {
+            .header-top {
                 display: none;
             }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .search-bar {
-                display: none;
-            }
-            
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-        }
 
-        @media (max-width: 480px) {
-            .hero-title {
-                font-size: 1.8rem;
+            .header-content {
+                grid-template-columns: auto 1fr auto;
+                gap: 20px;
             }
-            
-            .section-title {
-                font-size: 1.5rem;
+
+            .search-container {
+                display: none;
             }
-            
-            .main-container {
-                padding: 0 1rem;
+
+            .nav-list {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
             }
         }
     </style>
@@ -510,86 +648,125 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="header-content">
-            <a href="/" class="logo">
-                <div class="logo-icon">IH</div>
-                <span class="logo-text">IndustryHub</span>
-            </a>
-            
-            <nav>
-                <ul class="nav-menu">
-                    <li><a href="#" class="nav-link">Ana Sayfa</a></li>
-                    <li><a href="#" class="nav-link">Kategoriler</a></li>
-                    <li><a href="#" class="nav-link">Yeni Ürünler</a></li>
-                    <li><a href="#" class="nav-link">Kampanyalar</a></li>
-                </ul>
-            </nav>
-
-            <div class="header-right">
-                <div class="search-bar">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" class="search-input" placeholder="Ürün ara...">
+        <div class="header-top">
+            <div class="header-top-content">
+                <div class="contact-info">
+                    <a href="tel:+902121234567"><i class="fas fa-phone"></i> +90 212 123 45 67</a>
+                    <a href="mailto:info@industryhub.com"><i class="fas fa-envelope"></i> info@industryhub.com</a>
+                </div>
+                <div class="header-top-right">
+                    <a href="#" class="top-link">Kargo Takip</a>
+                    <a href="#" class="top-link">Yardım</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-main">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <div class="logo-icon">IH</div>
+                    <span class="logo-text">IndustryHub</span>
+                </a>
+                
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Ürün, kategori veya marka ara...">
+                    <button class="search-btn"><i class="fas fa-search"></i></button>
                 </div>
                 
                 <div class="header-actions">
                     <button class="action-btn">
-                        <i class="fas fa-heart"></i>
+                        <i class="far fa-heart"></i>
+                        <span class="badge">0</span>
                     </button>
-                    <button class="action-btn">
+                    <button class="action-btn" id="cartBtn">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count">0</span>
+                        <span class="badge">0</span>
                     </button>
                     <button class="action-btn">
-                        <i class="fas fa-user"></i>
+                        <i class="far fa-user"></i>
                     </button>
                 </div>
             </div>
         </div>
+        
+        <nav class="nav">
+            <div class="nav-content">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Kategoriler</a>
+                        <div class="mega-menu">
+                            <!-- Mega menu content will be added dynamically -->
+                        </div>
+                    </li>
+                    <li class="nav-item"><a href="#" class="nav-link">Yeni Ürünler</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">İndirimler</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Kampanyalar</a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">Markalar</a></li>
+                </ul>
+            </div>
+        </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Endüstriyel Çözümler İçin Doğru Adres</h1>
-            <p class="hero-subtitle">En yeni endüstriyel ürünler ve profesyonel çözümler için IndustryHub'ı keşfedin.</p>
-            <button class="hero-btn">Hemen Alışverişe Başla</button>
+    <!-- Hero Slider -->
+    <div class="hero-slider swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <div class="slide-content">
+                    <h2 class="slide-title">Yeni Sezon Ürünleri</h2>
+                    <p class="slide-description">En yeni ürünleri keşfedin, fırsatları kaçırmayın!</p>
+                    <a href="#" class="slide-btn">Hemen İncele</a>
+                </div>
+                <div class="slide-overlay"></div>
+                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" alt="Slider 1" class="slide-image">
+            </div>
+            <!-- More slides will be added dynamically -->
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+    <!-- Featured Categories -->
+    <section class="featured-categories">
+        <div class="section-title">
+            <h2>Popüler Kategoriler</h2>
+            <p>En çok tercih edilen kategorilerimizi keşfedin</p>
+        </div>
+        <div class="categories-grid" id="categoriesGrid">
+            <!-- Categories will be added dynamically -->
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="main-container">
-        <!-- Categories Section -->
-        <section class="categories">
-            <h2 class="section-title">Popüler Kategoriler</h2>
-            <div class="categories-grid">
-                <!-- Category cards will be added dynamically -->
-            </div>
-        </section>
+    <!-- Featured Products -->
+    <section class="featured-products">
+        <div class="section-title">
+            <h2>Öne Çıkan Ürünler</h2>
+            <p>En çok satan ve en yeni ürünlerimiz</p>
+        </div>
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be added dynamically -->
+        </div>
+    </section>
 
-        <!-- Products Section -->
-        <section class="products">
-            <div class="products-header">
-                <h2 class="section-title">Öne Çıkan Ürünler</h2>
-                <div class="filter-dropdown">
-                    <button class="filter-btn">
-                        <i class="fas fa-filter"></i>
-                        Filtrele
-                    </button>
-                </div>
-            </div>
-            <div class="products-grid" id="productsGrid">
-                <!-- Product cards will be added dynamically -->
-            </div>
-        </section>
-    </main>
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="newsletter-content">
+            <h2 class="newsletter-title">Fırsatları Kaçırmayın!</h2>
+            <p class="newsletter-description">En yeni ürünler ve özel kampanyalardan haberdar olmak için bültenimize kayıt olun.</p>
+            <form class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="E-posta adresiniz">
+                <button type="submit" class="newsletter-btn">Kayıt Ol</button>
+            </form>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h3>Hakkımızda</h3>
+                <h3>Kurumsal</h3>
                 <ul class="footer-links">
-                    <li><a href="#">Şirket Bilgisi</a></li>
+                    <li><a href="#">Hakkımızda</a></li>
                     <li><a href="#">Kariyer</a></li>
                     <li><a href="#">İletişim</a></li>
                 </ul>
@@ -600,17 +777,16 @@
                 <ul class="footer-links">
                     <li><a href="#">Sipariş Takibi</a></li>
                     <li><a href="#">İade ve Değişim</a></li>
-                    <li><a href="#">SSS</a></li>
+                    <li><a href="#">Sıkça Sorulan Sorular</a></li>
                 </ul>
             </div>
             
             <div class="footer-section">
-                <h3>Kategoriler</h3>
+                <h3>Yardım</h3>
                 <ul class="footer-links">
-                    <li><a href="#">Endüstriyel Ekipmanlar</a></li>
-                    <li><a href="#">Otomasyon Sistemleri</a></li>
-                    <li><a href="#">Güvenlik Ekipmanları</a></li>
-                    <li><a href="#">Yedek Parçalar</a></li>
+                    <li><a href="#">Teslimat Bilgileri</a></li>
+                    <li><a href="#">Gizlilik Politikası</a></li>
+                    <li><a href="#">Kullanım Koşulları</a></li>
                 </ul>
             </div>
             
@@ -620,7 +796,6 @@
                     <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
                     <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
                     <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
-                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
                 </ul>
             </div>
         </div>
@@ -630,87 +805,85 @@
         </div>
     </footer>
 
+    <!-- Swiper.js -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    
     <script>
-        // Sample data for categories
+        // Initialize Swiper
+        const swiper = new Swiper('.hero-slider', {
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+        });
+
+        // Sample Categories Data
         const categories = [
             {
                 id: 1,
-                name: "Endüstriyel Ekipmanlar",
+                name: "Elektronik",
+                count: "250+ Ürün",
                 image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
             },
-            {
-                id: 2,
-                name: "Otomasyon Sistemleri",
-                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-            },
-            {
-                id: 3,
-                name: "Güvenlik Ekipmanları",
-                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-            },
-            {
-                id: 4,
-                name: "Yedek Parçalar",
-                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-            }
+            // Add more categories as needed
         ];
 
-        // Sample data for products
+        // Sample Products Data
         const products = [
             {
                 id: 1,
-                name: "Endüstriyel Robot Kolu",
-                description: "6 eksenli endüstriyel robot kolu, yüksek hassasiyet ve performans",
-                price: 75000,
+                name: "Ürün Adı 1",
+                category: "Elektronik",
+                price: 1999.99,
+                oldPrice: 2499.99,
                 image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
             },
-            {
-                id: 2,
-                name: "Otomatik Konveyör Sistemi",
-                description: "Yüksek kapasiteli otomatik konveyör sistemi",
-                price: 45000,
-                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-            },
-            {
-                id: 3,
-                name: "Endüstriyel Sensör Paketi",
-                description: "Gelişmiş sensör paketi, tüm ihtiyaçlarınız için",
-                price: 12500,
-                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
-            }
+            // Add more products as needed
         ];
 
-        // Render categories
+        // Render Categories
         function renderCategories() {
-            const categoriesGrid = document.querySelector('.categories-grid');
+            const categoriesGrid = document.getElementById('categoriesGrid');
             categoriesGrid.innerHTML = categories.map(category => `
                 <div class="category-card">
-                    <img src="${category.image}" alt="${category.name}" class="category-img">
+                    <img src="${category.image}" alt="${category.name}" class="category-image">
                     <div class="category-overlay">
                         <h3 class="category-name">${category.name}</h3>
+                        <p class="category-count">${category.count}</p>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Render products
+        // Render Products
         function renderProducts() {
             const productsGrid = document.getElementById('productsGrid');
             productsGrid.innerHTML = products.map(product => `
                 <div class="product-card">
-                    <img src="${product.image}" alt="${product.name}" class="product-img">
-                    <div class="product-info">
-                        <h3 class="product-name">${product.name}</h3>
-                        <p class="product-description">${product.description}</p>
-                        <div class="product-price">₺${product.price.toLocaleString('tr-TR')}</div>
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}">
                         <div class="product-actions">
-                            <button class="add-to-cart-btn">
-                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
-                            </button>
-                            <button class="wishlist-btn">
-                                <i class="fas fa-heart"></i>
-                            </button>
+                            <button class="product-action-btn"><i class="far fa-heart"></i></button>
+                            <button class="product-action-btn"><i class="fas fa-search"></i></button>
                         </div>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-category">${product.category}</p>
+                        <h3 class="product-name">${product.name}</h3>
+                        <div class="product-price">
+                            <span class="current-price">₺${product.price.toLocaleString('tr-TR')}</span>
+                            <span class="old-price">₺${product.oldPrice.toLocaleString('tr-TR')}</span>
+                        </div>
+                        <button class="add-to-cart">Sepete Ekle</button>
                     </div>
                 </div>
             `).join('');
@@ -721,42 +894,6 @@
             renderCategories();
             renderProducts();
         });
-
-        // Cart functionality
-        let cartCount = 0;
-        const cartCountElement = document.querySelector('.cart-count');
-
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.add-to-cart-btn')) {
-                cartCount++;
-                cartCountElement.textContent = cartCount;
-                
-                // Show notification
-                showNotification('Ürün sepete eklendi!');
-            }
-        });
-
-        // Notification function
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: var(--primary-color);
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 10px;
-                z-index: 1000;
-                animation: slideIn 0.3s ease forwards;
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
     </script>
 </body>
 </html>
