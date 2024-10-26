@@ -667,6 +667,7 @@
     }
 
     // Login İşlemi
+    // Login İşlemi
     async function handleLogin(event) {
         event.preventDefault();
         
@@ -677,22 +678,22 @@
         button.classList.add('loading');
         
         try {
-            const response = await fetch(`${API_URL}/auth/login`, {
+            const response = await fetch(`${API_URL}/auth/manufacturer/login`, { // URL güncellendi
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     email,
-                    password,
-                    userType: 'manufacturer'
+                    password
                 })
             });
-
+    
             const data = await response.json();
-
-            if (response.ok) {
+    
+            if (data.success) {
                 localStorage.setItem('token', data.token);
+                localStorage.setItem('userType', 'manufacturer');
                 localStorage.setItem('user', JSON.stringify(data.user));
                 
                 showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
@@ -704,12 +705,13 @@
                 showToast(data.message || 'Giriş başarısız!', 'error');
             }
         } catch (error) {
+            console.error('Login error:', error);
             showToast('Bir hata oluştu!', 'error');
         } finally {
             button.classList.remove('loading');
         }
     }
-
+    
     // Signup İşlemi
     async function handleSignup(event) {
         event.preventDefault();
@@ -725,7 +727,7 @@
         
         const button = event.target.querySelector('button');
         button.classList.add('loading');
-
+    
         const formData = new FormData();
         formData.append('companyName', companyName);
         formData.append('taxNumber', taxNumber);
@@ -734,27 +736,27 @@
         formData.append('contactName', contactName);
         formData.append('email', email);
         formData.append('password', password);
-        formData.append('userType', 'manufacturer');
-
+    
         for (let i = 0; i < companyDocs.length; i++) {
-            formData.append('companyDocs', companyDocs[i]);
+            formData.append('documents', companyDocs[i]); // 'companyDocs' yerine 'documents' kullanıldı
         }
-
+    
         try {
-            const response = await fetch(`${API_URL}/auth/register`, {
+            const response = await fetch(`${API_URL}/auth/manufacturer/register`, { // URL güncellendi
                 method: 'POST',
                 body: formData
             });
-
+    
             const data = await response.json();
-
-            if (response.ok) {
+    
+            if (data.success) {
                 showToast('Kayıt başarılı! Giriş yapabilirsiniz.', 'success');
                 toggleForm();
             } else {
                 showToast(data.message || 'Kayıt başarısız!', 'error');
             }
         } catch (error) {
+            console.error('Signup error:', error);
             showToast('Bir hata oluştu!', 'error');
         } finally {
             button.classList.remove('loading');
