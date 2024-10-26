@@ -283,17 +283,16 @@
         }
     });
 
-    // Manufacturer yetkisi kontrolü
     function checkManufacturerAuth() {
-        const token = localStorage.getItem('token');
-        const userType = localStorage.getItem('userType');
-        
-        if (!token || userType !== 'manufacturer') {
-            window.location.href = '/index.html';
-            return false;
-        }
-        return true;
+    const token = localStorage.getItem('token');
+    const userType = localStorage.getItem('userType');
+    
+    if (!token || userType !== 'manufacturer') {
+        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/index.html';
+        return false;
     }
+    return true;
+}
 
     // Event Listeners
     function setupEventListeners() {
