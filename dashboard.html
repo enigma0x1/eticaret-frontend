@@ -784,96 +784,88 @@
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
-        // Dashboard sayfasında:
-        document.addEventListener('DOMContentLoaded', function() {
-            // Önce mevcut URL'i kontrol et
-            const currentPage = window.location.pathname;
-            
-            // Token kontrolü
-            const token = localStorage.getItem('token');
-            const userType = localStorage.getItem('userType');
+        const API_URL = 'https://eticaret-glif.onrender.com/api';
+        const AUTH_TOKEN = localStorage.getItem('token');
         
-            if (currentPage.includes('dashboard')) {
-                // Dashboard sayfasındayız
-                if (!token || userType !== 'professional') {
-                    // Token yoksa veya kullanıcı tipi uygun değilse
-                    localStorage.setItem('redirectFrom', 'dashboard');
-                    window.location.href = 'loginForPro.html';
-                } else {
-                    // Token varsa geçerliliğini kontrol et
-                    fetch(`${API_URL}/auth/verify-token`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.success || data.userType !== 'professional') {
-                            throw new Error('Invalid token');
-                        }
-                        // Token geçerliyse normal işleme devam et
-                        initializeDashboard();
-                    })
-                    .catch(() => {
-                        localStorage.clear();
-                        localStorage.setItem('redirectFrom', 'dashboard');
-                        window.location.href = 'loginForPro.html';
-                    });
-                }
+        // Rate limiting için yardımcı fonksiyon
+        let lastRedirectTime = 0;
+        function safeRedirect(url) {
+            const now = Date.now();
+            if (now - lastRedirectTime > 2000) {
+                lastRedirectTime = now;
+                window.location.href = url;
             }
-        });
+        }
         
-        // Login sayfasında:
-        document.addEventListener('DOMContentLoaded', function() {
+        // Toast Bildirimleri
+        function showToast(message, type = 'success') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                style: {
+                    background: type === 'success' ? "linear-gradient(to right, #00b09b, #96c93d)" : 
+                               type === 'error' ? "linear-gradient(to right, #ff5f6d, #ffc371)" : 
+                               "linear-gradient(to right, #4facfe, #00f2fe)",
+                }
+            }).showToast();
+        }
+        
+        // Token kontrolü ve yetkilendirme
+        async function checkAuth() {
             const token = localStorage.getItem('token');
             const userType = localStorage.getItem('userType');
             const redirectFrom = localStorage.getItem('redirectFrom');
         
-            // Eğer geçerli token varsa ve dashboard'dan yönlendirilmediyse
-            if (token && userType === 'professional' && redirectFrom !== 'dashboard') {
-                window.location.href = 'dashboard.html';
+            if (!token || userType !== 'professional') {
+                localStorage.setItem('redirectFrom', 'dashboard');
+                safeRedirect('loginForPro.html');
+                return false;
             }
         
-            // redirectFrom'u temizle
-            localStorage.removeItem('redirectFrom');
-        });
+            try {
+                const response = await fetch(`${API_URL}/auth/verify-token`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
         
-        // Login başarılı olduğunda:
-        function handleSuccessfulLogin(response) {
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('userType', response.userType);
-            // redirectFrom'u temizle
-            localStorage.removeItem('redirectFrom');
-            window.location.href = 'dashboard.html';
-        }
-        // İlk kontrol
-        if (!localStorage.getItem('token') || localStorage.getItem('userType') !== 'professional') {
-            window.location.href = 'loginForPro.html';
-        }
-        // API URL ve Sabitler
-        const API_URL = 'https://eticaret-glif.onrender.com/api';
-        const AUTH_TOKEN = localStorage.getItem('token');
-        
-        // Sayfa yüklenirken ilk kontrol
-        (function checkAuth() {
-            if (!AUTH_TOKEN) {
-                window.location.href = 'loginForPro.html';
-                return;
-            }
-            
-            // Token geçerliliğini kontrol et
-            fetch(`${API_URL}/auth/verify-token`, {
-                headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
-            })
-            .then(response => response.json())
-            .then(data => {
+                const data = await response.json();
                 if (!data.success || data.userType !== 'professional') {
                     throw new Error('Invalid token or user type');
                 }
-            })
-            .catch(() => {
+        
+                return true;
+            } catch (error) {
                 localStorage.clear();
-                window.location.href = 'loginForPro.html';
-            });
-        })();
+                localStorage.setItem('redirectFrom', 'dashboard');
+                safeRedirect('loginForPro.html');
+                return false;
+            }
+        }
+        
+        // Çıkış yapma fonksiyonu
+        async function handleLogout() {
+            try {
+                const response = await fetch(`${API_URL}/auth/professional/logout`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${AUTH_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+        
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.clear();
+                    safeRedirect('loginForPro.html');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                localStorage.clear();
+                safeRedirect('loginForPro.html');
+            }
+        }
+        
         class ProductManager {
             constructor() {
                 this.products = [];
@@ -883,11 +875,6 @@
                 this.loading = false;
                 this.hasMore = true;
                 this.activeFilters = new Set();
-                
-                if (!AUTH_TOKEN) {
-                    window.location.href = 'loginForPro.html';
-                    return;
-                }
         
                 this.headers = {
                     'Authorization': `Bearer ${AUTH_TOKEN}`,
@@ -910,7 +897,7 @@
                     this.handleError(error);
                     if (error.message.includes('token')) {
                         localStorage.clear();
-                        window.location.href = 'loginForPro.html';
+                        safeRedirect('loginForPro.html');
                     }
                 }
             }
@@ -940,6 +927,16 @@
                 this.products = data.products;
                 this.filteredProducts = [...this.products];
                 this.loadProducts();
+            }
+        
+            async loadCart() {
+                // Cart loading logic will be implemented here
+                console.log('Loading cart...');
+            }
+        
+            loadFromLocalStorage() {
+                // Load saved filters and preferences from localStorage
+                console.log('Loading from localStorage...');
             }
         
             setupEventListeners() {
@@ -1133,6 +1130,52 @@
                 this.filterProducts();
             }
         
+            handleSorting(sortType) {
+                // Implement sorting logic
+                console.log('Sorting by:', sortType);
+            }
+        
+            clearAllFilters() {
+                this.activeFilters.clear();
+                // Reset all form elements
+                document.getElementById('mainCategory').value = '';
+                document.getElementById('subCategory').value = '';
+                document.getElementById('minPrice').value = '';
+                document.getElementById('maxPrice').value = '';
+                document.querySelectorAll('input[name="format"]').forEach(cb => cb.checked = false);
+                
+                this.filterProducts();
+            }
+        
+            addActiveFilter(type, value) {
+                this.activeFilters.add(`${type}:${value}`);
+                this.updateActiveFiltersDisplay();
+            }
+        
+            removeActiveFilter(type) {
+                const filterToRemove = Array.from(this.activeFilters)
+                    .find(filter => filter.startsWith(`${type}:`));
+                if (filterToRemove) {
+                    this.activeFilters.delete(filterToRemove);
+                    this.updateActiveFiltersDisplay();
+                }
+            }
+        
+            updateActiveFiltersDisplay() {
+                const container = document.getElementById('activeFilters');
+                container.innerHTML = Array.from(this.activeFilters)
+                    .map(filter => {
+                        const [type, value] = filter.split(':');
+                        return `
+                            <div class="filter-tag">
+                                ${value}
+                                <i class="fas fa-times" onclick="productManager.removeActiveFilter('${type}')"></i>
+                            </div>
+                        `;
+                    })
+                    .join('');
+            }
+        
             filterProducts() {
                 this.filteredProducts = this.products.filter(product => {
                     return Array.from(this.activeFilters).every(filter => {
@@ -1261,23 +1304,19 @@
                 menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
             }
         
-            showNotification(message, type = 'success') {
-                Toastify({
-                    text: message,
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    backgroundColor: type === 'success' ? "#10B981" : "#EF4444",
-                    stopOnFocus: true
-                }).showToast();
+            viewProduct(productId) {
+                // Implement product view logic
+                console.log('Viewing product:', productId);
+            }
+        
+            addToCart(productId) {
+                // Implement add to cart logic
+                console.log('Adding to cart:', productId);
             }
         
             handleError(error) {
                 console.error('Error:', error);
-                this.showNotification(
-                    error.message || 'Bir hata oluştu',
-                    'error'
-                );
+                showToast(error.message || 'Bir hata oluştu', 'error');
             }
         
             hideLoader() {
@@ -1287,32 +1326,12 @@
             }
         }
         
-        // Çıkış yapma fonksiyonu
-        async function handleLogout() {
-            try {
-                const response = await fetch(`${API_URL}/auth/professional/logout`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${AUTH_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-        
-                const data = await response.json();
-                if (data.success) {
-                    localStorage.clear();
-                    window.location.href = 'loginForPro.html';
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-                localStorage.clear();
-                window.location.href = 'loginForPro.html';
+        // Tek bir DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isAuthenticated = await checkAuth();
+            if (isAuthenticated) {
+                window.productManager = new ProductManager();
             }
-        }
-        
-        // Sayfa yüklendiğinde ProductManager'ı başlat
-        document.addEventListener('DOMContentLoaded', () => {
-            window.productManager = new ProductManager();
         });
     </script>
 </body>
