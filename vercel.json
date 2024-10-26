@@ -1,15 +1,20 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "headers": [
+  "version": 2,
+  "routes": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
+      "src": "/sw.js",
+      "headers": {
+        "cache-control": "public, max-age=0, must-revalidate",
+        "Service-Worker-Allowed": "/"
+      },
+      "dest": "/sw.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dashboard.html"
     }
-  ]
+  ],
+  "env": {
+    "API_URL": "https://eticaret-glif.onrender.com/api"
+  }
 }
