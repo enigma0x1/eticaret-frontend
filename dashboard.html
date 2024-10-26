@@ -167,6 +167,34 @@
         line-height: 1.5;
     }
 
+    /* Loading Spinner */
+    .loader-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    }
+
+    .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid var(--gray-light);
+        border-bottom-color: var(--primary-color);
+        border-radius: 50%;
+        animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
     /* Header Stilleri */
     .header {
         background: var(--white);
@@ -257,18 +285,39 @@
         z-index: 1000;
     }
 
-    .checkbox-group {
+    /* Nav Menu */
+    .nav-menu {
         display: flex;
-        flex-wrap: wrap;
         gap: 1rem;
-        margin-top: 0.5rem;
+        align-items: center;
     }
 
-    .checkbox-group label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
+    .nav-link {
+        color: var(--text-color);
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .nav-link.active {
+        background: var(--primary-color);
+        color: var(--white);
+    }
+
+    .cart-icon {
+        position: relative;
+    }
+
+    .cart-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--primary-color);
+        color: var(--white);
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
     }
 
     /* Filtre Bölümü */
@@ -278,6 +327,7 @@
         padding: 1.5rem;
         margin-bottom: 2rem;
         box-shadow: var(--shadow-md);
+        margin-top: 80px;
     }
 
     .filter-header {
@@ -287,18 +337,53 @@
         margin-bottom: 1rem;
     }
 
-    .clear-filters {
-        background: none;
-        border: none;
-        color: var(--gray-dark);
-        cursor: pointer;
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filter-label {
+        font-weight: 500;
+        color: var(--text-color);
+    }
+
+    .filter-select {
+        padding: 0.75rem;
+        border: 1px solid var(--gray-light);
+        border-radius: 0.5rem;
+        outline: none;
+    }
+
+    .price-range-inputs {
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        padding: 0.5rem;
-        font-size: 0.9rem;
     }
 
+    .price-range-inputs input {
+        width: 100px;
+        padding: 0.5rem;
+        border: 1px solid var(--gray-light);
+        border-radius: 0.5rem;
+    }
+
+    .apply-price {
+        padding: 0.5rem 1rem;
+        background: var(--primary-color);
+        color: var(--white);
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+    }
+
+    /* Aktif Filtreler */
     .active-filters {
         display: flex;
         flex-wrap: wrap;
@@ -317,22 +402,12 @@
         gap: 0.5rem;
     }
 
-    .filter-tag i {
-        cursor: pointer;
-    }
-
-    .filter-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-    }
-
     /* Ürün Grid */
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1.5rem;
-        margin-top: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        padding: 2rem 0;
     }
 
     .product-card {
@@ -343,8 +418,146 @@
         transition: transform 0.3s ease;
     }
 
-    .product-card:hover {
-        transform: translateY(-5px);
+    .product-image-container {
+        position: relative;
+        padding-top: 75%;
+    }
+
+    .product-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .model-badge, .bestseller-badge {
+        position: absolute;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .model-badge {
+        top: 1rem;
+        right: 1rem;
+        background: var(--primary-color);
+        color: var(--white);
+    }
+
+    .bestseller-badge {
+        top: 1rem;
+        left: 1rem;
+        background: #fbbf24;
+        color: #92400e;
+    }
+
+    .product-content {
+        padding: 1.5rem;
+    }
+
+    .product-category {
+        color: var(--gray-dark);
+        font-size: 0.9rem;
+    }
+
+    .product-title {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .product-specs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .spec-tag {
+        background: var(--gray-light);
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.8rem;
+    }
+
+    .stars {
+        color: #fbbf24;
+    }
+
+    .product-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-light);
+    }
+
+    .product-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .product-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: var(--white);
+    }
+
+    .btn-secondary {
+        background: var(--gray-light);
+        color: var(--text-color);
+    }
+
+    /* Modal */
+    .product-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1500;
+    }
+
+    /* Notification */
+    .notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: var(--primary-color);
+        color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: var(--shadow-lg);
+        z-index: 1500;
     }
 
     /* Responsive Tasarım */
@@ -382,7 +595,7 @@
 
     @media (max-width: 480px) {
         .product-grid {
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            grid-template-columns: 1fr;
         }
 
         .product-actions {
@@ -391,7 +604,6 @@
 
         .btn {
             width: 100%;
-            padding: 0.5rem;
         }
     }
 
@@ -405,8 +617,10 @@
         animation: fadeIn 0.3s ease-in;
     }
 </style>
+<script>
 class ProductManager {
     constructor() {
+        // Örnek ürün verileri
         this.products = [
             {
                 id: 1,
@@ -422,7 +636,34 @@ class ProductManager {
                 description: 'Yüksek performanslı otomatik kontrol valfi',
                 bestSeller: true
             },
-            // Diğer ürünler buraya eklenecek
+            {
+                id: 2,
+                image: 'https://via.placeholder.com/400x300',
+                category: 'Makine Parçaları',
+                subCategory: 'Dişliler',
+                title: 'Helisel Dişli Sistemi',
+                specs: ['STEP', 'Teknik Döküman'],
+                price: '2999',
+                modelFormats: ['STEP'],
+                stock: 8,
+                rating: 4.2,
+                description: 'Yüksek dayanımlı helisel dişli sistemi',
+                bestSeller: false
+            },
+            {
+                id: 3,
+                image: 'https://via.placeholder.com/400x300',
+                category: 'Otomasyon Sistemleri',
+                subCategory: 'PLC',
+                title: 'Endüstriyel PLC Kontrol Ünitesi',
+                specs: ['STL', 'OBJ', 'Teknik Döküman'],
+                price: '8999',
+                modelFormats: ['STL', 'OBJ'],
+                stock: 5,
+                rating: 4.8,
+                description: 'Gelişmiş otomasyon kontrol ünitesi',
+                bestSeller: true
+            }
         ];
 
         this.filteredProducts = [...this.products];
@@ -436,12 +677,33 @@ class ProductManager {
         this.loadProducts();
         this.updateCartCount();
         this.setupAdvancedSearch();
+        this.hideLoader();
+    }
+
+    hideLoader() {
+        const loader = document.querySelector('.loader-container');
+        setTimeout(() => {
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 300);
+        }, 1000);
     }
 
     setupEventListeners() {
         // Ana kategori değişikliği
         document.getElementById('mainCategory').addEventListener('change', (e) => {
             this.handleMainCategoryChange(e.target.value);
+        });
+
+        // Alt kategori değişikliği
+        document.getElementById('subCategory').addEventListener('change', (e) => {
+            if (e.target.value) {
+                this.addActiveFilter('subCategory', e.target.value);
+            } else {
+                this.removeActiveFilter('subCategory');
+            }
+            this.filterProducts();
         });
 
         // Fiyat filtresi
@@ -467,7 +729,8 @@ class ProductManager {
 
         // Gelişmiş arama toggle
         document.getElementById('searchFilterToggle').addEventListener('click', () => {
-            this.toggleAdvancedSearch();
+            const panel = document.getElementById('advancedSearchPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         });
     }
 
@@ -485,7 +748,6 @@ class ProductManager {
             }
         });
 
-        // Arama yeri checkbox'ları
         document.querySelectorAll('input[name="searchIn"]').forEach(checkbox => {
             checkbox.addEventListener('change', () => {
                 if (searchBar.value) {
@@ -523,13 +785,28 @@ class ProductManager {
         this.loadProducts();
     }
 
+    getSubCategories(mainCategory) {
+        const subCategories = {
+            'Endüstriyel Ekipmanlar': ['Valfler', 'Pompalar', 'Filtreler'],
+            'Makine Parçaları': ['Dişliler', 'Rulmanlar', 'Contalar'],
+            'Otomasyon Sistemleri': ['PLC', 'Sensörler', 'Kontrol Üniteleri']
+        };
+        return subCategories[mainCategory] || [];
+    }
+
+    populateSubCategories(subCategories) {
+        const select = document.getElementById('subCategory');
+        select.innerHTML = '<option value="">Seçiniz</option>' +
+            subCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        select.disabled = false;
+    }
+
     handleMainCategoryChange(category) {
         const subCategorySelect = document.getElementById('subCategory');
         subCategorySelect.disabled = !category;
 
         if (category) {
             this.addActiveFilter('category', category);
-            // Alt kategorileri doldur
             const subCategories = this.getSubCategories(category);
             this.populateSubCategories(subCategories);
         } else {
@@ -566,6 +843,11 @@ class ProductManager {
         this.filterProducts();
     }
 
+    handleSorting(sortValue) {
+        this.applySorting();
+        this.loadProducts();
+    }
+
     addActiveFilter(type, value) {
         this.activeFilters.add(`${type}:${value}`);
         this.updateActiveFiltersUI();
@@ -600,8 +882,8 @@ class ProductManager {
         this.resetFilterInputs();
         this.filterProducts();
     }
+
     resetFilterInputs() {
-        // Tüm filtreleri sıfırla
         document.getElementById('mainCategory').value = '';
         document.getElementById('subCategory').value = '';
         document.getElementById('subCategory').disabled = true;
@@ -754,7 +1036,7 @@ class ProductManager {
         if (!product) return;
 
         const modal = document.createElement('div');
-        modal.className = 'product-modal';
+        modal.className = 'product-modal fade-in';
         // Modal içeriği burada oluşturulacak
         document.body.appendChild(modal);
     }
@@ -796,3 +1078,4 @@ class ProductManager {
 document.addEventListener('DOMContentLoaded', () => {
     window.productManager = new ProductManager();
 });
+</script>
