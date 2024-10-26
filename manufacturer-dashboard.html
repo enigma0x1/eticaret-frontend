@@ -408,7 +408,7 @@
         const userType = localStorage.getItem('userType');
         
         if (!token || userType !== 'manufacturer') {
-            window.location.href = 'login.html';
+            window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
             return false;
         }
         return true;
@@ -724,7 +724,7 @@
     function logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('userType');
-        window.location.href = 'login.html';
+        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
     }
 
     // Bildirim göster
