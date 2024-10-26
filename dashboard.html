@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndustryHub Dashboard</title>
+    <title>IndustryHub - Modern Endüstriyel Çözümler</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,27 +14,40 @@
             font-family: 'Poppins', sans-serif;
         }
 
+        :root {
+            --primary-color: #4facfe;
+            --secondary-color: #00f2fe;
+            --dark-bg: #1a1a2e;
+            --light-text: #ffffff;
+            --gray-text: #a0a0a0;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --header-height: 80px;
+        }
+
         body {
-            background: #0f0c29;
-            background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
-            color: white;
+            background: var(--dark-bg);
+            color: var(--light-text);
             min-height: 100vh;
+            line-height: 1.6;
         }
 
         /* Header Styles */
         .header {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(26, 26, 46, 0.95);
             backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            position: sticky;
+            position: fixed;
+            width: 100%;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+            height: var(--header-height);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .header-content {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 0 2rem;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -45,13 +58,13 @@
             align-items: center;
             gap: 15px;
             text-decoration: none;
-            color: white;
+            color: var(--light-text);
         }
 
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -64,289 +77,432 @@
         .logo:hover .logo-icon {
             transform: rotate(225deg);
         }
-                /* Search Bar Styles */
-        .search-bar {
-            flex: 1;
-            max-width: 500px;
-            margin: 0 2rem;
-            position: relative;
-        }
 
-        .search-bar input {
-            width: 100%;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 0.9rem;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s ease;
-        }
-
-        .search-bar input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .search-bar input:focus {
-            outline: none;
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(79, 172, 254, 0.3);
-        }
-
-        /* Main Container Styles */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-            display: flex;
-            gap: 2rem;
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            width: 280px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 1.5rem;
-            height: fit-content;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .user-info {
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 1.5rem;
-        }
-
-        .user-name {
-            font-size: 1.2rem;
+        .logo-text {
+            font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(to right, #fff, #a7a7a7);
+            background: linear-gradient(to right, var(--light-text), var(--gray-text));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .user-type {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-        }
-
-        /* Filter Styles */
-        .filter-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .filter-title {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .price-range {
+        /* Navigation */
+        .nav-menu {
             display: flex;
-            gap: 0.5rem;
+            gap: 2rem;
+            list-style: none;
         }
 
-        .price-range input {
+        .nav-link {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--secondary-color), var(--primary-color));
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
             width: 100%;
-            padding: 0.5rem;
-            border: none;
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 0.9rem;
         }
 
-        /* Products Grid Styles */
-        .main-content {
-            flex: 1;
+        /* Header Right */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            width: 350px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-text);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .action-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary-color);
+            color: var(--light-text);
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: var(--header-height);
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(26, 26, 46, 0.7)),
+                        url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 2rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--light-text), var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray-text);
+            margin-bottom: 2rem;
+        }
+
+        .hero-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: var(--light-text);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Categories Section */
+        .categories {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: var(--light-text);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            position: relative;
+            height: 200px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .category-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .category-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 1.5rem;
+        }
+
+        .category-name {
+            color: var(--light-text);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .category-card:hover .category-img {
+            transform: scale(1.1);
+        }
+
+        /* Products Section */
+        .products {
+            margin-bottom: 3rem;
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-dropdown {
+            position: relative;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 25px;
+            color: var(--light-text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
         .product-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-                /* Product Card Details */
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
-        .product-card:hover .product-image {
-            transform: scale(1.05);
+        .product-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
         }
 
         .product-info {
             padding: 1.5rem;
         }
 
-        .product-title {
-            font-size: 1.1rem;
+        .product-name {
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, #a7a7a7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            color: var(--light-text);
         }
 
-        .price-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .product-description {
+            color: var(--gray-text);
             margin-bottom: 1rem;
+            font-size: 0.9rem;
         }
 
         .product-price {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #4facfe;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
         }
 
-        .stock-info {
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            background: rgba(79, 172, 254, 0.2);
-            color: #4facfe;
-        }
-
-        .product-details {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-
-        .action-buttons {
+        .product-actions {
             display: flex;
             gap: 1rem;
         }
 
-        .action-buttons button {
-            flex: 1;
+        .add-to-cart-btn {
+            flex: 2;
             padding: 0.75rem;
             border: none;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            border-radius: 25px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: var(--light-text);
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
-        .add-to-cart {
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
-            color: white;
+        .wishlist-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 25px;
+            background: transparent;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        .add-to-cart:hover {
+        .add-to-cart-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
         }
 
-        .download-model {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            backdrop-filter: blur(5px);
+        .wishlist-btn:hover {
+            background: rgba(79, 172, 254, 0.1);
         }
 
-        .download-model:hover {
-            background: rgba(255, 255, 255, 0.2);
+        /* Footer */
+        .footer {
+            background: rgba(26, 26, 46, 0.95);
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
         }
 
-        /* Loading Skeleton */
-        .skeleton {
-            background: linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.1) 25%,
-                rgba(255, 255, 255, 0.15) 37%,
-                rgba(255, 255, 255, 0.1) 63%
-            );
-            background-size: 400% 100%;
-            animation: skeleton-loading 1.4s ease infinite;
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
         }
 
-        @keyframes skeleton-loading {
-            0% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0 50%;
-            }
+        .footer-section h3 {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--gray-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray-text);
         }
 
         /* Responsive Design */
         @media (max-width: 1024px) {
-            .container {
-                padding: 1rem;
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .search-input {
+                width: 250px;
+            }
+            
+            .search-input:focus {
+                width: 300px;
             }
         }
 
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
+            .nav-menu {
+                display: none;
             }
-
-            .sidebar {
-                width: 100%;
+            
+            .hero-title {
+                font-size: 2rem;
             }
-
-            .header {
-                padding: 1rem;
-            }
-
+            
             .search-bar {
-                margin: 0 1rem;
+                display: none;
             }
-
+            
             .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
 
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: white;
-            z-index: 1000;
-            animation: slideIn 0.3s ease forwards;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .main-container {
+                padding: 0 1rem;
             }
         }
     </style>
@@ -359,124 +515,241 @@
                 <div class="logo-icon">IH</div>
                 <span class="logo-text">IndustryHub</span>
             </a>
-            <div class="search-bar">
-                <input type="text" placeholder="Ürün ara..." id="searchInput">
-            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link">Ana Sayfa</a></li>
+                    <li><a href="#" class="nav-link">Kategoriler</a></li>
+                    <li><a href="#" class="nav-link">Yeni Ürünler</a></li>
+                    <li><a href="#" class="nav-link">Kampanyalar</a></li>
+                </ul>
+            </nav>
+
             <div class="header-right">
-                <a href="#" class="cart-link">
-                    <i class="fas fa-shopping-cart"></i> 
-                    <span class="cart-count">0</span>
-                </a>
-                <a href="#" class="user-link">
-                    <i class="fas fa-user"></i>
-                </a>
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Ürün ara...">
+                </div>
+                
+                <div class="header-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="user-info">
-                <!-- Kullanıcı bilgileri dinamik olarak yüklenecek -->
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Endüstriyel Çözümler İçin Doğru Adres</h1>
+            <p class="hero-subtitle">En yeni endüstriyel ürünler ve profesyonel çözümler için IndustryHub'ı keşfedin.</p>
+            <button class="hero-btn">Hemen Alışverişe Başla</button>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Categories Section -->
+        <section class="categories">
+            <h2 class="section-title">Popüler Kategoriler</h2>
+            <div class="categories-grid">
+                <!-- Category cards will be added dynamically -->
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products">
+            <div class="products-header">
+                <h2 class="section-title">Öne Çıkan Ürünler</h2>
+                <div class="filter-dropdown">
+                    <button class="filter-btn">
+                        <i class="fas fa-filter"></i>
+                        Filtrele
+                    </button>
+                </div>
+            </div>
+            <div class="products-grid" id="productsGrid">
+                <!-- Product cards will be added dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Hakkımızda</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Şirket Bilgisi</a></li>
+                    <li><a href="#">Kariyer</a></li>
+                    <li><a href="#">İletişim</a></li>
+                </ul>
             </div>
             
-            <div class="filters">
-                <div class="filter-group">
-                    <h4 class="filter-title">Fiyat Aralığı</h4>
-                    <div class="price-range">
-                        <input type="number" placeholder="Min" id="minPrice">
-                        <input type="number" placeholder="Max" id="maxPrice">
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <h4 class="filter-title">Kategoriler</h4>
-                    <div class="category-list">
-                        <!-- Kategoriler dinamik olarak yüklenecek -->
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <h4 class="filter-title">Model Formatları</h4>
-                    <div class="format-list">
-                        <!-- Format listesi dinamik olarak yüklenecek -->
-                    </div>
-                </div>
+            <div class="footer-section">
+                <h3>Müşteri Hizmetleri</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Sipariş Takibi</a></li>
+                    <li><a href="#">İade ve Değişim</a></li>
+                    <li><a href="#">SSS</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Kategoriler</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Endüstriyel Ekipmanlar</a></li>
+                    <li><a href="#">Otomasyon Sistemleri</a></li>
+                    <li><a href="#">Güvenlik Ekipmanları</a></li>
+                    <li><a href="#">Yedek Parçalar</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Bizi Takip Edin</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                </ul>
             </div>
         </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <div class="products-grid" id="productsContainer">
-                <!-- Ürünler dinamik olarak yüklenecek -->
-            </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 IndustryHub. Tüm hakları saklıdır.</p>
         </div>
-    </div>
+    </footer>
 
     <script>
-        // Mevcut JavaScript kodunuzu buraya ekleyin, ancak ürün kartı oluşturma
-        // fonksiyonunu güncelleyelim:
-
-        function displayProducts(products) {
-            const productsGrid = document.querySelector('.products-grid');
-            productsGrid.innerHTML = '';
-
-            if (products.length === 0) {
-                productsGrid.innerHTML = '<div class="no-products">Ürün bulunamadı</div>';
-                return;
+        // Sample data for categories
+        const categories = [
+            {
+                id: 1,
+                name: "Endüstriyel Ekipmanlar",
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+            },
+            {
+                id: 2,
+                name: "Otomasyon Sistemleri",
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+            },
+            {
+                id: 3,
+                name: "Güvenlik Ekipmanları",
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+            },
+            {
+                id: 4,
+                name: "Yedek Parçalar",
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
             }
+        ];
 
-            products.forEach(product => {
-                const productCard = `
-                    <div class="product-card">
-                        <img src="${product.image}" alt="${product.title}" class="product-image">
-                        <div class="product-info">
-                            <h3 class="product-title">${product.title}</h3>
-                            <div class="price-container">
-                                <span class="product-price">₺${product.price.toLocaleString('tr-TR')}</span>
-                                <span class="stock-info">Stok: ${product.stock}</span>
-                            </div>
-                            <div class="product-details">
-                                <p>${product.description}</p>
-                            </div>
-                            <div class="action-buttons">
-                                <button class="add-to-cart" onclick="addToCart('${product._id}')">
-                                    <i class="fas fa-shopping-cart"></i> Sepete Ekle
-                                </button>
-                                ${product.modelFormats ? 
-                                    `<button class="download-model" onclick="downloadModel('${product._id}')">
-                                        <i class="fas fa-cube"></i> 3D Model
-                                    </button>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-                productsGrid.innerHTML += productCard;
-            });
-        }
+        // Sample data for products
+        const products = [
+            {
+                id: 1,
+                name: "Endüstriyel Robot Kolu",
+                description: "6 eksenli endüstriyel robot kolu, yüksek hassasiyet ve performans",
+                price: 75000,
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+            },
+            {
+                id: 2,
+                name: "Otomatik Konveyör Sistemi",
+                description: "Yüksek kapasiteli otomatik konveyör sistemi",
+                price: 45000,
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+            },
+            {
+                id: 3,
+                name: "Endüstriyel Sensör Paketi",
+                description: "Gelişmiş sensör paketi, tüm ihtiyaçlarınız için",
+                price: 12500,
+                image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+            }
+        ];
 
-        // Loading skeleton güncellemesi
-        function showLoading() {
-            const container = document.getElementById('productsContainer');
-            container.innerHTML = Array(6).fill(0).map(() => `
-                <div class="product-card">
-                    <div class="skeleton" style="height: 200px;"></div>
-                    <div class="product-info">
-                        <div class="skeleton" style="height: 24px; width: 80%; margin-bottom: 1rem;"></div>
-                        <div class="skeleton" style="height: 32px; width: 50%; margin-bottom: 1rem;"></div>
-                        <div class="skeleton" style="height: 60px; margin-bottom: 1rem;"></div>
-                        <div class="skeleton" style="height: 40px;"></div>
+        // Render categories
+        function renderCategories() {
+            const categoriesGrid = document.querySelector('.categories-grid');
+            categoriesGrid.innerHTML = categories.map(category => `
+                <div class="category-card">
+                    <img src="${category.image}" alt="${category.name}" class="category-img">
+                    <div class="category-overlay">
+                        <h3 class="category-name">${category.name}</h3>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Bildirim fonksiyonu güncellemesi
+        // Render products
+        function renderProducts() {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">₺${product.price.toLocaleString('tr-TR')}</div>
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart"></i> Sepete Ekle
+                            </button>
+                            <button class="wishlist-btn">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderProducts();
+        });
+
+        // Cart functionality
+        let cartCount = 0;
+        const cartCountElement = document.querySelector('.cart-count');
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.add-to-cart-btn')) {
+                cartCount++;
+                cartCountElement.textContent = cartCount;
+                
+                // Show notification
+                showNotification('Ürün sepete eklendi!');
+            }
+        });
+
+        // Notification function
         function showNotification(message) {
             const notification = document.createElement('div');
-            notification.className = 'notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--primary-color);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 1000;
+                animation: slideIn 0.3s ease forwards;
+            `;
             notification.textContent = message;
             document.body.appendChild(notification);
 
