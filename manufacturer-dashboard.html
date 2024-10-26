@@ -432,12 +432,14 @@ function openAddProductModal() {
 }
 
 // Dashboard yükleme
+// Dashboard yükleme
 async function loadDashboard() {
     try {
         const response = await authenticatedFetch(`${API_URL}/manufacturer/dashboard`);
         if (!response) return;
 
         const data = await response.json();
+        console.log('Dashboard data:', data); // Debug için
         
         if (data.success) {
             document.getElementById('total-products').textContent = data.totalProducts;
@@ -445,10 +447,10 @@ async function loadDashboard() {
 
             const recentProductsHtml = data.recentProducts.map(product => `
                 <div class="d-flex align-items-center mb-3">
-                    <img src="${product.images[0]}" class="product-image me-3" alt="${product.name}">
+                    <img src="${API_URL}${product.image}" class="product-image me-3" alt="${product.title}">
                     <div>
-                        <h6>${product.name}</h6>
-                        <p class="mb-0">₺${product.price} - Stok: ${product.stock}</p>
+                        <h6>${product.title}</h6>
+                        <p class="mb-0">₺${product.price}</p>
                     </div>
                 </div>
             `).join('');
@@ -457,6 +459,7 @@ async function loadDashboard() {
             showError(data.message || 'Dashboard yüklenirken hata oluştu');
         }
     } catch (error) {
+        console.error('Dashboard error:', error);
         showError('Dashboard yüklenirken hata oluştu');
     }
 }
@@ -468,16 +471,17 @@ async function loadProducts() {
         if (!response) return;
 
         const data = await response.json();
+        console.log('Products data:', data); // Debug için
         
         if (data.success) {
             const tableBody = document.getElementById('products-table-body');
             tableBody.innerHTML = data.products.map(product => `
                 <tr>
-                    <td><img src="${product.images[0]}" class="product-image" alt="${product.name}"></td>
-                    <td>${product.name}</td>
+                    <td><img src="${API_URL}${product.image}" class="product-image" alt="${product.title}"></td>
+                    <td>${product.title}</td>
                     <td>${product.category}</td>
                     <td>₺${product.price}</td>
-                    <td>${product.stock}</td>
+                    <td>${product.stock || 'N/A'}</td>
                     <td>
                         <button class="btn btn-sm btn-primary" onclick="editProduct('${product._id}')">
                             <i class="fas fa-edit"></i>
@@ -492,10 +496,10 @@ async function loadProducts() {
             showError(data.message || 'Ürünler yüklenirken hata oluştu');
         }
     } catch (error) {
+        console.error('Products error:', error);
         showError('Ürünler yüklenirken hata oluştu');
     }
 }
-
 // Profil bilgilerini yükle
 async function loadProfile() {
     try {
@@ -567,6 +571,7 @@ async function updateProfile() {
 }
 
 // Ürün kaydet
+// Ürün kaydet
 async function saveProduct() {
     const formData = new FormData();
     const productId = document.getElementById('productId').value;
@@ -575,7 +580,7 @@ async function saveProduct() {
     formData.append('description', document.getElementById('product-description').value);
     formData.append('price', document.getElementById('product-price').value);
     formData.append('category', document.getElementById('product-category').value);
-    formData.append('modelFormats', JSON.stringify(['3D', 'CAD'])); // Array'i JSON string'e dönüştür
+    formData.append('modelFormats', JSON.stringify(['3D']));
 
     const imageFile = document.getElementById('product-images').files[0];
     if (imageFile) {
@@ -583,31 +588,37 @@ async function saveProduct() {
     }
 
     try {
+        // URL'leri düzelttik
         const url = productId ? 
-            `${API_URL}/products/${productId}` : // URL'i düzelt
-            `${API_URL}/products`; // URL'i düzelt
+            `${API_URL}/manufacturer/products/${productId}` : 
+            `${API_URL}/manufacturer/products`;
         
-        console.log('Gönderilen veriler:', Object.fromEntries(formData));
+        console.log('Gönderilen veriler:', {
+            title: formData.get('title'),
+            description: formData.get('description'),
+            price: formData.get('price'),
+            category: formData.get('category'),
+            hasImage: !!imageFile
+        });
 
         const response = await authenticatedFetch(url, {
             method: productId ? 'PUT' : 'POST',
             body: formData
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Ürün kaydedilemedi');
-        }
-
         const data = await response.json();
+        console.log('Server response:', data); // Debug için
+
         if (data.success) {
             showNotification(productId ? 'Ürün güncellendi' : 'Ürün eklendi');
             addProductModal.hide();
-            loadProducts();
+            loadDashboard(); // Dashboard'ı güncelle
+            loadProducts(); // Ürün listesini güncelle
         } else {
             throw new Error(data.message || 'İşlem başarısız');
         }
     } catch (error) {
+        console.error('Save product error:', error);
         showError(error.message || 'Ürün kaydedilirken hata oluştu');
     }
 }
