@@ -571,44 +571,46 @@ async function saveProduct() {
     const formData = new FormData();
     const productId = document.getElementById('productId').value;
 
-    // Product modeline uygun alanları ekle
-    formData.append('title', document.getElementById('product-name').value); // name yerine title
+    formData.append('title', document.getElementById('product-name').value);
     formData.append('description', document.getElementById('product-description').value);
     formData.append('price', document.getElementById('product-price').value);
     formData.append('category', document.getElementById('product-category').value);
-    formData.append('modelFormats', ['3D', 'CAD']); // Sabit değerler ekledim, ihtiyaca göre değiştirilebilir
+    formData.append('modelFormats', JSON.stringify(['3D', 'CAD'])); // Array'i JSON string'e dönüştür
 
-    // Image dosyası
-    const images = document.getElementById('product-images').files;
-    if (images.length > 0) {
-        formData.append('image', images[0]); // Tek bir image dosyası gönder
+    const imageFile = document.getElementById('product-images').files[0];
+    if (imageFile) {
+        formData.append('image', imageFile);
     }
 
     try {
         const url = productId ? 
-            `${API_URL}/manufacturer/products/${productId}` : 
-            `${API_URL}/manufacturer/products`;
+            `${API_URL}/products/${productId}` : // URL'i düzelt
+            `${API_URL}/products`; // URL'i düzelt
         
+        console.log('Gönderilen veriler:', Object.fromEntries(formData));
+
         const response = await authenticatedFetch(url, {
             method: productId ? 'PUT' : 'POST',
             body: formData
         });
 
-        if (response && response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                showNotification(productId ? 'Ürün güncellendi' : 'Ürün eklendi');
-                addProductModal.hide();
-                loadProducts();
-            } else {
-                throw new Error(data.message || 'İşlem başarısız');
-            }
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Ürün kaydedilemedi');
+        }
+
+        const data = await response.json();
+        if (data.success) {
+            showNotification(productId ? 'Ürün güncellendi' : 'Ürün eklendi');
+            addProductModal.hide();
+            loadProducts();
+        } else {
+            throw new Error(data.message || 'İşlem başarısız');
         }
     } catch (error) {
         showError(error.message || 'Ürün kaydedilirken hata oluştu');
     }
 }
-
 // Ürün düzenleme
 async function editProduct(productId) {
     try {
