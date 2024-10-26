@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/login", "destination": "/loginForPro.html" },
+    { "source": "/manufacturer", "destination": "/manufacturer-dashboard.html" },
+    { "source": "/manufacturer/login", "destination": "/ureticiLogin.html" },
+    { "source": "/", "destination": "/index.html" }
+  ]
+}
