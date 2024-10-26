@@ -243,38 +243,34 @@
                 </div>
                 <div class="modal-body">
                     <form id="productForm">
-                        <input type="hidden" id="productId">
-                        <div class="mb-3">
-                            <label class="form-label">Ürün Adı</label>
-                            <input type="text" class="form-control" id="product-name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Açıklama</label>
-                            <textarea class="form-control" id="product-description" required></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Fiyat</label>
-                            <input type="number" class="form-control" id="product-price" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Kategori</label>
-                            <select class="form-control" id="product-category" required>
-                                <option value="">Kategori Seçin</option>
-                                <option value="elektronik">Elektronik</option>
-                                <option value="mekanik">Mekanik</option>
-                                <option value="kimyasal">Kimyasal</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Stok</label>
-                            <input type="number" class="form-control" id="product-stock" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Ürün Görselleri</label>
-                            <input type="file" class="form-control" id="product-images" multiple accept="image/*">
-                        </div>
-                        <div id="images-preview" class="mb-3"></div>
-                    </form>
+                    <input type="hidden" id="productId">
+                    <div class="mb-3">
+                        <label class="form-label">Ürün Adı</label>
+                        <input type="text" class="form-control" id="product-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Açıklama</label>
+                        <textarea class="form-control" id="product-description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fiyat</label>
+                        <input type="number" class="form-control" id="product-price" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kategori</label>
+                        <select class="form-control" id="product-category" required>
+                            <option value="">Kategori Seçin</option>
+                            <option value="elektronik">Elektronik</option>
+                            <option value="mekanik">Mekanik</option>
+                            <option value="kimyasal">Kimyasal</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Ürün Görseli</label>
+                        <input type="file" class="form-control" id="product-images" required accept="image/*">
+                    </div>
+                    <div id="images-preview" class="mb-3"></div>
+                </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
