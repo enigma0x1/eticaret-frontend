@@ -704,19 +704,24 @@ async function deleteDocument(docPath) {
 }
 
 // Çıkış yap
+// Çıkış yap
 async function logout() {
     try {
-        const response = await authenticatedFetch(`${API_URL}/auth/logout`, {
+        // Önce API'ye logout isteği gönder
+        const response = await authenticatedFetch(`${API_URL}/manufacturer/logout`, {
             method: 'POST'
         });
 
-        if (response && response.ok) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userType');
-            window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
-        }
+        console.log('Logout response:', response); // Debug için
+
+        // İstek başarılı olmasa bile local storage'ı temizle ve yönlendir
+        localStorage.clear(); // Tüm storage'ı temizle
+        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
+        
     } catch (error) {
         console.error('Logout error:', error);
+        // Hata durumunda da local storage'ı temizle ve yönlendir
+        localStorage.clear();
         window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
     }
 }
