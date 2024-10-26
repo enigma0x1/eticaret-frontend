@@ -40,6 +40,13 @@
             background: rgba(255,255,255,0.2);
         }
 
+        .stats-card {
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
         .status-badge {
             padding: 5px 10px;
             border-radius: 15px;
@@ -57,37 +64,6 @@
             height: 100px;
             object-fit: cover;
             border-radius: 5px;
-        }
-
-        .stats-card {
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .profile-section {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .inquiry-card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .toast-container {
@@ -134,12 +110,84 @@
 
         <!-- Dashboard Page -->
         <div id="dashboard-page" class="page active">
-            <!-- Dashboard içeriği mevcut -->
+            <h2 class="mb-4">Hoş Geldiniz</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="stats-card bg-primary text-white">
+                        <h3 id="total-products">0</h3>
+                        <p>Toplam Ürün</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card bg-success text-white">
+                        <h3 id="total-orders">0</h3>
+                        <p>Toplam Sipariş</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card bg-info text-white">
+                        <h3 id="pending-orders">0</h3>
+                        <p>Bekleyen Sipariş</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card bg-warning text-white">
+                        <h3 id="total-revenue">₺0</h3>
+                        <p>Toplam Gelir</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Son Siparişler</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="recent-orders-list"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Son Talepler</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="recent-inquiries-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Products Page -->
         <div id="products-page" class="page" style="display: none;">
-            <!-- Ürünler sayfası içeriği mevcut -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Ürünlerim</h2>
+                <button class="btn btn-primary" onclick="openAddProductModal()">
+                    <i class="fas fa-plus me-2"></i>Yeni Ürün Ekle
+                </button>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Görsel</th>
+                                    <th>Ürün Adı</th>
+                                    <th>Kategori</th>
+                                    <th>Fiyat</th>
+                                    <th>Model Formatları</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Orders Page -->
@@ -160,9 +208,7 @@
                                     <th>İşlemler</th>
                                 </tr>
                             </thead>
-                            <tbody id="orders-table-body">
-                                <!-- Siparişler buraya dinamik olarak eklenecek -->
-                            </tbody>
+                            <tbody id="orders-table-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -172,25 +218,31 @@
         <!-- Inquiries Page -->
         <div id="inquiries-page" class="page" style="display: none;">
             <h2 class="mb-4">Talepler</h2>
-            <div id="inquiries-container">
-                <!-- Talepler buraya dinamik olarak eklenecek -->
-            </div>
+            <div id="inquiries-container"></div>
         </div>
 
-        <!-- Analytics Page -->
+                <!-- Analytics Page -->
         <div id="analytics-page" class="page" style="display: none;">
             <h2 class="mb-4">Analizler</h2>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="chart-container">
-                        <h5>Aylık Satışlar</h5>
-                        <canvas id="salesChart"></canvas>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Aylık Satışlar</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="salesChart"></canvas>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="chart-container">
-                        <h5>En Çok Satan Ürünler</h5>
-                        <canvas id="productsChart"></canvas>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>En Çok Satan Ürünler</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="productsChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -201,53 +253,122 @@
             <h2 class="mb-4">Profil</h2>
             <div class="row">
                 <div class="col-md-6">
-                    <div class="profile-section">
-                        <h5>Firma Bilgileri</h5>
-                        <form id="company-form">
-                            <div class="mb-3">
-                                <label class="form-label">Firma Adı</label>
-                                <input type="text" class="form-control" id="company-name">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Vergi No</label>
-                                <input type="text" class="form-control" id="tax-number">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Adres</label>
-                                <textarea class="form-control" id="address"></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Güncelle</button>
-                        </form>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Firma Bilgileri</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="company-form">
+                                <div class="mb-3">
+                                    <label class="form-label">Firma Adı</label>
+                                    <input type="text" class="form-control" id="company-name">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Vergi No</label>
+                                    <input type="text" class="form-control" id="tax-number">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Adres</label>
+                                    <textarea class="form-control" id="address"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Güncelle</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="profile-section">
-                        <h5>Şifre Değiştir</h5>
-                        <form id="password-form">
-                            <div class="mb-3">
-                                <label class="form-label">Mevcut Şifre</label>
-                                <input type="password" class="form-control" id="current-password">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Yeni Şifre</label>
-                                <input type="password" class="form-control" id="new-password">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Yeni Şifre Tekrar</label>
-                                <input type="password" class="form-control" id="confirm-password">
-                            </div>
-                            <button type="submit" class="btn btn-primary">Şifre Değiştir</button>
-                        </form>
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Şifre Değiştir</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="password-form">
+                                <div class="mb-3">
+                                    <label class="form-label">Mevcut Şifre</label>
+                                    <input type="password" class="form-control" id="current-password">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Yeni Şifre</label>
+                                    <input type="password" class="form-control" id="new-password">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Yeni Şifre Tekrar</label>
+                                    <input type="password" class="form-control" id="confirm-password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Şifre Değiştir</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modals -->
     <!-- Add Product Modal -->
     <div class="modal fade" id="addProductModal" tabindex="-1">
-        <!-- Mevcut modal içeriği -->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalTitle">Yeni Ürün Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <div class="mb-3">
+                            <label class="form-label">Ürün Adı</label>
+                            <input type="text" class="form-control" id="productTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Açıklama</label>
+                            <textarea class="form-control" id="productDescription" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fiyat</label>
+                            <input type="number" class="form-control" id="productPrice" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Kategori</label>
+                            <select class="form-control" id="productCategory" required>
+                                <option value="">Kategori Seçin</option>
+                                <option value="3D Model">3D Model</option>
+                                <option value="2D Çizim">2D Çizim</option>
+                                <option value="Teknik Çizim">Teknik Çizim</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Model Formatları</label>
+                            <div id="modelFormatsContainer">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="STL" name="modelFormats">
+                                    <label class="form-check-label">STL</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="OBJ" name="modelFormats">
+                                    <label class="form-check-label">OBJ</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="FBX" name="modelFormats">
+                                    <label class="form-check-label">FBX</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="DWG" name="modelFormats">
+                                    <label class="form-check-label">DWG</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ürün Görseli</label>
+                            <input type="file" class="form-control" id="productImage" accept="image/*" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Kaydet</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Order Detail Modal -->
@@ -258,9 +379,7 @@
                     <h5 class="modal-title">Sipariş Detayı</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body" id="order-detail-content">
-                    <!-- Sipariş detayları buraya dinamik olarak eklenecek -->
-                </div>
+                <div class="modal-body" id="order-detail-content"></div>
             </div>
         </div>
     </div>
@@ -283,16 +402,17 @@
         }
     });
 
+    // Manufacturer yetkisi kontrolü
     function checkManufacturerAuth() {
-    const token = localStorage.getItem('token');
-    const userType = localStorage.getItem('userType');
-    
-    if (!token || userType !== 'manufacturer') {
-        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/admin.html';
-        return false;
+        const token = localStorage.getItem('token');
+        const userType = localStorage.getItem('userType');
+        
+        if (!token || userType !== 'manufacturer') {
+            window.location.href = 'login.html';
+            return false;
+        }
+        return true;
     }
-    return true;
-}
 
     // Event Listeners
     function setupEventListeners() {
@@ -305,6 +425,10 @@
                 }
             });
         });
+
+        // Form submit event listeners
+        document.getElementById('company-form').addEventListener('submit', updateCompanyInfo);
+        document.getElementById('password-form').addEventListener('submit', updatePassword);
     }
 
     // Sayfa navigasyonu
@@ -339,202 +463,260 @@
         }
     }
 
-    // Siparişleri yükle
-    async function loadOrders() {
+    // Dashboard yükleme
+    async function loadDashboard() {
         try {
-            const response = await fetch(`${API_URL}/manufacturer/orders`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            const orders = await response.json();
-
-            const tableBody = document.getElementById('orders-table-body');
-            tableBody.innerHTML = orders.map(order => `
-                <tr>
-                    <td>${order.orderNumber}</td>
-                    <td>${order.customerName}</td>
-                    <td>${order.items.length} ürün</td>
-                    <td>₺${order.total}</td>
-                    <td>
-                        <span class="status-badge status-${order.status.toLowerCase()}">
-                            ${order.status}
-                        </span>
-                    </td>
-                    <td>${new Date(order.createdAt).toLocaleDateString()}</td>
-                    <td>
-                        <button class="btn btn-sm btn-info" onclick="showOrderDetail('${order._id}')">
-                            Detay
-                        </button>
-                        ${order.status === 'PENDING' ? `
-                            <button class="btn btn-sm btn-success" onclick="updateOrderStatus('${order._id}', 'PROCESSING')">
-                                Onayla
-                            </button>
-                        ` : ''}
-                    </td>
-                </tr>
-            `).join('');
-        } catch (error) {
-            showError('Siparişler yüklenirken hata oluştu');
-        }
-    }
-
-    // Sipariş detayını göster
-    async function showOrderDetail(orderId) {
-        try {
-            const response = await fetch(`${API_URL}/orders/${orderId}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            const order = await response.json();
-
-            document.getElementById('order-detail-content').innerHTML = `
-                <div class="mb-3">
-                    <h6>Sipariş No: ${order.orderNumber}</h6>
-                    <p>Müşteri: ${order.customerName}</p>
-                    <p>Tarih: ${new Date(order.createdAt).toLocaleDateString()}</p>
-                </div>
-                <div class="mb-3">
-                    <h6>Ürünler:</h6>
-                    <ul class="list-group">
-                        ${order.items.map(item => `
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                ${item.productName}
-                                <span>${item.quantity} adet - ₺${item.price}</span>
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-                <div class="mb-3">
-                    <h6>Toplam: ₺${order.total}</h6>
-                </div>
-            `;
-
-            orderDetailModal.show();
-        } catch (error) {
-            showError('Sipariş detayı yüklenirken hata oluştu');
-        }
-    }
-
-    // Sipariş durumunu güncelle
-    async function updateOrderStatus(orderId, status) {
-        try {
-            const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ status })
-            });
-
-            if (response.ok) {
-                showNotification('Sipariş durumu güncellendi');
-                loadOrders();
-            } else {
-                throw new Error('Sipariş durumu güncellenemedi');
-            }
-        } catch (error) {
-            showError('Sipariş durumu güncellenirken hata oluştu');
-        }
-    }
-
-    // Talepleri yükle
-    async function loadInquiries() {
-        try {
-            const response = await fetch(`${API_URL}/manufacturer/inquiries`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
-            const inquiries = await response.json();
-
-            document.getElementById('inquiries-container').innerHTML = inquiries.map(inquiry => `
-                <div class="inquiry-card">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6>${inquiry.subject}</h6>
-                        <span class="status-badge status-${inquiry.status.toLowerCase()}">
-                            ${inquiry.status}
-                        </span>
-                    </div>
-                    <p>${inquiry.message}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small>Müşteri: ${inquiry.customerName}</small>
-                        <small>${new Date(inquiry.createdAt).toLocaleDateString()}</small>
-                    </div>
-                    ${inquiry.status === 'PENDING' ? `
-                        <div class="mt-2">
-                            <button class="btn btn-sm btn-primary" onclick="respondToInquiry('${inquiry._id}')">
-                                Yanıtla
-                            </button>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
-        } catch (error) {
-            showError('Talepler yüklenirken hata oluştu');
-        }
-    }
-
-    // Analitikleri yükle
-    async function loadAnalytics() {
-        try {
-            const response = await fetch(`${API_URL}/manufacturer/analytics`, {
+            const response = await fetch(`${API_URL}/manufacturer/dashboard`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
             const data = await response.json();
 
-            // Satış grafiği
-            const salesCtx = document.getElementById('salesChart').getContext('2d');
-            new Chart(salesCtx, {
-                type: 'line',
-                data: {
-                    labels: data.monthlySales.map(item => item.month),
-                    datasets: [{
-                        label: 'Aylık Satışlar',
-                        data: data.monthlySales.map(item => item.total),
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
-                }
-            });
+            // İstatistikleri güncelle
+            document.getElementById('total-products').textContent = data.totalProducts;
+            document.getElementById('total-orders').textContent = data.totalOrders;
+            document.getElementById('pending-orders').textContent = data.pendingOrders;
+            document.getElementById('total-revenue').textContent = `₺${data.totalRevenue}`;
 
-            // Ürün grafiği
-            const productsCtx = document.getElementById('productsChart').getContext('2d');
-            new Chart(productsCtx, {
-                type: 'bar',
-                data: {
-                    labels: data.topProducts.map(item => item.name),
-                    datasets: [{
-                        label: 'En Çok Satan Ürünler',
-                        data: data.topProducts.map(item => item.sales),
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)'
-                    }]
-                }
-            });
+            // Son siparişleri listele
+            const recentOrdersHtml = data.recentOrders.map(order => `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <strong>${order.orderNumber}</strong>
+                        <br>
+                        <small>${order.customerName}</small>
+                    </div>
+                    <div>
+                        <span class="status-badge status-${order.status.toLowerCase()}">
+                            ${order.status}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('recent-orders-list').innerHTML = recentOrdersHtml;
+
+            // Son talepleri listele
+            const recentInquiriesHtml = data.recentInquiries.map(inquiry => `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <strong>${inquiry.subject}</strong>
+                        <br>
+                        <small>${inquiry.customerName}</small>
+                    </div>
+                    <div>
+                        <span class="status-badge status-${inquiry.status.toLowerCase()}">
+                            ${inquiry.status}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('recent-inquiries-list').innerHTML = recentInquiriesHtml;
+
         } catch (error) {
-            showError('Analitikler yüklenirken hata oluştu');
+            showError('Dashboard yüklenirken hata oluştu');
         }
     }
 
-    // Profil bilgilerini yükle
-    async function loadProfile() {
+    // Ürünleri yükle
+    async function loadProducts() {
         try {
-            const response = await fetch(`${API_URL}/manufacturer/profile`, {
+            const response = await fetch(`${API_URL}/manufacturer/products`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
-            const profile = await response.json();
+            const products = await response.json();
 
-            document.getElementById('company-name').value = profile.companyName;
-            document.getElementById('tax-number').value = profile.taxNumber;
-            document.getElementById('address').value = profile.address;
+            const tableBody = document.getElementById('products-table-body');
+            tableBody.innerHTML = products.map(product => `
+                <tr>
+                    <td>
+                        <img src="${API_URL}/uploads/${product.image}" class="product-image" alt="${product.title}">
+                    </td>
+                    <td>${product.title}</td>
+                    <td>${product.category}</td>
+                    <td>₺${product.price}</td>
+                    <td>${product.modelFormats.join(', ')}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="editProduct('${product._id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${product._id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         } catch (error) {
-            showError('Profil bilgileri yüklenirken hata oluştu');
+            showError('Ürünler yüklenirken hata oluştu');
+        }
+    }
+
+    // Yeni ürün modalını aç
+    function openAddProductModal() {
+        document.getElementById('productForm').reset();
+        document.getElementById('productId').value = '';
+        document.getElementById('productModalTitle').textContent = 'Yeni Ürün Ekle';
+        addProductModal.show();
+    }
+
+    // Ürün kaydet
+    async function saveProduct() {
+        const formData = new FormData();
+        const productId = document.getElementById('productId').value;
+        
+        formData.append('title', document.getElementById('productTitle').value);
+        formData.append('description', document.getElementById('productDescription').value);
+        formData.append('price', document.getElementById('productPrice').value);
+        formData.append('category', document.getElementById('productCategory').value);
+        
+        const selectedFormats = Array.from(document.querySelectorAll('input[name="modelFormats"]:checked'))
+            .map(cb => cb.value);
+        formData.append('modelFormats', JSON.stringify(selectedFormats));
+
+        const imageFile = document.getElementById('productImage').files[0];
+        if (imageFile) {
+            formData.append('image', imageFile);
+        }
+
+        try {
+            const url = productId ? 
+                `${API_URL}/products/${productId}` : 
+                `${API_URL}/products`;
+            
+            const method = productId ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                showNotification(productId ? 'Ürün güncellendi' : 'Ürün eklendi');
+                addProductModal.hide();
+                loadProducts();
+            } else {
+                throw new Error('İşlem başarısız');
+            }
+        } catch (error) {
+            showError('Ürün kaydedilirken hata oluştu');
+        }
+    }
+
+    // Ürün düzenle
+    async function editProduct(productId) {
+        try {
+            const response = await fetch(`${API_URL}/products/${productId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            const product = await response.json();
+
+            document.getElementById('productId').value = product._id;
+            document.getElementById('productTitle').value = product.title;
+            document.getElementById('productDescription').value = product.description;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productCategory').value = product.category;
+
+            // Model formatlarını işaretle
+            document.querySelectorAll('input[name="modelFormats"]').forEach(cb => {
+                cb.checked = product.modelFormats.includes(cb.value);
+            });
+
+            document.getElementById('productModalTitle').textContent = 'Ürün Düzenle';
+            addProductModal.show();
+        } catch (error) {
+            showError('Ürün bilgileri yüklenirken hata oluştu');
+        }
+    }
+
+    // Ürün sil
+    async function deleteProduct(productId) {
+        if (confirm('Bu ürünü silmek istediğinizden emin misiniz?')) {
+            try {
+                const response = await fetch(`${API_URL}/products/${productId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (response.ok) {
+                    showNotification('Ürün silindi');
+                    loadProducts();
+                } else {
+                    throw new Error('Silme işlemi başarısız');
+                }
+            } catch (error) {
+                showError('Ürün silinirken hata oluştu');
+            }
+        }
+    }
+
+    // Profil bilgilerini güncelle
+    async function updateCompanyInfo(e) {
+        e.preventDefault();
+        try {
+            const response = await fetch(`${API_URL}/manufacturer/profile`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    companyName: document.getElementById('company-name').value,
+                    taxNumber: document.getElementById('tax-number').value,
+                    address: document.getElementById('address').value
+                })
+            });
+
+            if (response.ok) {
+                showNotification('Profil bilgileri güncellendi');
+            } else {
+                throw new Error('Güncelleme başarısız');
+            }
+        } catch (error) {
+            showError('Profil güncellenirken hata oluştu');
+        }
+    }
+
+    // Şifre güncelle
+    async function updatePassword(e) {
+        e.preventDefault();
+        const newPassword = document.getElementById('new-password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+
+        if (newPassword !== confirmPassword) {
+            showError('Yeni şifreler eşleşmiyor');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_URL}/manufacturer/password`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    currentPassword: document.getElementById('current-password').value,
+                    newPassword: newPassword
+                })
+            });
+
+            if (response.ok) {
+                showNotification('Şifre güncellendi');
+                document.getElementById('password-form').reset();
+            } else {
+                throw new Error('Şifre güncelleme başarısız');
+            }
+        } catch (error) {
+            showError('Şifre güncellenirken hata oluştu');
         }
     }
 
@@ -542,10 +724,10 @@
     function logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('userType');
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
     }
 
-    // Bildirimler
+    // Bildirim göster
     function showNotification(message, type = 'success') {
         const toast = document.createElement('div');
         toast.className = `toast align-items-center text-white bg-${type} border-0`;
