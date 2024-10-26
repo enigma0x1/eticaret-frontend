@@ -4,131 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IndustryHub Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            background: #f8f9fa;
-            color: #333;
+            background: #0f0c29;
+            background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
+            color: white;
+            min-height: 100vh;
         }
 
-        /* Header */
+        /* Header Styles */
         .header {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             padding: 1rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: white;
         }
 
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transform: rotate(45deg);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .logo-icon {
+            transform: rotate(225deg);
+        }
+                /* Search Bar Styles */
         .search-bar {
             flex: 1;
-            max-width: 600px;
+            max-width: 500px;
             margin: 0 2rem;
+            position: relative;
         }
 
         .search-bar input {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
             font-size: 0.9rem;
-            transition: all 0.2s;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
 
         .search-bar input:focus {
             outline: none;
-            border-color: #4a90e2;
-            box-shadow: 0 0 0 3px rgba(74,144,226,0.1);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(79, 172, 254, 0.3);
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .header-right a {
-            color: #6c757d;
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: color 0.2s;
-        }
-
-        .header-right a:hover {
-            color: #4a90e2;
-        }
-
-        /* Container */
+        /* Main Container Styles */
         .container {
-            display: flex;
-            gap: 2rem;
-            padding: 2rem;
             max-width: 1400px;
             margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
         }
 
-        /* Sidebar */
+        /* Sidebar Styles */
         .sidebar {
             width: 280px;
-            background: #fff;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             padding: 1.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
             height: fit-content;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .user-info {
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 1.5rem;
         }
 
         .user-name {
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #fff, #a7a7a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .user-type {
-            font-size: 0.875rem;
-            color: #6c757d;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
         }
 
-        /* Filters */
-        .filters {
-            margin-top: 1.5rem;
-        }
-
+        /* Filter Styles */
         .filter-group {
             margin-bottom: 1.5rem;
         }
 
         .filter-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: #2c3e50;
+            font-size: 1rem;
+            font-weight: 500;
             margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .price-range {
@@ -139,51 +154,61 @@
         .price-range input {
             width: 100%;
             padding: 0.5rem;
-            border: 1px solid #e9ecef;
-            border-radius: 4px;
-            font-size: 0.875rem;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 0.9rem;
         }
 
-        /* Main Content */
+        /* Products Grid Styles */
         .main-content {
             flex: 1;
         }
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        /* Product Card */
         .product-card {
-            background: #fff;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
 
         .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
         }
-
+                /* Product Card Details */
         .product-image {
             width: 100%;
             height: 200px;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
 
         .product-info {
-            padding: 1.25rem;
+            padding: 1.5rem;
         }
 
         .product-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #a7a7a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .price-container {
@@ -196,94 +221,82 @@
         .product-price {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #4a90e2;
+            color: #4facfe;
         }
 
         .stock-info {
-            font-size: 0.875rem;
-            color: #6c757d;
-            background: #f8f9fa;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: rgba(79, 172, 254, 0.2);
+            color: #4facfe;
         }
 
         .product-details {
-            font-size: 0.875rem;
-            color: #6c757d;
-            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
             line-height: 1.5;
+            margin-bottom: 1.5rem;
         }
 
-        /* Buttons */
         .action-buttons {
             display: flex;
-            gap: 0.75rem;
+            gap: 1rem;
         }
 
         .action-buttons button {
             flex: 1;
             padding: 0.75rem;
             border: none;
-            border-radius: 6px;
-            font-size: 0.875rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
         }
 
         .add-to-cart {
-            background: #4a90e2;
-            color: #fff;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            color: white;
         }
 
         .add-to-cart:hover {
-            background: #357abd;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
         }
 
         .download-model {
-            background: #f8f9fa;
-            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            backdrop-filter: blur(5px);
         }
 
         .download-model:hover {
-            background: #e9ecef;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         /* Loading Skeleton */
         .skeleton {
-            background: #f8f9fa;
-            background: linear-gradient(110deg, #f8f9fa 8%, #f1f3f5 18%, #f8f9fa 33%);
-            background-size: 200% 100%;
-            animation: shine 1.5s linear infinite;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.1) 25%,
+                rgba(255, 255, 255, 0.15) 37%,
+                rgba(255, 255, 255, 0.1) 63%
+            );
+            background-size: 400% 100%;
+            animation: skeleton-loading 1.4s ease infinite;
         }
 
-        @keyframes shine {
-            to {
-                background-position-x: -200%;
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0 50%;
             }
         }
 
-        .skeleton-card {
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .skeleton-image {
-            height: 200px;
-            width: 100%;
-        }
-
-        .skeleton-text {
-            height: 20px;
-            margin: 1rem;
-            border-radius: 4px;
-        }
-
-        .skeleton-text.short {
-            width: 60%;
-        }
-
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .container {
                 padding: 1rem;
@@ -306,26 +319,58 @@
             .search-bar {
                 margin: 0 1rem;
             }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            z-index: 1000;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="logo">IndustryHub</div>
-        <div class="search-bar">
-            <input type="text" placeholder="Ürün ara..." id="searchInput">
-        </div>
-        <div class="header-right">
-            <a href="#" class="cart-link">
-                <i class="fas fa-shopping-cart"></i> 
-                Sepet
-                <span class="cart-count">0</span>
+        <div class="header-content">
+            <a href="/" class="logo">
+                <div class="logo-icon">IH</div>
+                <span class="logo-text">IndustryHub</span>
             </a>
-            <a href="#" class="user-link">
-                <i class="fas fa-user"></i>
-                <span class="user-name">Hesabım</span>
-            </a>
+            <div class="search-bar">
+                <input type="text" placeholder="Ürün ara..." id="searchInput">
+            </div>
+            <div class="header-right">
+                <a href="#" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i> 
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="#" class="user-link">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -371,70 +416,9 @@
     </div>
 
     <script>
-        // API URL'i
-        const API_URL = 'https://eticaret-glif.onrender.com/api';
-        let currentUser = null;
+        // Mevcut JavaScript kodunuzu buraya ekleyin, ancak ürün kartı oluşturma
+        // fonksiyonunu güncelleyelim:
 
-        // Sayfa yüklendiğinde çalışacak fonksiyonlar
-        document.addEventListener('DOMContentLoaded', async () => {
-            if (checkAuth()) {
-                showLoading();
-                try {
-                    await Promise.all([
-                        loadProducts(),
-                        getUserInfo(),
-                        updateCartCount()
-                    ]);
-                } catch (error) {
-                    showError('Veriler yüklenirken bir hata oluştu');
-                } finally {
-                    hideLoading();
-                }
-                setupEventListeners();
-            }
-        });
-
-        // Loading göster/gizle
-        function showLoading() {
-            const container = document.getElementById('productsContainer');
-            container.innerHTML = Array(6).fill(0).map(() => `
-                <div class="skeleton-card">
-                    <div class="skeleton skeleton-image"></div>
-                    <div class="skeleton skeleton-text"></div>
-                    <div class="skeleton skeleton-text short"></div>
-                </div>
-            `).join('');
-        }
-
-        function hideLoading() {
-            document.getElementById('productsContainer').innerHTML = '';
-        }
-
-        // Ürünleri yükleme
-        async function loadProducts(filters = {}) {
-            try {
-                let url = `${API_URL}/products`;
-                if (Object.keys(filters).length > 0) {
-                    const params = new URLSearchParams(filters);
-                    url += `?${params.toString()}`;
-                }
-
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Ürünler yüklenemedi');
-                
-                const products = await response.json();
-                displayProducts(products);
-            } catch (error) {
-                showError(error.message);
-            }
-        }
-
-        // Ürünleri görüntüleme
         function displayProducts(products) {
             const productsGrid = document.querySelector('.products-grid');
             productsGrid.innerHTML = '';
@@ -459,11 +443,11 @@
                             </div>
                             <div class="action-buttons">
                                 <button class="add-to-cart" onclick="addToCart('${product._id}')">
-                                    Sepete Ekle
+                                    <i class="fas fa-shopping-cart"></i> Sepete Ekle
                                 </button>
                                 ${product.modelFormats ? 
                                     `<button class="download-model" onclick="downloadModel('${product._id}')">
-                                        3D Model
+                                        <i class="fas fa-cube"></i> 3D Model
                                     </button>` : ''}
                             </div>
                         </div>
@@ -473,128 +457,32 @@
             });
         }
 
-        // Sepete ekleme
-        async function addToCart(productId) {
-            try {
-                const response = await fetch(`${API_URL}/cart/add`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: JSON.stringify({ productId, quantity: 1 })
-                });
-
-                if (!response.ok) throw new Error('Ürün sepete eklenemedi');
-
-                await updateCartCount();
-                showNotification('Ürün sepete eklendi');
-            } catch (error) {
-                showError(error.message);
-            }
+        // Loading skeleton güncellemesi
+        function showLoading() {
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = Array(6).fill(0).map(() => `
+                <div class="product-card">
+                    <div class="skeleton" style="height: 200px;"></div>
+                    <div class="product-info">
+                        <div class="skeleton" style="height: 24px; width: 80%; margin-bottom: 1rem;"></div>
+                        <div class="skeleton" style="height: 32px; width: 50%; margin-bottom: 1rem;"></div>
+                        <div class="skeleton" style="height: 60px; margin-bottom: 1rem;"></div>
+                        <div class="skeleton" style="height: 40px;"></div>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // Sepet sayısını güncelle
-        async function updateCartCount() {
-            try {
-                const response = await fetch(`${API_URL}/cart`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Sepet bilgisi alınamadı');
-
-                const cart = await response.json();
-                const count = cart.items.reduce((total, item) => total + item.quantity, 0);
-                document.querySelector('.cart-count').textContent = count;
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        // Kullanıcı bilgilerini getir
-        async function getUserInfo() {
-            try {
-                const response = await fetch(`${API_URL}/auth/me`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                
-                if (!response.ok) throw new Error('Kullanıcı bilgileri alınamadı');
-
-                currentUser = await response.json();
-                displayUserInfo(currentUser);
-            } catch (error) {
-                showError(error.message);
-            }
-        }
-
-        // Kullanıcı bilgilerini görüntüle
-        function displayUserInfo(user) {
-            document.querySelector('.user-info').innerHTML = `
-                <div class="user-name">${user.name}</div>
-                <div class="user-type">${user.userType}</div>
-                ${user.profession ? `<div class="user-profession">${user.profession}</div>` : ''}
-            `;
-        }
-
-        // Event Listeners
-        function setupEventListeners() {
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', debounce(async (e) => {
-                const searchTerm = e.target.value.trim();
-                if (searchTerm) {
-                    await loadProducts({ search: searchTerm });
-                } else {
-                    await loadProducts();
-                }
-            }, 300));
-
-            const minPrice = document.getElementById('minPrice');
-            const maxPrice = document.getElementById('maxPrice');
-            
-            [minPrice, maxPrice].forEach(input => {
-                input.addEventListener('change', async () => {
-                    const filters = {};
-                    if (minPrice.value) filters.minPrice = minPrice.value;
-                    if (maxPrice.value) filters.maxPrice = maxPrice.value;
-                    await loadProducts(filters);
-                });
-            });
-        }
-
-        // Yardımcı fonksiyonlar
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
+        // Bildirim fonksiyonu güncellemesi
         function showNotification(message) {
-            // Bildirim gösterme fonksiyonu
-            alert(message); // Basit bir alert, daha şık bir bildirim sistemi eklenebilir
-        }
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
 
-        function showError(message) {
-            // Hata gösterme fonksiyonu
-            alert('Hata: ' + message); // Basit bir alert, daha şık bir hata gösterimi eklenebilir
-        }
-
-        function checkAuth() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location.href = '/login.html';
-                return false;
-            }
-            return true;
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
         }
     </script>
 </body>
