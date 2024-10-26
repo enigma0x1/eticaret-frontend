@@ -575,15 +575,17 @@ async function saveProduct() {
     const formData = new FormData();
     const productId = document.getElementById('productId').value;
 
-    formData.append('name', document.getElementById('product-name').value);
+    // Product modeline uygun alanları ekle
+    formData.append('title', document.getElementById('product-name').value); // name yerine title
     formData.append('description', document.getElementById('product-description').value);
     formData.append('price', document.getElementById('product-price').value);
     formData.append('category', document.getElementById('product-category').value);
-    formData.append('stock', document.getElementById('product-stock').value);
+    formData.append('modelFormats', ['3D', 'CAD']); // Sabit değerler ekledim, ihtiyaca göre değiştirilebilir
 
+    // Image dosyası
     const images = document.getElementById('product-images').files;
-    for (let i = 0; i < images.length; i++) {
-        formData.append('images', images[i]);
+    if (images.length > 0) {
+        formData.append('image', images[0]); // Tek bir image dosyası gönder
     }
 
     try {
