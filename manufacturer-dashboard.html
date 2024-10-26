@@ -504,18 +504,22 @@
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
-
+    
             if (response.ok) {
                 localStorage.removeItem('token');
+                localStorage.removeItem('userType');
                 window.location.href = 'login.html';
             } else {
                 throw new Error('Çıkış yapılamadı');
             }
         } catch (error) {
-            showError('Çıkış yapılırken hata oluştu');
+            console.error('Logout error:', error);
+            // Hata olsa bile local storage'ı temizle ve yönlendir
+            localStorage.removeItem('token');
+            localStorage.removeItem('userType');
+            window.location.href = 'login.html';
         }
     }
-
     // Yardımcı fonksiyonlar
     function showNotification(message, type = 'success') {
         const toast = document.createElement('div');
