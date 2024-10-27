@@ -844,27 +844,30 @@
             }
         
             async fetchProducts(page, limit = 10) {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve({
-                            products: Array.from({ length: limit }, (_, i) => ({
-                                id: (page - 1) * limit + i + 1,
-                                image: `https://via.placeholder.com/400x300?text=Product${(page - 1) * limit + i + 1}`,
-                                category: ['Endüstriyel Ekipmanlar', 'Makine Parçaları', 'Otomasyon Sistemleri'][Math.floor(Math.random() * 3)],
-                                subCategory: ['Valfler', 'Pompalar', 'Sensörler'][Math.floor(Math.random() * 3)],
-                                title: `Endüstriyel Ürün ${(page - 1) * limit + i + 1}`,
-                                price: Math.floor(Math.random() * 10000) + 1000,
-                                rating: (Math.random() * 2 + 3).toFixed(1),
-                                stock: Math.floor(Math.random() * 50) + 1,
-                                modelFormats: ['STL', 'STEP', 'OBJ'].slice(0, Math.floor(Math.random() * 3) + 1),
-                                specs: ['Teknik Döküman', '3B Model', 'Montaj Kılavuzu'].slice(0, Math.floor(Math.random() * 3) + 1),
-                                description: 'Yüksek kaliteli endüstriyel ürün',
-                                bestSeller: Math.random() > 0.7
-                            })),
-                            hasMore: page < 5
-                        });
-                    }, 1000);
-                });
+                try {
+                    const response = await fetch(`/api/products?page=${page}&limit=${limit}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+            
+                    if (!response.ok) {
+                        throw new Error('Ürünler yüklenirken bir hata oluştu');
+                    }
+            
+                    const data = await response.json();
+                    return {
+                        products: data.products,
+                        hasMore: data.hasMore || data.products.length === limit
+                    };
+                } catch (error) {
+                    this.handleError(error);
+                    return {
+                        products: [],
+                        hasMore: false
+                    };
+                }
             }
         
             async loadInitialProducts() {
@@ -982,24 +985,31 @@
                 select.disabled = false;
             }
         
-            handleSearch(searchTerm) {
+            async handleSearch(searchTerm) {
                 if (!searchTerm.trim()) {
                     this.filteredProducts = [...this.products];
                     this.loadProducts();
                     return;
                 }
-        
-                const searchIn = Array.from(document.querySelectorAll('input[name="searchIn"]:checked'))
-                    .map(input => input.value);
-        
-                this.filteredProducts = this.products.filter(product => {
-                    return searchIn.some(field => {
-                        const value = product[field]?.toString().toLowerCase() || '';
-                        return value.includes(searchTerm.toLowerCase());
+            
+                try {
+                    const response = await fetch(`/api/products/search?q=${encodeURIComponent(searchTerm)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
                     });
-                });
-        
-                this.loadProducts();
+            
+                    if (!response.ok) {
+                        throw new Error('Arama yapılırken bir hata oluştu');
+                    }
+            
+                    const data = await response.json();
+                    this.filteredProducts = data.products;
+                    this.loadProducts();
+                } catch (error) {
+                    this.handleError(error);
+                }
             }
         
             applyPriceFilter() {
@@ -1169,20 +1179,30 @@
                 return html;
             }
         
-            addToCart(productId) {
-                const product = this.products.find(p => p.id === productId);
-                if (!product) return;
-        
-                const existingItem = this.cart.find(item => item.id === productId);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    this.cart.push({ ...product, quantity: 1 });
+            async addToCart(productId) {
+                try {
+                    const response = await fetch('/api/cart/add', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            productId,
+                            quantity: 1
+                        })
+                    });
+            
+                    if (!response.ok) {
+                        throw new Error('Ürün sepete eklenirken bir hata oluştu');
+                    }
+            
+                    const result = await response.json();
+                    this.cart = result.cart;
+                    this.updateCartCount();
+                    this.showNotification('Ürün sepete eklendi');
+                } catch (error) {
+                    this.handleError(error);
                 }
-        
-                utils.storage.set('cart', this.cart);
-                this.updateCartCount();
-                this.showNotification('Ürün sepete eklendi');
             }
         
             viewProduct(productId) {
