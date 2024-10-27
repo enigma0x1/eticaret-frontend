@@ -857,7 +857,346 @@
                 hideLoading();
             }
         }
-
+        // Ürün tablosunu güncelleme fonksiyonu
+        function updateProductsTable(products) {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '';
+        
+            products.forEach(product => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <input type="checkbox" class="form-check-input" value="${product._id}">
+                    </td>
+                    <td>
+                        <img src="${product.image}" alt="${product.title}" class="product-image">
+                    </td>
+                    <td>${product.title}</td>
+                    <td>${product.category}</td>
+                    <td>${formatPrice(product.price)}</td>
+                    <td>
+                        <span class="badge ${getStockBadgeClass(product.stock)}">${product.stock}</span>
+                    </td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(product.status)}">${formatStatus(product.status)}</span>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-outline-primary" onclick="editProduct('${product._id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${product._id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        
+            // DataTable'ı başlat veya yenile
+            if ($.fn.DataTable.isDataTable('#productsTable')) {
+                $('#productsTable').DataTable().destroy();
+            }
+            
+            $('#productsTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Turkish.json'
+                },
+                responsive: true,
+                order: [[2, 'asc']] // Ürün adına göre sırala
+            });
+        }
+        
+        // Son siparişleri güncelleme fonksiyonu
+        function updateRecentOrders(orders) {
+            const tbody = document.getElementById('recentOrdersList');
+            tbody.innerHTML = '';
+        
+            orders.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>#${order.orderNumber}</td>
+                    <td>${order.customerName}</td>
+                    <td>${formatPrice(order.total)}</td>
+                    <td>
+                        <span class="badge ${getOrderStatusBadgeClass(order.status)}">
+                            ${formatOrderStatus(order.status)}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Stok uyarılarını güncelleme fonksiyonu
+        function updateStockAlerts(alerts) {
+            const container = document.getElementById('stockAlertsList');
+            container.innerHTML = '';
+        
+            if (alerts.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Stok uyarısı bulunmuyor.</div>';
+                return;
+            }
+        
+            alerts.forEach(alert => {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-warning d-flex justify-content-between align-items-center';
+                alertDiv.innerHTML = `
+                    <div>
+                        <strong>${alert.productName}</strong>
+                        <br>
+                        <small>Mevcut stok: ${alert.currentStock}</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-warning" onclick="updateStock('${alert.productId}')">
+                        Stok Güncelle
+                    </button>
+                `;
+                container.appendChild(alertDiv);
+            });
+        }
+        
+        // Ürün düzenleme fonksiyonu
+        async function editProduct(productId) {
+            try {
+                showLoading();
+                const response = await authenticatedFetch(`${API_URL}/products/${productId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Ürün bilgileri alınamadı');
+                }
+        
+                const product = await response.json();
+                
+                // Form alanlarını doldur
+                document.getElementById('productId').value = product._id;
+                document.getElementById('productName').value = product.title;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productStock').value = product.stock;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productStatus').value = product.status;
+        
+                // Görsel önizleme
+                if (product.image) {
+                    document.getElementById('imagePreview').innerHTML = `
+                        <img src="${product.image}" class="preview-image">
+                    `;
+                }
+        
+                // Modal başlığını güncelle
+                document.getElementById('productModalTitle').textContent = 'Ürün Düzenle';
+                
+                // Modalı aç
+                productModal.show();
+        
+            } catch (error) {
+                console.error('Edit product error:', error);
+                showNotification('Ürün düzenleme sırasında bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Ürün silme fonksiyonu
+        async function deleteProduct(productId) {
+            try {
+                const result = await Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: "Bu işlem geri alınamaz!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Evet, sil!',
+                    cancelButtonText: 'İptal'
+                });
+        
+                if (result.isConfirmed) {
+                    showLoading();
+                    const response = await authenticatedFetch(`${API_URL}/products/${productId}`, {
+                        method: 'DELETE'
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Ürün silinemedi');
+                    }
+        
+                    showNotification('Ürün başarıyla silindi', 'success');
+                    loadProducts();
+                    loadDashboard();
+                }
+            } catch (error) {
+                console.error('Delete product error:', error);
+                showNotification('Ürün silinirken bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Stok güncelleme fonksiyonu
+        async function updateStock(productId) {
+            try {
+                const { value: newStock } = await Swal.fire({
+                    title: 'Stok Güncelle',
+                    input: 'number',
+                    inputLabel: 'Yeni stok miktarı',
+                    inputPlaceholder: 'Stok miktarını girin',
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        if (!value || value < 0) {
+                            return 'Geçerli bir stok miktarı girin!';
+                        }
+                    }
+                });
+        
+                if (newStock) {
+                    showLoading();
+                    const response = await authenticatedFetch(`${API_URL}/products/${productId}/stock`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ stock: newStock })
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Stok güncellenemedi');
+                    }
+        
+                    showNotification('Stok başarıyla güncellendi', 'success');
+                    loadProducts();
+                    loadDashboard();
+                }
+            } catch (error) {
+                console.error('Update stock error:', error);
+                showNotification('Stok güncellenirken bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Yardımcı fonksiyonlar
+        function formatPrice(price) {
+            return new Intl.NumberFormat('tr-TR', {
+                style: 'currency',
+                currency: 'TRY'
+            }).format(price);
+        }
+        
+        function formatStatus(status) {
+            const statusMap = {
+                'active': 'Aktif',
+                'inactive': 'Pasif',
+                'out_of_stock': 'Stok Dışı'
+            };
+            return statusMap[status] || status;
+        }
+        
+        function formatOrderStatus(status) {
+            const statusMap = {
+                'pending': 'Beklemede',
+                'processing': 'İşleniyor',
+                'shipped': 'Kargoda',
+                'delivered': 'Teslim Edildi',
+                'cancelled': 'İptal Edildi'
+            };
+            return statusMap[status] || status;
+        }
+        
+        function getStockBadgeClass(stock) {
+            if (stock <= 0) return 'bg-danger';
+            if (stock <= 10) return 'bg-warning';
+            return 'bg-success';
+        }
+        
+        function getStatusBadgeClass(status) {
+            const classMap = {
+                'active': 'bg-success',
+                'inactive': 'bg-secondary',
+                'out_of_stock': 'bg-danger'
+            };
+            return classMap[status] || 'bg-secondary';
+        }
+        
+        function getOrderStatusBadgeClass(status) {
+            const classMap = {
+                'pending': 'bg-warning',
+                'processing': 'bg-info',
+                'shipped': 'bg-primary',
+                'delivered': 'bg-success',
+                'cancelled': 'bg-danger'
+            };
+            return classMap[status] || 'bg-secondary';
+        }
+        
+        // Ürün filtreleme fonksiyonu
+        function filterProducts() {
+            const category = document.getElementById('productFilterCategory').value;
+            const status = document.getElementById('productFilterStatus').value;
+            const minPrice = document.getElementById('priceMin').value;
+            const maxPrice = document.getElementById('priceMax').value;
+            const sort = document.getElementById('productSort').value;
+        
+            // DataTable filtreleme
+            const table = $('#productsTable').DataTable();
+            
+            // Custom filtreleme fonksiyonu
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex) {
+                    const productCategory = data[3]; // Kategori kolonu
+                    const productStatus = data[6]; // Durum kolonu
+                    const productPrice = parseFloat(data[4].replace(/[^\d.-]/g, '')); // Fiyat kolonu
+                    
+                    if (category && productCategory !== category) return false;
+                    if (status && !productStatus.includes(status)) return false;
+                    if (minPrice && productPrice < minPrice) return false;
+                    if (maxPrice && productPrice > maxPrice) return false;
+                    
+                    return true;
+                }
+            );
+        
+            // Sıralama
+            switch(sort) {
+                case 'newest':
+                    table.order([2, 'desc']).draw();
+                    break;
+                case 'oldest':
+                    table.order([2, 'asc']).draw();
+                    break;
+                case 'price_asc':
+                    table.order([4, 'asc']).draw();
+                    break;
+                case 'price_desc':
+                    table.order([4, 'desc']).draw();
+                    break;
+            }
+        
+            table.draw();
+        }
+        
+        // Dosya yükleme işleyicisi
+        function handleFileUpload(files) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+        
+            Array.from(files).forEach(file => {
+                if (!file.type.startsWith('image/')) {
+                    showNotification('Lütfen sadece resim dosyası yükleyin', 'warning');
+                    return;
+                }
+        
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
         // Ürün kaydetme
         async function saveProduct() {
             try {
