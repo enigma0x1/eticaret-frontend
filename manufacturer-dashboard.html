@@ -334,12 +334,14 @@ async function authenticatedFetch(url, options = {}) {
         const response = await fetch(url, {
             ...options,
             headers: {
-                ...options.headers,
-                'Authorization': `Bearer ${token}`
-            }
+                'Authorization': `Bearer ${token}`,
+                ...options.headers
+            },
+            credentials: 'include'
         });
 
         if (response.status === 401) {
+            localStorage.clear();
             window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
             return null;
         }
@@ -588,32 +590,32 @@ async function saveProduct() {
     }
 
     try {
-        // URL'leri düzelttik
+        // URL'yi düzelttik
         const url = productId ? 
-            `${API_URL}/manufacturer/products/${productId}` : 
-            `${API_URL}/manufacturer/products`;
+            `${API_URL}/products/${productId}` : 
+            `${API_URL}/products`;
         
-        console.log('Gönderilen veriler:', {
-            title: formData.get('title'),
-            description: formData.get('description'),
-            price: formData.get('price'),
-            category: formData.get('category'),
-            hasImage: !!imageFile
-        });
+        console.log('Sending request to:', url); // Debug için
+        console.log('Form data:', Object.fromEntries(formData.entries())); // Debug için
 
         const response = await authenticatedFetch(url, {
             method: productId ? 'PUT' : 'POST',
             body: formData
         });
 
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Sunucu hatası');
+        }
+
         const data = await response.json();
-        console.log('Server response:', data); // Debug için
+        console.log('Server response:', data);
 
         if (data.success) {
             showNotification(productId ? 'Ürün güncellendi' : 'Ürün eklendi');
             addProductModal.hide();
-            loadDashboard(); // Dashboard'ı güncelle
-            loadProducts(); // Ürün listesini güncelle
+            loadDashboard();
+            loadProducts();
         } else {
             throw new Error(data.message || 'İşlem başarısız');
         }
