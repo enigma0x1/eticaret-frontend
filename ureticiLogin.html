@@ -531,8 +531,36 @@
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
-    const API_URL = 'https://eticaret-glif.onrender.com/api';
-
+    // API ve Auth Servisleri
+    const ApiService = {
+        API_URL: 'https://eticaret-glif.onrender.com/api',
+    
+        async verifyToken(token) {
+            try {
+                const response = await fetch(`${this.API_URL}/auth/verify-token`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                return await response.json();
+            } catch (error) {
+                throw error;
+            }
+        },
+    
+        setAuthData(data) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userType', data.userType);
+            localStorage.setItem('user', JSON.stringify(data.user));
+        },
+    
+        clearAuthData() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userType');
+            localStorage.removeItem('user');
+        }
+    };
+    
     // Toast Bildirimleri için Yardımcı Fonksiyon
     function showToast(message, type = 'success') {
         Toastify({
@@ -548,22 +576,31 @@
             }
         }).showToast();
     }
-
+    
     // Sayfa Yüklendiğinde
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const token = localStorage.getItem('token');
         if (token) {
-            window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/categorydashboard.html';
+            try {
+                const verifyResult = await ApiService.verifyToken(token);
+                if (verifyResult.success) {
+                    window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/categorydashboard.html';
+                } else {
+                    ApiService.clearAuthData();
+                }
+            } catch (error) {
+                ApiService.clearAuthData();
+            }
         }
         initializeFileUpload();
     });
-
+    
     // Form Toggle
     function toggleForm() {
         document.getElementById('loginForm').classList.toggle('active');
         document.getElementById('signupForm').classList.toggle('active');
     }
-
+    
     // Şifre Görünürlüğü Toggle
     function togglePasswordVisibility(inputId, icon) {
         const input = document.getElementById(inputId);
@@ -577,7 +614,7 @@
             icon.classList.add('fa-eye');
         }
     }
-
+    
     // Şifre Gücü Kontrolü
     function checkPasswordStrength(password) {
         const strengthBar = document.querySelector('.password-strength-bar');
@@ -588,7 +625,7 @@
         if (password.match(/[0-9]+/)) strength += 1;
         if (password.match(/[$@#&!]+/)) strength += 1;
         if (password.length >= 8) strength += 1;
-
+    
         strengthBar.style.width = (strength * 20) + '%';
         
         switch(strength) {
@@ -610,39 +647,39 @@
                 break;
         }
     }
-
+    
     // Dosya Yükleme İşlemleri
     function initializeFileUpload() {
         const dropZone = document.querySelector('.file-input-wrapper');
         const fileInput = document.getElementById('companyDocs');
-
+    
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, preventDefaults, false);
         });
-
+    
         function preventDefaults(e) {
             e.preventDefault();
             e.stopPropagation();
         }
-
+    
         ['dragenter', 'dragover'].forEach(eventName => {
             dropZone.addEventListener(eventName, highlight, false);
         });
-
+    
         ['dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, unhighlight, false);
         });
-
+    
         function highlight(e) {
             dropZone.classList.add('highlight');
         }
-
+    
         function unhighlight(e) {
             dropZone.classList.remove('highlight');
         }
-
+    
         dropZone.addEventListener('drop', handleDrop, false);
-
+    
         function handleDrop(e) {
             const dt = e.dataTransfer;
             const files = dt.files;
@@ -650,7 +687,7 @@
             handleFileSelect({ target: fileInput });
         }
     }
-
+    
     function handleFileSelect(event) {
         const fileNameElement = document.getElementById('fileName');
         const files = event.target.files;
@@ -665,44 +702,39 @@
             fileNameElement.textContent = '';
         }
     }
-
-    // Login İşlemi
+    
     // Login İşlemi
     async function handleLogin(event) {
         event.preventDefault();
         
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
         const button = event.target.querySelector('button');
-        
         button.classList.add('loading');
         
         try {
-            const response = await fetch(`${API_URL}/auth/manufacturer/login`, { // URL güncellendi
+            const response = await fetch(`${ApiService.API_URL}/auth/manufacturer/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    email,
-                    password
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value
                 })
             });
     
             const data = await response.json();
     
             if (data.success) {
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('userType', 'manufacturer');
-                localStorage.setItem('user', JSON.stringify(data.user));
-                
+                ApiService.setAuthData(data);
                 showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
                 
                 setTimeout(() => {
-                    window.location.href =  'https://enigma0x1.github.io/eticaret-frontend/categorydashboard.html';
+                    window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/categorydashboard.html';
                 }, 1500);
             } else {
-                showToast(data.message || 'Giriş başarısız!', 'error');
+                showToast(data.message || 'Giriş başarısız!', '
+    
+    error');
             }
         } catch (error) {
             console.error('Login error:', error);
@@ -716,33 +748,23 @@
     async function handleSignup(event) {
         event.preventDefault();
         
-        const companyName = document.getElementById('companyName').value;
-        const taxNumber = document.getElementById('taxNumber').value;
-        const businessArea = document.getElementById('businessArea').value;
-        const address = document.getElementById('address').value;
-        const contactName = document.getElementById('contactName').value;
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        const companyDocs = document.getElementById('companyDocs').files;
-        
         const button = event.target.querySelector('button');
         button.classList.add('loading');
     
         const formData = new FormData();
-        formData.append('companyName', companyName);
-        formData.append('taxNumber', taxNumber);
-        formData.append('businessArea', businessArea);
-        formData.append('address', address);
-        formData.append('contactName', contactName);
-        formData.append('email', email);
-        formData.append('password', password);
+        const fields = ['companyName', 'taxNumber', 'businessArea', 'address', 'contactName', 'email', 'password'];
+        
+        fields.forEach(field => {
+            formData.append(field, document.getElementById(field === 'email' ? 'signupEmail' : field === 'password' ? 'signupPassword' : field).value);
+        });
     
-        for (let i = 0; i < companyDocs.length; i++) {
-            formData.append('documents', companyDocs[i]); // 'companyDocs' yerine 'documents' kullanıldı
+        const files = document.getElementById('companyDocs').files;
+        for (let i = 0; i < files.length; i++) {
+            formData.append('documents', files[i]);
         }
     
         try {
-            const response = await fetch(`${API_URL}/auth/manufacturer/register`, { // URL güncellendi
+            const response = await fetch(`${ApiService.API_URL}/auth/manufacturer/register`, {
                 method: 'POST',
                 body: formData
             });
@@ -762,7 +784,7 @@
             button.classList.remove('loading');
         }
     }
-
+    
     // Sosyal Medya ile Giriş
     function handleSocialLogin(platform) {
         showToast(`${platform} ile giriş yakında aktif olacak!`, 'info');
