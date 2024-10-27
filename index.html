@@ -33,7 +33,97 @@
             padding: 40px 20px;
         }
 
-        /* Hero Section */
+        /* Header Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .main-nav .nav-list {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-list a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-list a:hover {
+            color: white;
+        }
+
+        .auth-section {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+                /* Hero Section */
         .hero {
             height: 100vh;
             display: flex;
@@ -42,6 +132,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            margin-top: 80px; /* Header yüksekliği kadar margin */
         }
 
         .hero::before {
@@ -55,12 +146,8 @@
         }
 
         @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .hero-content {
@@ -82,44 +169,156 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
-        /* Logo */
-        .logo-container {
-            margin-bottom: 20px;
-            padding: 20px;
+        /* Features Section */
+        .features {
+            padding: 80px 0;
         }
 
-        .logo {
-            font-size: 40px;
-            color: white;
-            font-weight: 700;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            transform: rotate(45deg);
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover .logo-icon {
-            transform: rotate(225deg);
-        }
-
-        .logo-text {
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
             background: linear-gradient(to right, #fff, #a7a7a7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 40px 20px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            color: #4facfe;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .feature-card ul {
+            list-style: none;
+        }
+
+        .feature-card ul li {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-card ul li::before {
+            content: '→';
+            margin-right: 10px;
+            color: #4facfe;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 40px 20px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Trusted Partners Section */
+        .trusted-partners {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .partners-slider {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .partners-track {
+            display: flex;
+            animation: scroll 30s linear infinite;
+            gap: 2rem;
+        }
+
+        .partner-logo {
+            min-width: 150px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .partner-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .partner-logo:hover img {
+            opacity: 1;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-150px * 10)); }
         }
 
         /* Stats Section */
@@ -151,139 +350,6 @@
         .stat-label {
             color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
-        }
-
-        /* Portal Grid */
-        .portal-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-            padding: 20px;
-            margin-top: 40px;
-        }
-
-        .portal-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            transition: all 0.4s ease;
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transform-style: preserve-3d;
-        }
-
-        .portal-card:hover {
-            transform: translateY(-10px) rotateX(5deg);
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .portal-image {
-            width: 100%;
-            height: 200px;
-            position: relative;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .portal-card:nth-child(1) .portal-image {
-            background-image: url('https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?auto=format&fit=crop&w=800');
-        }
-
-        .portal-card:nth-child(2) .portal-image {
-            background-image: url('https://images.unsplash.com/photo-1581091226825-c6a89e7e4801?auto=format&fit=crop&w=800');
-        }
-
-        .portal-card:nth-child(3) .portal-image {
-            background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800');
-        }
-
-        .portal-image::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
-        }
-
-        .portal-content {
-            padding: 30px;
-            color: white;
-        }
-
-        .portal-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            background: linear-gradient(to right, #fff, #a7a7a7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .portal-description {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .portal-features {
-            list-style: none;
-            margin-bottom: 30px;
-        }
-
-        .portal-features li {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-        }
-
-        .portal-features li::before {
-            content: '→';
-            margin-right: 10px;
-            color: #4facfe;
-        }
-
-        .portal-button {
-            display: inline-block;
-            padding: 12px 35px;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 500;
-            text-align: center;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .portal-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: 0.5s;
-        }
-
-        .portal-button:hover::before {
-            left: 100%;
-        }
-
-        .portal-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
         }
 
         /* Footer */
@@ -326,126 +392,180 @@
                 font-size: 1.2rem;
             }
 
-            .portal-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .logo {
-                font-size: 30px;
+            .main-nav {
+                display: none;
             }
 
-            .logo-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
+            .auth-section {
+                display: none;
             }
 
-            .stats {
-                grid-template-columns: 1fr;
+            .mobile-menu-btn {
+                display: block;
             }
         }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .portal-card {
-            animation: fadeIn 0.6s ease forwards;
-            opacity: 0;
-        }
-
-        .portal-card:nth-child(1) { animation-delay: 0.2s; }
-        .portal-card:nth-child(2) { animation-delay: 0.4s; }
-        .portal-card:nth-child(3) { animation-delay: 0.6s; }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="/" class="logo">
+                    <div class="logo-icon">IH</div>
+                    <span class="logo-text">IndustryHub</span>
+                </a>
+            </div>
+
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="#features">Özellikler</a></li>
+                    <li><a href="#solutions">Çözümler</a></li>
+                    <li><a href="#partners">İş Ortakları</a></li>
+                    <li><a href="#about">Hakkımızda</a></li>
+                    <li><a href="#contact">İletişim</a></li>
+                </ul>
+            </nav>
+
+            <div class="auth-section">
+                <a href="/login" class="login-btn">Giriş Yap</a>
+                <a href="/register" class="register-btn">Ücretsiz Başla</a>
+            </div>
+        </div>
+    </header>
+
     <div class="container">
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <div class="logo-container">
-                    <div class="logo">
-                        <div class="logo-icon">IH</div>
-                        <span class="logo-text">IndustryHub</span>
-                    </div>
-                </div>
                 <h1 class="hero-title">Endüstrinin Geleceği Burada</h1>
                 <p class="hero-subtitle">B2B çözümlerle işinizi büyütün</p>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <h2 class="section-title">IndustryHub'da Neler Var?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h3>E-Sanayi</h3>
+                    <p>Endüstriyel parça ve komponent pazarı. 50.000+ ürün, 1000+ tedarikçi ile profesyonel üretim çözümleri.</p>
+                    <ul>
+                        <li>Kalite kontrollü parçalar</li>
+                        <li>Doğrudan tedarikçi bağlantısı</li>
+                        <li>Rekabetçi fiyatlar</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <i class="fas fa-box-open"></i>
+                    <h3>Hazır Ürünler</h3>
+                    <p>10.000+ ürün, 500+ üretici ile doğrudan fabrikadan son kullanıcıya ulaşın.</p>
+                    <ul>
+                        <li>Stoktan hızlı teslimat</li>
+                        <li>Toptan fiyat avantajı</li>
+                        <li>Garanti güvencesi</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <i class="fas fa-drafting-compass"></i>
+                    <h3>CAD Dosyaları</h3>
+                    <p>25.000+ teknik çizim ve 3D model ile profesyonel tasarım desteği.</p>
+                    <ul>
+                        <li>Endüstriyel standartlara uygun</li>
+                        <li>Çoklu format desteği</li>
+                        <li>Özelleştirilebilir modeller</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>İnovasyon Hub</h3>
+                    <p>200+ aktif proje, 50M+ yatırım hacmi ile fikirlerinizi hayata geçirin.</p>
+                    <ul>
+                        <li>Yatırımcı eşleştirme</li>
+                        <li>Proje danışmanlığı</li>
+                        <li>İnovasyon desteği</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works" id="solutions">
+            <h2 class="section-title">Nasıl Çalışır?</h2>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Üyelik Oluşturun</h3>
+                    <p>Size uygun portal üzerinden hesabınızı oluşturun</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Profil Doğrulama</h3>
+                    <p>Şirket belgelerinizle profilinizi doğrulayın</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Keşfedin</h3>
+                    <p>Size özel fırsatları ve çözümleri keşfedin</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>İşbirliği Yapın</h3>
+                    <p>Güvenli platformumuzda iş bağlantıları kurun</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trusted Partners Section -->
+        <section class="trusted-partners" id="partners">
+            <h2 class="section-title">Güvenilir İş Ortaklarımız</h2>
+            <p class="section-subtitle">Türkiye'nin önde gelen şirketleri IndustryHub'ı tercih ediyor</p>
+            
+            <div class="partners-slider">
+                <div class="partners-track">
+                    <div class="partner-logo">
+                        <img src="assets/logos/arcelik.png" alt="Arçelik">
+                    </div>
+                    <div class="partner-logo">
+                        <img src="assets/logos/vestel.png" alt="Vestel">
+                    </div>
+                    <div class="partner-logo">
+                        <img src="assets/logos/istikbal.png" alt="İstikbal">
+                    </div>
+                    <div class="partner-logo">
+                        <img src="assets/logos/bellona.png" alt="Bellona">
+                    </div>
+                    <div class="partner-logo">
+                        <img src="assets/logos/ford-otosan.png" alt="Ford Otosan">
+                    </div>
+                    <!-- Diğer logolar -->
+                </div>
             </div>
         </section>
 
         <!-- Stats Section -->
         <section class="stats">
             <div class="stat-item">
-                <div class="stat-number">10K+</div>
-                <div class="stat-label">Aktif Kullanıcı</div>
+                <div class="stat-number">65K+</div>
+                <div class="stat-label">Toplam Ürün</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">5M+</div>
-                <div class="stat-label">İşlem Hacmi</div>
+                <div class="stat-number">1.5K+</div>
+                <div class="stat-label">Aktif Tedarikçi</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">Ülke</div>
+                <div class="stat-number">200+</div>
+                <div class="stat-label">İnovasyon Projesi</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">50M+</div>
+                <div class="stat-label">Yatırım Hacmi</div>
             </div>
         </section>
-        
-        <!-- Portal Grid -->
-        <div class="portal-grid">
-            <!-- Üretici Portalı -->
-            <div class="portal-card">
-                <div class="portal-image"></div>
-                <div class="portal-content">
-                    <h2 class="portal-title">Üretici Portalı</h2>
-                    <p class="portal-description">Üreticiden üreticiye özel tedarik ağı</p>
-                    <ul class="portal-features">
-                        <li>Toptan parça tedariki</li>
-                        <li>Üretici ağına erişim</li>
-                        <li>Fabrikalar arası iş birliği</li>
-                    </ul>
-                    <a href="https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html" class="portal-button">Üretici Girişi</a>
-                </div>
-            </div>
-
-            <!-- Profesyonel Portalı -->
-            <div class="portal-card">
-                <div class="portal-image"></div>
-                <div class="portal-content">
-                    <h2 class="portal-title">Profesyonel Portalı</h2>
-                    <p class="portal-description">Tasarımcılar ve üreticiler için B2B platformu</p>
-                    <ul class="portal-features">
-                        <li>Endüstriyel tasarım dosyaları</li>
-                        <li>Üretim spesifikasyonları</li>
-                        <li>Direkt üretici bağlantısı</li>
-                    </ul>
-                    <a href="https://enigma0x1.github.io/eticaret-frontend/loginForPro.html" class="portal-button">Profesyonel Girişi</a>
-                </div>
-            </div>
-
-            <!-- Perakende Portalı -->
-            <div class="portal-card">
-                <div class="portal-image"></div>
-                <div class="portal-content">
-                    <h2 class="portal-title">Perakende Portalı</h2>
-                    <p class="portal-description">Kaliteli ürünler, uygun fiyatlar</p>
-                    <ul class="portal-features">
-                        <li>Geniş ürün yelpazesi</li>
-                        <li>Fabrika çıkış fiyatları</li>
-                        <li>Garantili ürünler</li>
-                    </ul>
-                    <a href="/perakende" class="portal-button">Satın Al</a>
-                </div>
-            </div>
-        </div>
 
         <!-- Footer -->
         <footer class="footer">
@@ -462,3 +582,4 @@
     </div>
 </body>
 </html>
+        
