@@ -1205,11 +1205,12 @@
                     form.reportValidity();
                     return;
                 }
-
+        
                 showLoading();
                 const formData = new FormData();
                 const productId = document.getElementById('productId').value;
-
+                const manufacturerId = localStorage.getItem('userId'); // Üretici ID'sini localStorage'dan al
+        
                 // Form verilerini ekle
                 formData.append('title', document.getElementById('productName').value);
                 formData.append('description', document.getElementById('productDescription').value);
@@ -1217,26 +1218,28 @@
                 formData.append('category', document.getElementById('productCategory').value);
                 formData.append('stock', document.getElementById('productStock').value);
                 formData.append('status', document.getElementById('productStatus').value);
-
+                formData.append('manufacturer', manufacturerId); // Üretici ID'sini ekle
+        
                 // Görsel ekle
                 const imageFile = document.getElementById('productImage').files[0];
                 if (imageFile) {
                     formData.append('image', imageFile);
                 }
-
+        
                 const url = productId ? 
                     `${API_URL}/products/${productId}` : 
                     `${API_URL}/products`;
-
+        
                 const response = await authenticatedFetch(url, {
                     method: productId ? 'PUT' : 'POST',
                     body: formData
                 });
-
+        
                 if (!response.ok) {
-                    throw new Error('Ürün kaydedilemedi');
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Ürün kaydedilemedi');
                 }
-
+        
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1247,15 +1250,14 @@
                 } else {
                     throw new Error(result.message);
                 }
-
+        
             } catch (error) {
                 console.error('Save product error:', error);
-                showNotification(error.message, 'error');
+                showNotification(error.message || 'Ürün kaydedilirken bir hata oluştu', 'error');
             } finally {
                 hideLoading();
             }
         }
-
         // Authenticated Fetch Utility
         async function authenticatedFetch(url, options = {}) {
             const token = localStorage.getItem('token');
