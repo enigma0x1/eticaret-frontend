@@ -759,6 +759,8 @@
 
     <script>
        // Utility fonksiyonları
+        const API_URL = 'https://eticaret-glif.onrender.com/api';
+        
         const utils = {
             storage: {
                 set(key, value) {
@@ -806,7 +808,6 @@
         
         class ProductManager {
             constructor() {
-                // Temel özellikler
                 this.products = [];
                 this.filteredProducts = [];
                 this.cart = utils.storage.get('cart') || [];
@@ -832,7 +833,101 @@
                     this.handleError(error);
                 }
             }
+            loadProducts() {
+                const grid = document.getElementById('productGrid');
+                grid.innerHTML = '';
         
+                if (this.filteredProducts.length === 0) {
+                    grid.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-search fa-3x"></i>
+                            <p>Sonuç bulunamadı</p>
+                        </div>
+                    `;
+                    return;
+                }
+        
+                this.filteredProducts.forEach((product, index) => {
+                    const card = this.createProductCard(product);
+                    card.style.animationDelay = `${index * 50}ms`;
+                    grid.appendChild(card);
+                });
+        
+                // Sonsuz scroll için gözlemci ekle
+                const observerTarget = document.createElement('div');
+                observerTarget.className = 'observer-target';
+                grid.appendChild(observerTarget);
+                this.observer.observe(observerTarget);
+            }
+        
+            // createProductCard fonksiyonunu buraya ekleyin
+            createProductCard(product) {
+                const article = document.createElement('article');
+                article.className = 'product-card fade-in';
+                article.innerHTML = `
+                    <div class="product-image-container">
+                        <img src="${product.image}" alt="${product.title}" class="product-image" loading="lazy">
+                        ${product.modelFormats?.length ? `
+                            <span class="model-badge">
+                                <i class="fas fa-cube"></i>
+                                3B Model
+                            </span>
+                        ` : ''}
+                    </div>
+                    <div class="product-content">
+                        <div class="product-category">${product.category}</div>
+                        <h3 class="product-title">${product.title}</h3>
+                        <div class="manufacturer-info">
+                            <i class="fas fa-industry"></i>
+                            <span>Üretici: ${product.manufacturer}</span>
+                        </div>
+                        <div class="product-specs">
+                            ${product.specs?.map(spec => `
+                                <span class="spec-tag">${spec}</span>
+                            `).join('')}
+                        </div>
+                        <div class="product-rating">
+                            ${this.generateRatingStars(product.rating)}
+                            <span class="stock-info">${product.stock} adet stokta</span>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">${utils.formatPrice(product.price)}</div>
+                            <div class="product-actions">
+                                <button class="btn btn-secondary" onclick="productManager.viewProduct('${product._id}')">
+                                    <i class="fas fa-eye"></i>
+                                    İncele
+                                </button>
+                                <button class="btn btn-primary" onclick="productManager.addToCart('${product._id}')">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Sepete Ekle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return article;
+            }
+        
+            // Yıldız derecelendirmesi için yardımcı fonksiyon
+            generateRatingStars(rating) {
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 !== 0;
+                let html = '<div class="stars">';
+                
+                for (let i = 0; i < fullStars; i++) {
+                    html += '<i class="fas fa-star"></i>';
+                }
+                if (hasHalfStar) {
+                    html += '<i class="fas fa-star-half-alt"></i>';
+                }
+                const emptyStars = 5 - Math.ceil(rating);
+                for (let i = 0; i < emptyStars; i++) {
+                    html += '<i class="far fa-star"></i>';
+                }
+                
+                html += `<span class="rating-text">(${rating})</span></div>`;
+                return html;
+            }
             async setupIntersectionObserver() {
                 this.observer = utils.createObserver((entries) => {
                     entries.forEach(entry => {
@@ -845,10 +940,13 @@
         
             async fetchProducts(page, limit = 10) {
                 try {
-                    const response = await fetch(`/api/products?page=${page}&limit=${limit}`, {
+                    // API endpoint'ini products'a yönlendirdik çünkü tüm ürünleri çekmek istiyoruz
+                    const response = await fetch(`${API_URL}/products?page=${page}&limit=${limit}`, {
                         method: 'GET',
+                        credentials: 'include',
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
                         }
                     });
             
@@ -857,9 +955,27 @@
                     }
             
                     const data = await response.json();
+                    
+                    // Ürünleri işle ve manufacturer bilgisini ekle
+                    const products = data.products.map(product => ({
+                        ...product,
+                        // Ürün resminin tam URL'ini oluştur
+                        image: product.image ? `${API_URL}${product.image}` : 'default-image.jpg',
+                        // Üretici bilgisini ekle
+                        manufacturer: product.manufacturer?.companyName || 'Bilinmeyen Üretici',
+                        // Diğer gerekli alanları ekle
+                        modelFormats: product.modelFormats || [],
+                        specs: product.specs || [],
+                        rating: product.rating || 0,
+                        stock: product.stock || 0,
+                        price: product.price || 0
+                    }));
+            
+                    console.log('Yüklenen ürünler:', products); // Debug için
+            
                     return {
-                        products: data.products,
-                        hasMore: data.hasMore || data.products.length === limit
+                        products,
+                        hasMore: data.hasMore || products.length === limit
                     };
                 } catch (error) {
                     this.handleError(error);
@@ -901,12 +1017,10 @@
             }
         
             setupEventListeners() {
-                // Ana kategori değişikliği
-                document.getElementById('mainCategory').addEventListener('change', 
+                document.getElementById('mainCategory')?.addEventListener('change', 
                     (e) => this.handleMainCategoryChange(e.target.value));
         
-                // Alt kategori değişikliği
-                document.getElementById('subCategory').addEventListener('change',
+                document.getElementById('subCategory')?.addEventListener('change',
                     (e) => {
                         if (e.target.value) {
                             this.addActiveFilter('subCategory', e.target.value);
@@ -916,45 +1030,69 @@
                         this.filterProducts();
                     });
         
-                // Fiyat filtresi
-                document.querySelector('.apply-price').addEventListener('click',
+                document.querySelector('.apply-price')?.addEventListener('click',
                     () => this.applyPriceFilter());
         
-                // Format filtreleri
                 document.querySelectorAll('input[name="format"]').forEach(checkbox => {
                     checkbox.addEventListener('change', () => this.handleFormatFilter());
                 });
         
-                // Sıralama
-                document.getElementById('sorting').addEventListener('change',
+                document.getElementById('sorting')?.addEventListener('change',
                     (e) => this.handleSorting(e.target.value));
         
-                // Filtreleri temizle
-                document.getElementById('clearFilters').addEventListener('click',
+                document.getElementById('clearFilters')?.addEventListener('click',
                     () => this.clearAllFilters());
         
-                // Gelişmiş arama toggle
-                document.getElementById('searchFilterToggle').addEventListener('click',
+                document.getElementById('searchFilterToggle')?.addEventListener('click',
                     () => this.toggleAdvancedSearch());
             }
-        
             setupAdvancedSearch() {
                 const searchBar = document.querySelector('.search-bar');
                 const searchPanel = document.getElementById('advancedSearchPanel');
         
-                searchBar.addEventListener('input', utils.debounce((e) => {
+                searchBar?.addEventListener('input', utils.debounce((e) => {
                     this.handleSearch(e.target.value);
                 }, 300));
         
                 document.addEventListener('click', (e) => {
-                    if (!searchBar.contains(e.target) && !searchPanel.contains(e.target)) {
+                    if (!searchBar?.contains(e.target) && !searchPanel?.contains(e.target)) {
                         searchPanel.style.display = 'none';
                     }
                 });
             }
         
+            async handleSearch(searchTerm) {
+                if (!searchTerm.trim()) {
+                    this.filteredProducts = [...this.products];
+                    this.loadProducts();
+                    return;
+                }
+        
+                try {
+                    const response = await fetch(`${API_URL}/products/search?q=${encodeURIComponent(searchTerm)}`, {
+                        method: 'GET',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Arama yapılırken bir hata oluştu');
+                    }
+        
+                    const data = await response.json();
+                    this.filteredProducts = data.products;
+                    this.loadProducts();
+                } catch (error) {
+                    this.handleError(error);
+                }
+            }
+        
             handleMainCategoryChange(category) {
                 const subCategorySelect = document.getElementById('subCategory');
+                if (!subCategorySelect) return;
+        
                 subCategorySelect.disabled = !category;
         
                 if (category) {
@@ -980,41 +1118,16 @@
         
             populateSubCategories(subCategories) {
                 const select = document.getElementById('subCategory');
+                if (!select) return;
+        
                 select.innerHTML = '<option value="">Seçiniz</option>' +
                     subCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
                 select.disabled = false;
             }
         
-            async handleSearch(searchTerm) {
-                if (!searchTerm.trim()) {
-                    this.filteredProducts = [...this.products];
-                    this.loadProducts();
-                    return;
-                }
-            
-                try {
-                    const response = await fetch(`/api/products/search?q=${encodeURIComponent(searchTerm)}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-            
-                    if (!response.ok) {
-                        throw new Error('Arama yapılırken bir hata oluştu');
-                    }
-            
-                    const data = await response.json();
-                    this.filteredProducts = data.products;
-                    this.loadProducts();
-                } catch (error) {
-                    this.handleError(error);
-                }
-            }
-        
             applyPriceFilter() {
-                const minPrice = document.getElementById('minPrice').value;
-                const maxPrice = document.getElementById('maxPrice').value;
+                const minPrice = document.getElementById('minPrice')?.value;
+                const maxPrice = document.getElementById('maxPrice')?.value;
         
                 if (minPrice || maxPrice) {
                     this.addActiveFilter('price', `${minPrice || 0}₺ - ${maxPrice || '∞'}₺`);
@@ -1047,7 +1160,7 @@
                         this.filteredProducts.sort((a, b) => b.price - a.price);
                         break;
                     case 'newest':
-                        this.filteredProducts.sort((a, b) => b.id - a.id);
+                        this.filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                         break;
                     case 'bestSelling':
                         this.filteredProducts.sort((a, b) => (b.bestSeller ? 1 : 0) - (a.bestSeller ? 1 : 0));
@@ -1069,7 +1182,7 @@
                                 return product.subCategory === value;
                             case 'format':
                                 const formats = value.split(', ');
-                                return formats.some(format => product.modelFormats.includes(format));
+                                return formats.some(format => product.modelFormats?.includes(format));
                             case 'price':
                                 const [min, max] = value.replace('₺', '').split(' - ');
                                 return product.price >= parseFloat(min) && 
@@ -1083,106 +1196,11 @@
                 this.loadProducts();
             }
         
-            loadProducts() {
-                const grid = document.getElementById('productGrid');
-                grid.innerHTML = '';
-        
-                if (this.filteredProducts.length === 0) {
-                    grid.innerHTML = `
-                        <div class="no-results">
-                            <i class="fas fa-search fa-3x"></i>
-                            <p>Sonuç bulunamadı</p>
-                        </div>
-                    `;
-                    return;
-                }
-        
-                this.filteredProducts.forEach((product, index) => {
-                    const card = this.createProductCard(product);
-                    card.style.animationDelay = `${index * 50}ms`;
-                    grid.appendChild(card);
-                });
-        
-                // Sonsuz scroll için gözlemci ekle
-                const observerTarget = document.createElement('div');
-                observerTarget.className = 'observer-target';
-                grid.appendChild(observerTarget);
-                this.observer.observe(observerTarget);
-            }
-        
-            createProductCard(product) {
-                const article = document.createElement('article');
-                article.className = 'product-card fade-in';
-                article.innerHTML = `
-                    <div class="product-image-container">
-                        <img src="${product.image}" alt="${product.title}" class="product-image" loading="lazy">
-                        ${product.modelFormats.length ? `
-                            <span class="model-badge">
-                                <i class="fas fa-cube"></i>
-                                3B Model
-                            </span>
-                        ` : ''}
-                        ${product.bestSeller ? `
-                            <span class="bestseller-badge">
-                                <i class="fas fa-award"></i>
-                                Çok Satan
-                            </span>
-                        ` : ''}
-                    </div>
-                    <div class="product-content">
-                        <div class="product-category">${product.category}</div>
-                        <h3 class="product-title">${product.title}</h3>
-                        <div class="product-specs">
-                            ${product.specs.map(spec => `
-                                <span class="spec-tag">${spec}</span>
-                            `).join('')}
-                        </div>
-                        <div class="product-rating">
-                            ${this.generateRatingStars(product.rating)}
-                            <span class="stock-info">${product.stock} adet stokta</span>
-                        </div>
-                        <div class="product-footer">
-                            <div class="product-price">${utils.formatPrice(product.price)}</div>
-                            <div class="product-actions">
-                                <button class="btn btn-secondary" onclick="productManager.viewProduct(${product.id})">
-                                    <i class="fas fa-eye"></i>
-                                    İncele
-                                </button>
-                                <button class="btn btn-primary" onclick="productManager.addToCart(${product.id})">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Sepete Ekle
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                return article;
-            }
-        
-            generateRatingStars(rating) {
-                const fullStars = Math.floor(rating);
-                const hasHalfStar = rating % 1 !== 0;
-                let html = '<div class="stars">';
-                
-                for (let i = 0; i < fullStars; i++) {
-                    html += '<i class="fas fa-star"></i>';
-                }
-                if (hasHalfStar) {
-                    html += '<i class="fas fa-star-half-alt"></i>';
-                }
-                const emptyStars = 5 - Math.ceil(rating);
-                for (let i = 0; i < emptyStars; i++) {
-                    html += '<i class="far fa-star"></i>';
-                }
-                
-                html += `<span class="rating-text">(${rating})</span></div>`;
-                return html;
-            }
-        
             async addToCart(productId) {
                 try {
-                    const response = await fetch('/api/cart/add', {
+                    const response = await fetch(`${API_URL}/cart/add`, {
                         method: 'POST',
+                        credentials: 'include',
                         headers: {
                             'Content-Type': 'application/json'
                         },
@@ -1191,11 +1209,11 @@
                             quantity: 1
                         })
                     });
-            
+        
                     if (!response.ok) {
                         throw new Error('Ürün sepete eklenirken bir hata oluştu');
                     }
-            
+        
                     const result = await response.json();
                     this.cart = result.cart;
                     this.updateCartCount();
@@ -1205,121 +1223,12 @@
                 }
             }
         
-            viewProduct(productId) {
-                // Ürün detay modalı için yer tutucu
-                this.showNotification('Bu özellik yakında eklenecek');
-            }
-        
             updateCartCount() {
                 const cartCount = document.querySelector('.cart-count');
-                const totalItems = this.cart.reduce((sum, item) => sum + item.quantity, 0);
-                cartCount.textContent = totalItems;
-            }
-        
-            toggleAdvancedSearch() {
-                const panel = document.getElementById('advancedSearchPanel');
-                panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-            }
-        
-            addActiveFilter(type, value) {
-                this.activeFilters.add(`${type}:${value}`);
-                this.updateActiveFiltersUI();
-                this.saveFiltersToStorage();
-            }
-        
-            removeActiveFilter(type) {
-                Array.from(this.activeFilters)
-                    .filter(filter => filter.startsWith(`${type}:`))
-                    .forEach(filter => this.activeFilters.delete(filter));
-                this.updateActiveFiltersUI();
-                this.saveFiltersToStorage();
-            }
-        
-            updateActiveFiltersUI() {
-                const container = document.getElementById('activeFilters');
-                container.innerHTML = Array.from(this.activeFilters).map(filter => `
-                    <span class="filter-tag">
-                        ${filter.split(':')[1]}
-                        <i class="fas fa-times" onclick="productManager.removeFilter('${filter}')"></i>
-                    </span>
-                `).join('');
-            }
-        
-            removeFilter(filter) {
-                this.activeFilters.delete(filter);
-                this.updateActiveFiltersUI();
-                this.filterProducts();
-                this.saveFiltersToStorage();
-            }
-        
-            saveFiltersToStorage() {
-                const filters = {
-                    mainCategory: document.getElementById('mainCategory').value,
-                    subCategory: document.getElementById('subCategory').value,
-                    minPrice: document.getElementById('minPrice').value,
-                    maxPrice: document.getElementById('maxPrice').value,
-                    formats: Array.from(document.querySelectorAll('input[name="format"]:checked'))
-                        .map(cb => cb.value),
-                    sorting: document.getElementById('sorting').value
-                };
-                utils.storage.set('filters', filters);
-            }
-        
-            loadFromLocalStorage() {
-                try {
-                    const savedFilters = utils.storage.get('filters');
-                    if (savedFilters) {
-                        if (savedFilters.mainCategory) {
-                            document.getElementById('mainCategory').value = savedFilters.mainCategory;
-                            this.handleMainCategoryChange(savedFilters.mainCategory);
-                        }
-                        if (savedFilters.subCategory) {
-                            document.getElementById('subCategory').value = savedFilters.subCategory;
-                        }
-                        if (savedFilters.minPrice) {
-                            document.getElementById('minPrice').value = savedFilters.minPrice;
-                        }
-                        if (savedFilters.maxPrice) {
-                            document.getElementById('maxPrice').value = savedFilters.maxPrice;
-                        }
-                        if (savedFilters.formats) {
-                            savedFilters.formats.forEach(format => {
-                                const checkbox = document.querySelector(`input[name="format"][value="${format}"]`);
-                                if (checkbox) checkbox.checked = true;
-                            });
-                        }
-                        if (savedFilters.sorting) {
-                            document.getElementById('sorting').value = savedFilters.sorting;
-                        }
-                        this.filterProducts();
-                    }
-        
-                    const savedCart = utils.storage.get('cart');
-                    if (savedCart) {
-                        this.cart = savedCart;
-                        this.updateCartCount();
-                    }
-                } catch (error) {
-                    console.error('Error loading from localStorage:', error);
-                    this.showNotification('Kayıtlı veriler yüklenirken bir hata oluştu', 'error');
+                if (cartCount) {
+                    const totalItems = this.cart.reduce((sum, item) => sum + item.quantity, 0);
+                    cartCount.textContent = totalItems;
                 }
-            }
-        
-            clearAllFilters() {
-                this.activeFilters.clear();
-                this.updateActiveFiltersUI();
-                
-                document.getElementById('mainCategory').value = '';
-                document.getElementById('subCategory').value = '';
-                document.getElementById('subCategory').disabled = true;
-                document.getElementById('minPrice').value = '';
-                document.getElementById('maxPrice').value = '';
-                document.getElementById('sorting').value = 'recommended';
-                document.querySelectorAll('input[name="format"]')
-                    .forEach(cb => cb.checked = false);
-        
-                this.filterProducts();
-                utils.storage.set('filters', null);
             }
         
             showNotification(message, type = 'success') {
@@ -1329,29 +1238,31 @@
                     <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
                     <span>${message}</span>
                 `;
-                document.getElementById('notificationContainer').appendChild(notification);
+                document.getElementById('notificationContainer')?.appendChild(notification);
                 setTimeout(() => {
                     notification.classList.add('fade-out');
                     setTimeout(() => notification.remove(), 300);
                 }, 3000);
             }
         
-                handleError(error) {
-                    console.error('An error occurred:', error);
-                    this.showNotification('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.', 'error');
-                }
-            
-                hideLoader() {
-                    const loader = document.querySelector('.loader-container');
+            handleError(error) {
+                console.error('An error occurred:', error);
+                this.showNotification(error.message || 'Bir hata oluştu. Lütfen daha sonra tekrar deneyin.', 'error');
+            }
+        
+            hideLoader() {
+                const loader = document.querySelector('.loader-container');
+                if (loader) {
                     loader.style.opacity = '0';
                     setTimeout(() => loader.style.display = 'none', 300);
                 }
             }
-            
-            // Sayfa yüklendiğinde ProductManager'ı başlat
-            document.addEventListener('DOMContentLoaded', () => {
-                window.productManager = new ProductManager();
-            });
+        }
+        
+        // Sayfa yüklendiğinde ProductManager'ı başlat
+        document.addEventListener('DOMContentLoaded', () => {
+            window.productManager = new ProductManager();
+        });
     </script>
 </body>
 </html>
