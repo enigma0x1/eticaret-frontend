@@ -783,21 +783,43 @@
 
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script>
+        <script>
         const API_URL = 'https://eticaret-glif.onrender.com/api';
-        const AUTH_TOKEN = localStorage.getItem('token');
-        
-        // Rate limiting için yardımcı fonksiyon
-        let lastRedirectTime = 0;
-        function safeRedirect(url) {
-            const now = Date.now();
-            if (now - lastRedirectTime > 2000) {
-                lastRedirectTime = now;
-                window.location.href = url;
+    
+        // Sayfa yüklendiğinde çalışacak ana fonksiyon
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Token kontrolü
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    window.location.replace('loginForPro.html');
+                    return;
+                }
+    
+                // Token'ı doğrula
+                const response = await fetch(`${API_URL}/auth/verify-token`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+    
+                const data = await response.json();
+    
+                if (!data.success || data.userType !== 'professional') {
+                    throw new Error('Invalid token');
+                }
+    
+                // Token geçerliyse ProductManager'ı başlat
+                window.productManager = new ProductManager();
+    
+            } catch (error) {
+                console.error('Auth error:', error);
+                localStorage.clear();
+                window.location.replace('loginForPro.html');
             }
-        }
-        
-        // Toast Bildirimleri
+        });
+    
+        // Toast bildirimleri için yardımcı fonksiyon
         function showToast(message, type = 'success') {
             Toastify({
                 text: message,
@@ -805,64 +827,22 @@
                 gravity: "top",
                 position: "right",
                 style: {
-                    background: type === 'success' ? "linear-gradient(to right, #00b09b, #96c93d)" : 
-                               type === 'error' ? "linear-gradient(to right, #ff5f6d, #ffc371)" : 
-                               "linear-gradient(to right, #4facfe, #00f2fe)",
+                    background: type === 'success' ? 
+                        "linear-gradient(to right, #00b09b, #96c93d)" : 
+                        "linear-gradient(to right, #ff5f6d, #ffc371)",
                 }
             }).showToast();
         }
-        
-        // Token kontrolü ve yetkilendirme
-        async function checkAuth() {
-            const token = localStorage.getItem('token');
-            const userType = localStorage.getItem('userType');
-            const redirectFrom = localStorage.getItem('redirectFrom');
-        
-            if (!token || userType !== 'professional') {
-                localStorage.setItem('redirectFrom', 'dashboard');
-                safeRedirect('loginForPro.html');
-                return false;
-            }
-        
-            try {
-                const response = await fetch(`${API_URL}/auth/verify-token`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-        
-                const data = await response.json();
-                if (!data.success || data.userType !== 'professional') {
-                    throw new Error('Invalid token or user type');
-                }
-        
-                return true;
-            } catch (error) {
-                localStorage.clear();
-                localStorage.setItem('redirectFrom', 'dashboard');
-                safeRedirect('loginForPro.html');
-                return false;
-            }
-        }
-        
-        // Çıkış yapma fonksiyonu
+    
+        // Çıkış işlemi
         async function handleLogout() {
             try {
-                const response = await fetch(`${API_URL}/auth/professional/logout`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${AUTH_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-        
-                const data = await response.json();
-                if (data.success) {
-                    localStorage.clear();
-                    safeRedirect('loginForPro.html');
-                }
+                localStorage.clear();
+                window.location.replace('loginForPro.html');
             } catch (error) {
                 console.error('Logout error:', error);
                 localStorage.clear();
-                safeRedirect('loginForPro.html');
+                window.location.replace('loginForPro.html');
             }
         }
         
