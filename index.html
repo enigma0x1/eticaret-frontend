@@ -394,64 +394,64 @@
         }
 
         /* Newsletter Section - Yeni stil */
+        /* Newsletter Form stilini güncelle */
+        .newsletter-form {
+            display: flex;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 15px;
+            color: white;
+            transition: all 0.3s ease;
+            min-width: 0; /* Input'un taşmasını önler */
+        }
+        
+        .newsletter-form button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap; /* Buton metninin alt satıra geçmesini önler */
+        }
+        
+        /* Newsletter Section stilini güncelle */
         .newsletter-section {
-            background: linear-gradient(135deg, #1a1f35 0%, #2b3147 100%);
-            padding: 60px 0;
-            margin-bottom: 60px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 40px 0;
+            margin-bottom: 40px;
+            border-radius: 15px;
         }
         
         .newsletter-content {
             text-align: center;
             max-width: 600px;
             margin: 0 auto;
+            padding: 0 20px;
         }
         
-        .newsletter-content h3 {
-            font-size: 28px;
-            margin-bottom: 15px;
-            background: linear-gradient(to right, #fff, #a7a7a7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* Responsive tasarım için medya sorgusu */
+        @media (max-width: 768px) {
+            .newsletter-form {
+                flex-direction: column;
+                gap: 10px;
+            }
         
-        .newsletter-content p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 16px;
-            margin-bottom: 25px;
-        }
-        
-        .newsletter-form input {
-            flex: 1;
-            padding: 15px 25px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            font-size: 16px;
-            color: white;
-            transition: all 0.3s ease;
-        }
-        
-        .newsletter-form input:focus {
-            border-color: rgba(255, 255, 255, 0.3);
-            outline: none;
-            background: rgba(255, 255, 255, 0.08 }
-        
-        .newsletter-form button {
-            padding: 15px 35px;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .newsletter-form button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+            .newsletter-form button {
+                width: 100%;
+            }
         }
         
         .contact-info li {
