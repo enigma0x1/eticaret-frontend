@@ -139,7 +139,48 @@
             align-items: center;
             gap: 2rem;
         }
-
+        /* User Dropdown Styles */
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            padding: 0.5rem;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .user-dropdown.active {
+            display: block;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-base);
+        }
+        
+        .dropdown-item:hover {
+            background: var(--background-color);
+        }
+        
+        .dropdown-item.danger {
+            color: var(--danger-color);
+        }
+        
+        .dropdown-divider {
+            margin: 0.5rem 0;
+            border: none;
+            border-top: 1px solid var(--border-color);
+        }
         /* Logo */
         .logo {
             display: flex;
@@ -1032,7 +1073,7 @@
                         !state.filters.categories.includes(product.category)) {
                         return false;
                     }
-    
+            
                     // Fiyat aralığı filtresi
                     if (state.filters.priceRange.min !== null && 
                         product.price < state.filters.priceRange.min) {
@@ -1042,35 +1083,36 @@
                         product.price > state.filters.priceRange.max) {
                         return false;
                     }
-    
+            
                     // Rating filtresi
                     if (state.filters.rating && product.rating < state.filters.rating) {
                         return false;
                     }
-    
-                    // Arama filtresi
+            
+                    // Arama filtresi - BU KISMI DEĞİŞTİRİN
                     if (state.filters.search) {
                         const searchTerm = state.filters.search.toLowerCase();
-                        product.description.toLowerCase().includes(searchTerm) ||
-                        product.category.toLowerCase().includes(searchTerm);
-                }
-
-                return true;
-            }).sort((a, b) => {
-                switch (state.filters.sort) {
-                    case 'priceAsc':
-                        return a.price - b.price;
-                    case 'priceDesc':
-                        return b.price - a.price;
-                    case 'rating':
-                        return b.rating - a.rating;
-                    case 'popular':
-                        return b.views - a.views;
-                    default: // newest
-                        return new Date(b.createdAt) - new Date(a.createdAt);
-                }
-            });
-        },
+                        return product.title.toLowerCase().includes(searchTerm) ||
+                               product.description.toLowerCase().includes(searchTerm) ||
+                               product.category.toLowerCase().includes(searchTerm);
+                    }
+            
+                    return true;
+                }).sort((a, b) => {
+                    switch (state.filters.sort) {
+                        case 'priceAsc':
+                            return a.price - b.price;
+                        case 'priceDesc':
+                            return b.price - a.price;
+                        case 'rating':
+                            return b.rating - a.rating;
+                        case 'popular':
+                            return b.views - a.views;
+                        default: // newest
+                            return new Date(b.createdAt) - new Date(a.createdAt);
+                    }
+                });
+            },
 
         renderProducts() {
             const grid = document.getElementById('productGrid');
@@ -1155,6 +1197,7 @@
                 </div>
             `;
         },
+            
 
         formatPrice(price) {
             return new Intl.NumberFormat('tr-TR', {
@@ -1358,7 +1401,20 @@
         document.getElementById('clearFiltersBtn')?.addEventListener('click', () => {
             productManager.clearFilters();
         });
-
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        
+        userMenuBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('active');
+        });
+        
+        // Dropdown dışına tıklandığında kapanması için
+        document.addEventListener('click', (e) => {
+            if (!userMenuBtn?.contains(e.target)) {
+                userDropdown?.classList.remove('active');
+            }
+        });
         // Sonsuz scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1394,6 +1450,7 @@
             }
         });
     }
+    // setupEventListeners fonksiyonuna ekleyin
 
     function initializePriceRangeSlider() {
         const slider = document.getElementById('priceRangeSlider');
