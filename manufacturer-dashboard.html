@@ -943,6 +943,168 @@
                 throw error;
             }
         }
+        // Dashboard yenileme fonksiyonu
+        function refreshDashboard() {
+            loadDashboard();
+            showNotification('Dashboard yenilendi', 'success');
+        }
+        
+        // Yeni ürün ekleme modalını açma fonksiyonu
+        function openAddProductModal() {
+            // Form alanlarını temizle
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            
+            // Modal başlığını güncelle
+            document.getElementById('productModalTitle').textContent = 'Yeni Ürün Ekle';
+            
+            // Modalı aç
+            productModal.show();
+        }
+        
+        // Toplu işlemler modalını açma fonksiyonu
+        function openBulkOperationsModal() {
+            // Toplu işlemler modalı için gerekli kodlar
+            Swal.fire({
+                title: 'Toplu İşlemler',
+                html: `
+                    <div class="mb-3">
+                        <select class="form-select" id="bulkAction">
+                            <option value="">İşlem Seçin</option>
+                            <option value="delete">Toplu Sil</option>
+                            <option value="status">Durum Güncelle</option>
+                            <option value="price">Fiyat Güncelle</option>
+                        </select>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Uygula',
+                cancelButtonText: 'İptal',
+                preConfirm: () => {
+                    const action = document.getElementById('bulkAction').value;
+                    if (!action) {
+                        Swal.showValidationMessage('Lütfen bir işlem seçin');
+                    }
+                    return action;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    handleBulkOperation(result.value);
+                }
+            });
+        }
+        
+        // Toplu işlemleri handle etme fonksiyonu
+        async function handleBulkOperation(action) {
+            const selectedProducts = getSelectedProducts();
+            
+            if (selectedProducts.length === 0) {
+                showNotification('Lütfen ürün seçin', 'warning');
+                return;
+            }
+        
+            try {
+                showLoading();
+                
+                let endpoint = '';
+                let data = { productIds: selectedProducts };
+                
+                switch(action) {
+                    case 'delete':
+                        endpoint = '/bulk-delete';
+                        break;
+                    case 'status':
+                        const status = await promptForStatus();
+                        if (!status) return;
+                        data.status = status;
+                        endpoint = '/bulk-status-update';
+                        break;
+                    case 'price':
+                        const priceAction = await promptForPriceAction();
+                        if (!priceAction) return;
+                        data = { ...data, ...priceAction };
+                        endpoint = '/bulk-price-update';
+                        break;
+                }
+        
+                const response = await authenticatedFetch(`${API_URL}/products${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+        
+                if (!response.ok) {
+                    throw new Error('İşlem başarısız');
+                }
+        
+                showNotification('Toplu işlem başarıyla tamamlandı', 'success');
+                loadProducts();
+            } catch (error) {
+                console.error('Bulk operation error:', error);
+                showNotification('İşlem sırasında bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Seçili ürünleri alma fonksiyonu
+        function getSelectedProducts() {
+            const checkboxes = document.querySelectorAll('#productsTableBody input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        // Durum seçimi için prompt
+        function promptForStatus() {
+            return Swal.fire({
+                title: 'Durum Seçin',
+                input: 'select',
+                inputOptions: {
+                    'active': 'Aktif',
+                    'inactive': 'Pasif',
+                    'out_of_stock': 'Stok Dışı'
+                },
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Lütfen bir durum seçin';
+                    }
+                }
+            }).then(result => result.isConfirmed ? result.value : null);
+        }
+        
+        // Fiyat güncelleme için prompt
+        function promptForPriceAction() {
+            return Swal.fire({
+                title: 'Fiyat Güncelleme',
+                html: `
+                    <select class="form-select mb-3" id="priceUpdateType">
+                        <option value="percentage">Yüzde</option>
+                        <option value="fixed">Sabit Tutar</option>
+                    </select>
+                    <input type="number" id="priceUpdateValue" class="form-control mb-3" placeholder="Değer">
+                    <select class="form-select" id="priceUpdateOperation">
+                        <option value="increase">Artır</option>
+                        <option value="decrease">Azalt</option>
+                    </select>
+                `,
+                showCancelButton: true,
+                preConfirm: () => {
+                    const type = document.getElementById('priceUpdateType').value;
+                    const value = document.getElementById('priceUpdateValue').value;
+                    const operation = document.getElementById('priceUpdateOperation').value;
+                    
+                    if (!value || value <= 0) {
+                        Swal.showValidationMessage('Geçerli bir değer girin');
+                        return false;
+                    }
+                    
+                    return { type, value, operation };
+                }
+            }).then(result => result.isConfirmed ? result.value : null);
+        }
 
         // Yardımcı fonksiyonlar
         function showLoading() {
