@@ -516,290 +516,267 @@
 
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script>
-    // API URL ve Sabitler
-    const API_URL = 'https://eticaret-glif.onrender.com/api';
-    
-    // Sayfa Yüklendiğinde İlk Kontroller
-    document.addEventListener('DOMContentLoaded', () => {
-        // Token ve redirectFrom kontrolü
-        const token = localStorage.getItem('token');
-        const redirectFrom = localStorage.getItem('redirectFrom');
+    <script>
+        // API URL ve Sabitler
+        const API_URL = 'https://eticaret-glif.onrender.com/api';
         
-        // Eğer token varsa ve dashboard'dan yönlendirilmediyse
-        if (token && localStorage.getItem('userType') === 'professional' && redirectFrom !== 'dashboard') {
-            safeRedirect('https://enigma0x1.github.io/eticaret-frontend/dashboard.html');
-            return;
-        }
-        
-        // redirectFrom'u temizle
-        localStorage.removeItem('redirectFrom');
-        
-        // Dosya yükleme için drag&drop
-        initializeFileUpload();
-    });
+        // Sayfa Yüklendiğinde İlk Kontroller
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            
+            if (token) {
+                try {
+                    // Token'ı doğrula
+                    const response = await fetch(`${API_URL}/auth/verify-token`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
     
-    // Güvenli Yönlendirme
-    let lastRedirectTime = 0;
-    function safeRedirect(url) {
-        const now = Date.now();
-        if (now - lastRedirectTime > 2000) {
-            lastRedirectTime = now;
-            window.location.href = url;
-        }
-    }
+                    const data = await response.json();
     
-    // Toast Bildirimleri
-    function showToast(message, type = 'success') {
-        Toastify({
-            text: message,
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            stopOnFocus: true,
-            style: {
-                background: type === 'success' ? "linear-gradient(to right, #00b09b, #96c93d)" : 
-                           type === 'error' ? "linear-gradient(to right, #ff5f6d, #ffc371)" : 
-                           "linear-gradient(to right, #4facfe, #00f2fe)",
+                    // Token geçerliyse ve professional ise dashboard'a yönlendir
+                    if (data.success && data.userType === 'professional') {
+                        window.location.replace('dashboard.html');
+                        return;
+                    }
+                } catch (error) {
+                    // Token geçersizse temizle
+                    localStorage.clear();
+                }
             }
-        }).showToast();
-    }
-    
-    // Form Doğrulama
-    function validateForm(formData) {
-        const errors = [];
+            
+            // Dosya yükleme için drag&drop
+            initializeFileUpload();
+        });
         
-        if (!formData.get('email').match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-            errors.push('Geçerli bir email adresi giriniz');
+        // Toast Bildirimleri
+        function showToast(message, type = 'success') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                stopOnFocus: true,
+                style: {
+                    background: type === 'success' ? "linear-gradient(to right, #00b09b, #96c93d)" : 
+                               type === 'error' ? "linear-gradient(to right, #ff5f6d, #ffc371)" : 
+                               "linear-gradient(to right, #4facfe, #00f2fe)",
+                }
+            }).showToast();
         }
         
-        if (formData.get('password').length < 6) {
-            errors.push('Şifre en az 6 karakter olmalıdır');
+        // Login İşlemi
+        async function handleLogin(event) {
+            event.preventDefault();
+            const button = event.target.querySelector('.auth-button');
+            button.classList.add('loading');
+            
+            try {
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+        
+                if (!email || !password) {
+                    throw new Error('Lütfen tüm alanları doldurun');
+                }
+        
+                const response = await fetch(`${API_URL}/auth/professional/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+        
+                const data = await response.json();
+        
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userType', data.userType);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    
+                    showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.replace('dashboard.html');
+                    }, 1500);
+                } else {
+                    throw new Error(data.message || 'Giriş başarısız');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast(error.message || 'Bir hata oluştu! Lütfen tekrar deneyin.', 'error');
+            } finally {
+                button.classList.remove('loading');
+            }
         }
         
-        return errors;
-    }
-    
-    // Login İşlemi
-    async function handleLogin(event) {
-        event.preventDefault();
-        const button = event.target.querySelector('.auth-button');
-        button.classList.add('loading');
+        // Signup İşlemi
+        async function handleSignup(event) {
+            event.preventDefault();
+            const button = event.target.querySelector('.auth-button');
+            button.classList.add('loading');
+            
+            try {
+                const formData = new FormData();
+                const fullName = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                const profession = document.getElementById('profession').value;
+                const otherProfession = document.getElementById('otherProfession').value;
+                const diplomaFile = document.getElementById('diplomaFile').files[0];
         
-        try {
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-    
-            if (!email || !password) {
-                throw new Error('Lütfen tüm alanları doldurun');
+                // Form validation
+                if (!fullName || !email || !password || !profession) {
+                    throw new Error('Lütfen tüm zorunlu alanları doldurun');
+                }
+        
+                formData.append('fullName', fullName);
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('profession', profession === 'other' ? otherProfession : profession);
+                if (diplomaFile) {
+                    formData.append('diploma', diplomaFile);
+                }
+        
+                const response = await fetch(`${API_URL}/auth/professional/register`, {
+                    method: 'POST',
+                    body: formData
+                });
+        
+                const data = await response.json();
+        
+                if (data.success) {
+                    showToast('Kayıt başarılı! Giriş yapabilirsiniz.', 'success');
+                    toggleForm();
+                } else {
+                    throw new Error(data.message || 'Kayıt başarısız');
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                showToast(error.message || 'Bir hata oluştu! Lütfen tekrar deneyin.', 'error');
+            } finally {
+                button.classList.remove('loading');
             }
-    
-            const response = await fetch(`${API_URL}/auth/professional/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
-    
-            if (!response.ok) {
-                throw new Error('Sunucu hatası');
-            }
-    
-            const data = await response.json();
-    
-            if (data.success) {
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('userType', 'professional');
-                localStorage.setItem('user', JSON.stringify(data.user));
-                localStorage.removeItem('redirectFrom');
-                
-                showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
-                
-                setTimeout(() => {
-                    safeRedirect('https://enigma0x1.github.io/eticaret-frontend/dashboard.html');
-                }, 1500);
+        }
+        
+        // Şifre Görünürlüğü Toggle
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
             } else {
-                throw new Error(data.message || 'Giriş başarısız');
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
             }
-        } catch (error) {
-            console.error('Login error:', error);
-            showToast(error.message || 'Bir hata oluştu! Lütfen tekrar deneyin.', 'error');
-        } finally {
-            button.classList.remove('loading');
         }
-    }
-    
-    // Signup İşlemi
-    async function handleSignup(event) {
-        event.preventDefault();
-        const button = event.target.querySelector('.auth-button');
-        button.classList.add('loading');
         
-        try {
-            const formData = new FormData();
-            const fullName = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const profession = document.getElementById('profession').value;
-            const otherProfession = document.getElementById('otherProfession').value;
-            const diplomaFile = document.getElementById('diplomaFile').files[0];
-    
-            // Form validation
-            if (!fullName || !email || !password || !profession) {
-                throw new Error('Lütfen tüm zorunlu alanları doldurun');
+        // Şifre Güçlülük Kontrolü
+        function checkPasswordStrength(password) {
+            const strengthBar = document.querySelector('.password-strength-bar');
+            let strength = 0;
+            
+            if (password.match(/[a-z]+/)) strength += 1;
+            if (password.match(/[A-Z]+/)) strength += 1;
+            if (password.match(/[0-9]+/)) strength += 1;
+            if (password.match(/[$@#&!]+/)) strength += 1;
+            if (password.length >= 8) strength += 1;
+        
+            switch (true) {
+                case strength <= 2:
+                    strengthBar.className = 'password-strength-bar strength-weak';
+                    break;
+                case strength <= 4:
+                    strengthBar.className = 'password-strength-bar strength-medium';
+                    break;
+                case strength === 5:
+                    strengthBar.className = 'password-strength-bar strength-strong';
+                    break;
             }
-    
-            formData.append('fullName', fullName);
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('profession', profession === 'other' ? otherProfession : profession);
-            if (diplomaFile) {
-                formData.append('diploma', diplomaFile);
-            }
-    
-            const response = await fetch(`${API_URL}/auth/professional/register`, {
-                method: 'POST',
-                body: formData
-            });
-    
-            if (!response.ok) {
-                throw new Error('Sunucu hatası');
-            }
-    
-            const data = await response.json();
-    
-            if (data.success) {
-                showToast('Kayıt başarılı! Giriş yapabilirsiniz.', 'success');
-                toggleForm();
+        }
+        
+        // Form Toggle
+        function toggleForm() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            
+            if (loginForm.classList.contains('active')) {
+                loginForm.classList.remove('active');
+                signupForm.classList.add('active');
             } else {
-                throw new Error(data.message || 'Kayıt başarısız');
+                signupForm.classList.remove('active');
+                loginForm.classList.add('active');
             }
-        } catch (error) {
-            console.error('Signup error:', error);
-            showToast(error.message || 'Bir hata oluştu! Lütfen tekrar deneyin.', 'error');
-        } finally {
-            button.classList.remove('loading');
         }
-    }
-    
-    // Şifre Görünürlüğü Toggle
-    function togglePasswordVisibility(inputId, icon) {
-        const input = document.getElementById(inputId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-    
-    // Şifre Güçlülük Kontrolü
-    function checkPasswordStrength(password) {
-        const strengthBar = document.querySelector('.password-strength-bar');
-        let strength = 0;
         
-        if (password.match(/[a-z]+/)) strength += 1;
-        if (password.match(/[A-Z]+/)) strength += 1;
-        if (password.match(/[0-9]+/)) strength += 1;
-        if (password.match(/[$@#&!]+/)) strength += 1;
-        if (password.length >= 8) strength += 1;
-    
-        switch (true) {
-            case strength <= 2:
-                strengthBar.className = 'password-strength-bar strength-weak';
-                break;
-            case strength <= 4:
-                strengthBar.className = 'password-strength-bar strength-medium';
-                break;
-            case strength === 5:
-                strengthBar.className = 'password-strength-bar strength-strong';
-                break;
-        }
-    }
-    
-    // Form Toggle
-    function toggleForm() {
-        const loginForm = document.getElementById('loginForm');
-        const signupForm = document.getElementById('signupForm');
+        // Meslek Seçimi
+        function toggleOtherProfession() {
+            const profession = document.getElementById('profession');
+            const otherProfessionGroup = document.getElementById('otherProfessionGroup');
+            const otherProfessionInput = document.getElementById('otherProfession');
         
-        if (loginForm.classList.contains('active')) {
-            loginForm.classList.remove('active');
-            signupForm.classList.add('active');
-        } else {
-            signupForm.classList.remove('active');
-            loginForm.classList.add('active');
+            if (profession.value === 'other') {
+                otherProfessionGroup.style.display = 'block';
+                otherProfessionInput.required = true;
+            } else {
+                otherProfessionGroup.style.display = 'none';
+                otherProfessionInput.required = false;
+            }
         }
-    }
-    
-    // Meslek Seçimi
-    function toggleOtherProfession() {
-        const profession = document.getElementById('profession');
-        const otherProfessionGroup = document.getElementById('otherProfessionGroup');
-        const otherProfessionInput = document.getElementById('otherProfession');
-    
-        if (profession.value === 'other') {
-            otherProfessionGroup.style.display = 'block';
-            otherProfessionInput.required = true;
-        } else {
-            otherProfessionGroup.style.display = 'none';
-            otherProfessionInput.required = false;
+        
+        // Dosya Seçimi
+        function handleFileSelect(event) {
+            const fileName = event.target.files[0]?.name;
+            document.getElementById('fileName').textContent = fileName || '';
         }
-    }
-    
-    // Dosya Seçimi
-    function handleFileSelect(event) {
-        const fileName = event.target.files[0]?.name;
-        document.getElementById('fileName').textContent = fileName || '';
-    }
-    
-    // Sosyal Medya ile Giriş
-    function handleSocialLogin(provider) {
-        showToast(`${provider} ile giriş yakında aktif olacak!`, 'info');
-    }
-    
-    // Dosya Yükleme Initialize
-    function initializeFileUpload() {
-        const dropZone = document.querySelector('.file-upload-btn');
-        const fileInput = document.getElementById('diplomaFile');
-    
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-        });
-    
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        
+        // Sosyal Medya ile Giriş
+        function handleSocialLogin(provider) {
+            showToast(`${provider} ile giriş yakında aktif olacak!`, 'info');
         }
-    
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, highlight, false);
-        });
-    
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, unhighlight, false);
-        });
-    
-        function highlight(e) {
-            dropZone.classList.add('highlight');
+        
+        // Dosya Yükleme Initialize
+        function initializeFileUpload() {
+            const dropZone = document.querySelector('.file-upload-btn');
+            const fileInput = document.getElementById('diplomaFile');
+        
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+        
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+        
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+        
+            function highlight(e) {
+                dropZone.classList.add('highlight');
+            }
+        
+            function unhighlight(e) {
+                dropZone.classList.remove('highlight');
+            }
+        
+            dropZone.addEventListener('drop', handleDrop, false);
+        
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                fileInput.files = files;
+                handleFileSelect({target: fileInput});
+            }
         }
-    
-        function unhighlight(e) {
-            dropZone.classList.remove('highlight');
-        }
-    
-        dropZone.addEventListener('drop', handleDrop, false);
-    
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            fileInput.files = files;
-            handleFileSelect({target: fileInput});
-        }
-    }
-</script>
+    </script>
 </body>
 </html>
