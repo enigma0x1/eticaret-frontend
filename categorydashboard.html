@@ -79,7 +79,7 @@
 
         /* Main Content */
         .dashboard-container {
-            margin-top: 80px; /* Header height + padding */
+            margin-top: 80px;
             min-height: calc(100vh - 80px);
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -115,6 +115,118 @@
             transition: var(--transition);
         }
 
+        /* E-Sanayi Animasyonu */
+        .e-sanayi .category-icon i {
+            transition: transform 2s ease-in-out;
+        }
+
+        .e-sanayi:hover .category-icon i {
+            animation: spinGear 4s linear infinite;
+        }
+
+        @keyframes spinGear {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hazır Ürünler Animasyonu */
+        .hazir-urunler .category-icon {
+            position: relative;
+        }
+
+        .hazir-urunler .category-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: linear-gradient(45deg, 
+                #ff0000, #ff7300, #fffb00, #48ff00, 
+                #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            transition: all 0.5s ease;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .hazir-urunler:hover .category-icon::after {
+            width: 200%;
+            height: 200%;
+            opacity: 0.5;
+            animation: colorFlow 2s linear infinite;
+        }
+
+        @keyframes colorFlow {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* İnovasyon Hub Işık Efekti */
+        .inovasyon-hub::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, 
+                rgba(255, 215, 0, 0.8) 0%,
+                rgba(255, 215, 0, 0.4) 30%,
+                rgba(255, 215, 0, 0) 70%
+            );
+            transition: all 0.8s ease;
+            border-radius: 50%;
+            z-index: 0;
+            opacity: 0;
+        }
+
+        .inovasyon-hub:hover::after {
+            width: 300%;
+            height: 300%;
+            top: -100%;
+            left: -100%;
+            opacity: 1;
+        }
+
+        @keyframes lightBeam {
+            0% {
+                transform: rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .inovasyon-hub::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent 0%,
+                rgba(255, 215, 0, 0.1) 1%,
+                transparent 2%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            animation: lightBeam 4s linear infinite;
+            pointer-events: none;
+        }
+
+        .inovasyon-hub:hover::before {
+            opacity: 1;
+        }
+
         .e-sanayi::before { background: var(--esanayi-gradient); }
         .hazir-urunler::before { background: var(--hazir-gradient); }
         .cad-dosyalari::before { background: var(--cad-gradient); }
@@ -133,10 +245,6 @@
             font-size: 4rem;
             margin-bottom: 2rem;
             transition: var(--transition);
-        }
-
-        .category-card:hover .category-icon {
-            transform: scale(1.1) rotate(10deg);
         }
 
         .category-content {
@@ -341,7 +449,7 @@
             </div>
         </div>
 
-        <!-- İnovasyon Hub -->
+                <!-- İnovasyon Hub -->
         <div class="category-card inovasyon-hub" onclick="window.location.href='inovasyon-hub.html'">
             <div class="category-content">
                 <div class="category-icon">
