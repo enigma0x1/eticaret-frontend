@@ -833,6 +833,88 @@
                     this.handleError(error);
                 }
             }
+            loadFromLocalStorage() {
+                try {
+                    // Kayıtlı filtreleri yükle
+                    const savedFilters = utils.storage.get('filters');
+                    if (savedFilters) {
+                        // Ana kategori
+                        if (savedFilters.mainCategory) {
+                            const mainCategorySelect = document.getElementById('mainCategory');
+                            if (mainCategorySelect) {
+                                mainCategorySelect.value = savedFilters.mainCategory;
+                                this.handleMainCategoryChange(savedFilters.mainCategory);
+                            }
+                        }
+            
+                        // Alt kategori
+                        if (savedFilters.subCategory) {
+                            const subCategorySelect = document.getElementById('subCategory');
+                            if (subCategorySelect) {
+                                subCategorySelect.value = savedFilters.subCategory;
+                            }
+                        }
+            
+                        // Fiyat aralığı
+                        if (savedFilters.minPrice) {
+                            const minPriceInput = document.getElementById('minPrice');
+                            if (minPriceInput) {
+                                minPriceInput.value = savedFilters.minPrice;
+                            }
+                        }
+                        if (savedFilters.maxPrice) {
+                            const maxPriceInput = document.getElementById('maxPrice');
+                            if (maxPriceInput) {
+                                maxPriceInput.value = savedFilters.maxPrice;
+                            }
+                        }
+            
+                        // Format checkboxları
+                        if (savedFilters.formats) {
+                            savedFilters.formats.forEach(format => {
+                                const checkbox = document.querySelector(`input[name="format"][value="${format}"]`);
+                                if (checkbox) {
+                                    checkbox.checked = true;
+                                }
+                            });
+                        }
+            
+                        // Sıralama
+                        if (savedFilters.sorting) {
+                            const sortingSelect = document.getElementById('sorting');
+                            if (sortingSelect) {
+                                sortingSelect.value = savedFilters.sorting;
+                            }
+                        }
+            
+                        // Filtreleri uygula
+                        this.filterProducts();
+                    }
+            
+                    // Kayıtlı sepeti yükle
+                    const savedCart = utils.storage.get('cart');
+                    if (savedCart) {
+                        this.cart = savedCart;
+                        this.updateCartCount();
+                    }
+                } catch (error) {
+                    console.error('Error loading from localStorage:', error);
+                    this.showNotification('Kayıtlı veriler yüklenirken bir hata oluştu', 'error');
+                }
+            }
+            
+            saveFiltersToStorage() {
+                const filters = {
+                    mainCategory: document.getElementById('mainCategory')?.value,
+                    subCategory: document.getElementById('subCategory')?.value,
+                    minPrice: document.getElementById('minPrice')?.value,
+                    maxPrice: document.getElementById('maxPrice')?.value,
+                    formats: Array.from(document.querySelectorAll('input[name="format"]:checked'))
+                        .map(cb => cb.value),
+                    sorting: document.getElementById('sorting')?.value
+                };
+                utils.storage.set('filters', filters);
+            }
             loadProducts() {
                 const grid = document.getElementById('productGrid');
                 grid.innerHTML = '';
