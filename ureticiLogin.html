@@ -553,7 +553,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('token');
         if (token) {
-            window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/dashboard.html';
+            window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/categorydashboard.html';
         }
         initializeFileUpload();
     });
@@ -699,7 +699,7 @@
                 showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
                 
                 setTimeout(() => {
-                    window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/dashboard.html';
+                    window.location.href =  'https://enigma0x1.github.io/eticaret-frontend/categorydashboard.html';
                 }, 1500);
             } else {
                 showToast(data.message || 'Giriş başarısız!', 'error');
