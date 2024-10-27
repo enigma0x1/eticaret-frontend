@@ -1278,7 +1278,7 @@
                 this.loadProducts();
             }
         
-            async function addToCart(productId, quantity) {
+            async addToCart(productId, quantity = 1) {
                 const token = localStorage.getItem('token');
                 
                 if (!token) {
