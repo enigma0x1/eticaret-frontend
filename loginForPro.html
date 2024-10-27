@@ -516,9 +516,10 @@
 
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script>
-        // API URL ve Sabitler
+        <script>
+        // API URL ve Site URL
         const API_URL = 'https://eticaret-glif.onrender.com/api';
+        const SITE_URL = 'https://enigma0x1.github.io/eticaret-frontend';
         
         // Sayfa Yüklendiğinde İlk Kontroller
         document.addEventListener('DOMContentLoaded', async () => {
@@ -526,7 +527,6 @@
             
             if (token) {
                 try {
-                    // Token'ı doğrula
                     const response = await fetch(`${API_URL}/auth/verify-token`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
@@ -535,13 +535,11 @@
     
                     const data = await response.json();
     
-                    // Token geçerliyse ve professional ise dashboard'a yönlendir
                     if (data.success && data.userType === 'professional') {
-                        window.location.replace('dashboard.html');
+                        window.location.replace(`${SITE_URL}/dashboard.html`);
                         return;
                     }
                 } catch (error) {
-                    // Token geçersizse temizle
                     localStorage.clear();
                 }
             }
@@ -598,7 +596,7 @@
                     showToast('Giriş başarılı! Yönlendiriliyorsunuz...', 'success');
                     
                     setTimeout(() => {
-                        window.location.replace('dashboard.html');
+                        window.location.replace(`${SITE_URL}/dashboard.html`);
                     }, 1500);
                 } else {
                     throw new Error(data.message || 'Giriş başarısız');
@@ -626,7 +624,6 @@
                 const otherProfession = document.getElementById('otherProfession').value;
                 const diplomaFile = document.getElementById('diplomaFile').files[0];
         
-                // Form validation
                 if (!fullName || !email || !password || !profession) {
                     throw new Error('Lütfen tüm zorunlu alanları doldurun');
                 }
@@ -660,7 +657,7 @@
             }
         }
         
-        // Şifre Görünürlüğü Toggle
+        // Form Toggle ve Diğer UI Fonksiyonları
         function togglePasswordVisibility(inputId, icon) {
             const input = document.getElementById(inputId);
             if (input.type === 'password') {
@@ -674,31 +671,6 @@
             }
         }
         
-        // Şifre Güçlülük Kontrolü
-        function checkPasswordStrength(password) {
-            const strengthBar = document.querySelector('.password-strength-bar');
-            let strength = 0;
-            
-            if (password.match(/[a-z]+/)) strength += 1;
-            if (password.match(/[A-Z]+/)) strength += 1;
-            if (password.match(/[0-9]+/)) strength += 1;
-            if (password.match(/[$@#&!]+/)) strength += 1;
-            if (password.length >= 8) strength += 1;
-        
-            switch (true) {
-                case strength <= 2:
-                    strengthBar.className = 'password-strength-bar strength-weak';
-                    break;
-                case strength <= 4:
-                    strengthBar.className = 'password-strength-bar strength-medium';
-                    break;
-                case strength === 5:
-                    strengthBar.className = 'password-strength-bar strength-strong';
-                    break;
-            }
-        }
-        
-        // Form Toggle
         function toggleForm() {
             const loginForm = document.getElementById('loginForm');
             const signupForm = document.getElementById('signupForm');
@@ -712,7 +684,11 @@
             }
         }
         
-        // Meslek Seçimi
+        function handleFileSelect(event) {
+            const fileName = event.target.files[0]?.name;
+            document.getElementById('fileName').textContent = fileName || '';
+        }
+        
         function toggleOtherProfession() {
             const profession = document.getElementById('profession');
             const otherProfessionGroup = document.getElementById('otherProfessionGroup');
@@ -727,18 +703,6 @@
             }
         }
         
-        // Dosya Seçimi
-        function handleFileSelect(event) {
-            const fileName = event.target.files[0]?.name;
-            document.getElementById('fileName').textContent = fileName || '';
-        }
-        
-        // Sosyal Medya ile Giriş
-        function handleSocialLogin(provider) {
-            showToast(`${provider} ile giriş yakında aktif olacak!`, 'info');
-        }
-        
-        // Dosya Yükleme Initialize
         function initializeFileUpload() {
             const dropZone = document.querySelector('.file-upload-btn');
             const fileInput = document.getElementById('diplomaFile');
