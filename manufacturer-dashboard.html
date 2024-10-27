@@ -282,506 +282,470 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const API_URL = 'https://eticaret-glif.onrender.com/api';
-let addProductModal;
-
-// Loading göstergesi fonksiyonları
-function showLoading() {
-    document.getElementById('loading').style.display = 'flex';
-}
-
-function hideLoading() {
-    document.getElementById('loading').style.display = 'none';
-}
-
-// Auth Guard Implementation
-async function verifyAuth() {
-    const token = localStorage.getItem('token');
-    const userType = localStorage.getItem('userType');
-
-    if (!token || userType !== 'manufacturer') {
-        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
-        return false;
-    }
-
-    try {
-        // Endpoint adını güncelle
-        const response = await fetch(`${API_URL}/auth/verify-token`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+    <script>
+        const API_URL = 'https://eticaret-glif.onrender.com/api';
+        let addProductModal;
+        
+        // Loading göstergesi fonksiyonları
+        function showLoading() {
+            document.getElementById('loading').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        // Auth Guard Implementation
+        async function verifyAuth() {
+            const token = localStorage.getItem('token');
+            const userType = localStorage.getItem('userType');
+        
+            if (!token || userType !== 'manufacturer') {
+                window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
+                return false;
+            }
+        
+            try {
+                const response = await fetch(`${API_URL}/auth/verify-token`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+        
+                if (!response.ok) {
+                    throw new Error('Token geçersiz');
+                }
+        
+                return true;
+            } catch (error) {
+                console.error('Auth error:', error);
+                window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
+                return false;
+            }
+        }
+        
+        // Authenticated Fetch Utility
+        async function authenticatedFetch(url, options = {}) {
+            showLoading();
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        ...options.headers
+                    },
+                    credentials: 'include'
+                });
+        
+                if (response.status === 401) {
+                    localStorage.clear();
+                    window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
+                    return null;
+                }
+        
+                return response;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                showError('Bir hata oluştu');
+                throw error;
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isAuthenticated = await verifyAuth();
+            if (isAuthenticated) {
+                initializeApp();
             }
         });
-
-        if (!response.ok) {
-            throw new Error('Token geçersiz');
-        }
-
-        return true;
-    } catch (error) {
-        console.error('Auth error:', error);
-        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
-        return false;
-    }
-}
-
-// Authenticated Fetch Utility
-async function authenticatedFetch(url, options = {}) {
-    showLoading();
-    const token = localStorage.getItem('token');
-    
-    try {
-        const response = await fetch(url, {
-            ...options,
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                ...options.headers
-            },
-            credentials: 'include'
-        });
-
-        if (response.status === 401) {
-            localStorage.clear();
-            window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
-            return null;
-        }
-
-        return response;
-    } catch (error) {
-        console.error('Fetch error:', error);
-        showError('Bir hata oluştu');
-        throw error;
-    } finally {
-        hideLoading();
-    }
-}
-
-// Sayfa yüklendiğinde
-document.addEventListener('DOMContentLoaded', async () => {
-    const isAuthenticated = await verifyAuth();
-    if (isAuthenticated) {
-        initializeApp();
-    }
-});
-
-// Uygulama başlatma
-function initializeApp() {
-    addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
-    setupEventListeners();
-    loadDashboard();
-}
-
-// Event Listeners
-function setupEventListeners() {
-    // Navigasyon
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            if (!e.currentTarget.hasAttribute('onclick')) {
-                e.preventDefault();
-                const page = e.currentTarget.dataset.page;
-                navigateToPage(page);
-            }
-        });
-    });
-
-    // Form submit listeners
-    document.getElementById('company-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        updateProfile();
-    });
-    
-    // Dosya yükleme preview'ları
-    document.getElementById('product-images').addEventListener('change', previewImages);
-    document.getElementById('company-documents').addEventListener('change', previewDocuments);
-
-    // Ürün formu submit
-    document.getElementById('productForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        saveProduct();
-    });
-}
-
-// Sayfa navigasyonu
-function navigateToPage(page) {
-    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-    document.getElementById(`${page}-page`).style.display = 'block';
-    
-    document.querySelectorAll('.nav-link').forEach(link => {
-        link.classList.remove('active');
-    });
-    document.querySelector(`[data-page="${page}"]`).classList.add('active');
-
-    switch(page) {
-        case 'dashboard':
+        
+        // Uygulama başlatma
+        function initializeApp() {
+            addProductModal = new bootstrap.Modal(document.getElementById('addProductModal'));
+            setupEventListeners();
             loadDashboard();
-            break;
-        case 'products':
-            loadProducts();
-            break;
-        case 'profile':
-            loadProfile();
-            break;
-    }
-}
-
-// Modal işlemleri
-function openAddProductModal() {
-    document.getElementById('productId').value = '';
-    document.getElementById('productModalTitle').textContent = 'Yeni Ürün Ekle';
-    document.getElementById('productForm').reset();
-    document.getElementById('images-preview').innerHTML = '';
-    addProductModal.show();
-}
-
-// Dashboard yükleme
-// Dashboard yükleme
-async function loadDashboard() {
-    try {
-        const response = await authenticatedFetch(`${API_URL}/manufacturer/dashboard`);
-        if (!response) return;
-
-        const data = await response.json();
-        console.log('Dashboard data:', data); // Debug için
+        }
         
-        if (data.success) {
-            document.getElementById('total-products').textContent = data.totalProducts;
-            document.getElementById('out-of-stock').textContent = data.outOfStock;
-
-            const recentProductsHtml = data.recentProducts.map(product => `
-                <div class="d-flex align-items-center mb-3">
-                    <img src="${API_URL}${product.image}" class="product-image me-3" alt="${product.title}">
-                    <div>
-                        <h6>${product.title}</h6>
-                        <p class="mb-0">₺${product.price}</p>
-                    </div>
-                </div>
-            `).join('');
-            document.getElementById('recent-products-list').innerHTML = recentProductsHtml;
-        } else {
-            showError(data.message || 'Dashboard yüklenirken hata oluştu');
-        }
-    } catch (error) {
-        console.error('Dashboard error:', error);
-        showError('Dashboard yüklenirken hata oluştu');
-    }
-}
-
-// Ürünleri yükle
-async function loadProducts() {
-    try {
-        const response = await authenticatedFetch(`${API_URL}/manufacturer/products`);
-        if (!response) return;
-
-        const data = await response.json();
-        console.log('Products data:', data); // Debug için
-        
-        if (data.success) {
-            const tableBody = document.getElementById('products-table-body');
-            tableBody.innerHTML = data.products.map(product => `
-                <tr>
-                    <td><img src="${API_URL}${product.image}" class="product-image" alt="${product.title}"></td>
-                    <td>${product.title}</td>
-                    <td>${product.category}</td>
-                    <td>₺${product.price}</td>
-                    <td>${product.stock || 'N/A'}</td>
-                    <td>
-                        <button class="btn btn-sm btn-primary" onclick="editProduct('${product._id}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteProduct('${product._id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        } else {
-            showError(data.message || 'Ürünler yüklenirken hata oluştu');
-        }
-    } catch (error) {
-        console.error('Products error:', error);
-        showError('Ürünler yüklenirken hata oluştu');
-    }
-}
-// Profil bilgilerini yükle
-async function loadProfile() {
-    try {
-        const response = await authenticatedFetch(`${API_URL}/manufacturer/profile`);
-        if (!response) return;
-
-        const data = await response.json();
-        
-        if (data.success) {
-            document.getElementById('company-name').value = data.manufacturer.companyName || '';
-            document.getElementById('tax-number').value = data.manufacturer.taxNumber || '';
-            document.getElementById('address').value = data.manufacturer.address || '';
-            document.getElementById('phone').value = data.manufacturer.phone || '';
-            document.getElementById('business-area').value = data.manufacturer.businessArea || '';
-            document.getElementById('contact-name').value = data.manufacturer.contactName || '';
-
-            if (data.manufacturer.documents && data.manufacturer.documents.length > 0) {
-                const documentsHtml = data.manufacturer.documents.map(doc => `
-                    <div class="document-preview">
-                        <a href="${doc}" target="_blank">Belge</a>
-                        <button class="btn btn-sm btn-danger" onclick="deleteDocument('${doc}')">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `).join('');
-                document.getElementById('documents-preview').innerHTML = documentsHtml;
-            }
-        } else {
-            showError(data.message || 'Profil bilgileri yüklenirken hata oluştu');
-        }
-    } catch (error) {
-        showError('Profil bilgileri yüklenirken hata oluştu');
-    }
-}
-
-// Profil güncelle
-async function updateProfile() {
-    const formData = new FormData();
-
-    formData.append('companyName', document.getElementById('company-name').value);
-    formData.append('address', document.getElementById('address').value);
-    formData.append('phone', document.getElementById('phone').value);
-    formData.append('businessArea', document.getElementById('business-area').value);
-    formData.append('contactName', document.getElementById('contact-name').value);
-
-    const documents = document.getElementById('company-documents').files;
-    for (let i = 0; i < documents.length; i++) {
-        formData.append('documents', documents[i]);
-    }
-
-    try {
-        const response = await authenticatedFetch(`${API_URL}/manufacturer/profile`, {
-            method: 'PUT',
-            body: formData
-        });
-
-        if (response && response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                showNotification('Profil güncellendi');
-                loadProfile();
-            } else {
-                throw new Error(data.message || 'Profil güncellenemedi');
-            }
-        }
-    } catch (error) {
-        showError(error.message || 'Profil güncellenirken hata oluştu');
-    }
-}
-
-// Ürün kaydet
-// Ürün kaydet
-async function saveProduct() {
-    const formData = new FormData();
-    const productId = document.getElementById('productId').value;
-
-    formData.append('title', document.getElementById('product-name').value);
-    formData.append('description', document.getElementById('product-description').value);
-    formData.append('price', document.getElementById('product-price').value);
-    formData.append('category', document.getElementById('product-category').value);
-    formData.append('modelFormats', JSON.stringify(['3D']));
-
-    const imageFile = document.getElementById('product-images').files[0];
-    if (imageFile) {
-        formData.append('image', imageFile);
-    }
-
-    try {
-        // URL'yi düzelttik
-        const url = productId ? 
-            `${API_URL}/products/${productId}` : 
-            `${API_URL}/products`;
-        
-        console.log('Sending request to:', url); // Debug için
-        console.log('Form data:', Object.fromEntries(formData.entries())); // Debug için
-
-        const response = await authenticatedFetch(url, {
-            method: productId ? 'PUT' : 'POST',
-            body: formData
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Sunucu hatası');
-        }
-
-        const data = await response.json();
-        console.log('Server response:', data);
-
-        if (data.success) {
-            showNotification(productId ? 'Ürün güncellendi' : 'Ürün eklendi');
-            addProductModal.hide();
-            loadDashboard();
-            loadProducts();
-        } else {
-            throw new Error(data.message || 'İşlem başarısız');
-        }
-    } catch (error) {
-        console.error('Save product error:', error);
-        showError(error.message || 'Ürün kaydedilirken hata oluştu');
-    }
-}
-// Ürün düzenleme
-async function editProduct(productId) {
-    try {
-        const response = await authenticatedFetch(`${API_URL}/manufacturer/products/${productId}`);
-        if (!response) return;
-
-        const data = await response.json();
-        
-        if (data.success) {
-            document.getElementById('productId').value = productId;
-            document.getElementById('productModalTitle').textContent = 'Ürün Düzenle';
-            document.getElementById('product-name').value = data.product.name;
-            document.getElementById('product-description').value = data.product.description;
-            document.getElementById('product-price').value = data.product.price;
-            document.getElementById('product-category').value = data.product.category;
-            document.getElementById('product-stock').value = data.product.stock;
-
-            const imagesPreview = document.getElementById('images-preview');
-            imagesPreview.innerHTML = data.product.images.map(image => `
-                <img src="${image}" class="product-image me-2 mb-2" alt="current">
-            `).join('');
-
-            addProductModal.show();
-        } else {
-            showError(data.message || 'Ürün bilgileri alınamadı');
-        }
-    } catch (error) {
-        showError('Ürün bilgileri alınırken hata oluştu');
-    }
-}
-
-// Ürün silme
-async function deleteProduct(productId) {
-    if (confirm('Bu ürünü silmek istediğinizden emin misiniz?')) {
-        try {
-            const response = await authenticatedFetch(`${API_URL}/manufacturer/products/${productId}`, {
-                method: 'DELETE'
+        // Event Listeners
+        function setupEventListeners() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (!e.currentTarget.hasAttribute('onclick')) {
+                        e.preventDefault();
+                        const page = e.currentTarget.dataset.page;
+                        navigateToPage(page);
+                    }
+                });
             });
-
-            if (response && response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    showNotification('Ürün silindi');
+        
+            document.getElementById('company-form')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                updateProfile();
+            });
+            
+            document.getElementById('product-images')?.addEventListener('change', previewImages);
+            document.getElementById('company-documents')?.addEventListener('change', previewDocuments);
+        
+            document.getElementById('productForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveProduct();
+            });
+        }
+        
+        // Sayfa navigasyonu
+        function navigateToPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(`${page}-page`).style.display = 'block';
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[data-page="${page}"]`).classList.add('active');
+        
+            switch(page) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'products':
                     loadProducts();
+                    break;
+                case 'profile':
+                    loadProfile();
+                    break;
+            }
+        }
+        
+        // Ürün kaydetme
+        async function saveProduct() {
+            try {
+                const formData = new FormData();
+                const productId = document.getElementById('productId').value;
+        
+                formData.append('title', document.getElementById('product-name').value);
+                formData.append('description', document.getElementById('product-description').value);
+                formData.append('price', document.getElementById('product-price').value);
+                formData.append('category', document.getElementById('product-category').value);
+                formData.append('modelFormats', JSON.stringify(['3D']));
+        
+                const imageFile = document.getElementById('product-images').files[0];
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+        
+                console.log('Sending product data:', Object.fromEntries(formData.entries()));
+        
+                const response = await authenticatedFetch(`${API_URL}/products`, {
+                    method: 'POST',
+                    body: formData
+                });
+        
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Sunucu hatası');
+                }
+        
+                const data = await response.json();
+                console.log('Server response:', data);
+        
+                if (data.success) {
+                    showNotification('Ürün başarıyla eklendi');
+                    addProductModal.hide();
+                    loadProducts();
+                    loadDashboard();
                 } else {
-                    throw new Error(data.message || 'Ürün silinemedi');
+                    throw new Error(data.message || 'Ürün eklenemedi');
+                }
+            } catch (error) {
+                console.error('Save product error:', error);
+                showError(error.message || 'Ürün kaydedilirken hata oluştu');
+            }
+        }
+        
+        // Ürünleri yükleme
+        async function loadProducts() {
+            try {
+                const response = await authenticatedFetch(`${API_URL}/products/my-products`);
+                if (!response || !response.ok) {
+                    throw new Error('Ürünler yüklenemedi');
+                }
+        
+                const data = await response.json();
+                console.log('Products data:', data);
+        
+                if (data.success) {
+                    const tableBody = document.getElementById('products-table-body');
+                    tableBody.innerHTML = data.products.map(product => `
+                        <tr>
+                            <td><img src="${API_URL}${product.image}" class="product-image" alt="${product.title}"></td>
+                            <td>${product.title}</td>
+                            <td>${product.category}</td>
+                            <td>₺${product.price}</td>
+                            <td>${product.stock || 'N/A'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="editProduct('${product._id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteProduct('${product._id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    throw new Error(data.message || 'Ürünler yüklenemedi');
+                }
+            } catch (error) {
+                console.error('Load products error:', error);
+                showError(error.message);
+            }
+        }
+        
+        // Yardımcı fonksiyonlar
+        function showNotification(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0`;
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            document.querySelector('.toast-container').appendChild(toast);
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            toast.addEventListener('hidden.bs.toast', () => {
+                toast.remove();
+            });
+        }
+        
+        function showError(message) {
+            showNotification(message, 'danger');
+        }
+        
+        function previewImages(event) {
+            const preview = document.getElementById('images-preview');
+            preview.innerHTML = '';
+            
+            Array.from(event.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML += `
+                        <img src="${e.target.result}" class="product-image me-2 mb-2" alt="preview">
+                    `;
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+        
+        function previewDocuments(event) {
+            const preview = document.getElementById('documents-preview');
+            preview.innerHTML = '';
+            
+            Array.from(event.target.files).forEach(file => {
+                preview.innerHTML += `
+                    <div class="document-preview">
+                        <span>${file.name}</span>
+                    </div>
+                `;
+            });
+        }
+        
+        // Modal işlemleri
+        function openAddProductModal() {
+            document.getElementById('productId').value = '';
+            document.getElementById('productModalTitle').textContent = 'Yeni Ürün Ekle';
+            document.getElementById('productForm').reset();
+            document.getElementById('images-preview').innerHTML = '';
+            addProductModal.show();
+        }
+        
+        // Ürün düzenleme
+        async function editProduct(productId) {
+            try {
+                const response = await authenticatedFetch(`${API_URL}/products/${productId}`);
+                if (!response || !response.ok) {
+                    throw new Error('Ürün bilgileri alınamadı');
+                }
+        
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('productId').value = productId;
+                    document.getElementById('productModalTitle').textContent = 'Ürün Düzenle';
+                    document.getElementById('product-name').value = data.product.title;
+                    document.getElementById('product-description').value = data.product.description;
+                    document.getElementById('product-price').value = data.product.price;
+                    document.getElementById('product-category').value = data.product.category;
+        
+                    const imagesPreview = document.getElementById('images-preview');
+                    if (data.product.image) {
+                        imagesPreview.innerHTML = `
+                            <img src="${API_URL}${data.product.image}" class="product-image me-2 mb-2" alt="current">
+                        `;
+                    }
+        
+                    addProductModal.show();
+                } else {
+                    throw new Error(data.message || 'Ürün bilgileri alınamadı');
+                }
+            } catch (error) {
+                console.error('Edit product error:', error);
+                showError(error.message);
+            }
+        }
+        
+        // Ürün silme
+        async function deleteProduct(productId) {
+            if (confirm('Bu ürünü silmek istediğinizden emin misiniz?')) {
+                try {
+                    const response = await authenticatedFetch(`${API_URL}/products/${productId}`, {
+                        method: 'DELETE'
+                    });
+        
+                    if (!response || !response.ok) {
+                        throw new Error('Ürün silinemedi');
+                    }
+        
+                    const data = await response.json();
+                    if (data.success) {
+                        showNotification('Ürün başarıyla silindi');
+                        loadProducts();
+                        loadDashboard();
+                    } else {
+                        throw new Error(data.message || 'Ürün silinemedi');
+                    }
+                } catch (error) {
+                    console.error('Delete product error:', error);
+                    showError(error.message);
                 }
             }
-        } catch (error) {
-            showError(error.message || 'Ürün silinirken hata oluştu');
         }
-    }
-}
-
-// Belge silme
-async function deleteDocument(docPath) {
-    if (confirm('Bu belgeyi silmek istediğinizden emin misiniz?')) {
-        try {
-            const response = await authenticatedFetch(`${API_URL}/manufacturer/documents`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ documentPath: docPath })
-            });
-
-            if (response && response.ok) {
+        
+        // Dashboard yükleme
+        async function loadDashboard() {
+            try {
+                const response = await authenticatedFetch(`${API_URL}/products/my-products`);
+                if (!response || !response.ok) {
+                    throw new Error('Dashboard bilgileri alınamadı');
+                }
+        
+                const data = await response.json();
+                console.log('Dashboard data:', data);
+        
+                if (data.success) {
+                    // Toplam ürün sayısı
+                    document.getElementById('total-products').textContent = data.products.length;
+        
+                    // Son eklenen ürünler (en fazla 5 tane)
+                    const recentProducts = data.products
+                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                        .slice(0, 5);
+        
+                    const recentProductsHtml = recentProducts.map(product => `
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="${API_URL}${product.image}" class="product-image me-3" alt="${product.title}">
+                            <div>
+                                <h6>${product.title}</h6>
+                                <p class="mb-0">₺${product.price}</p>
+                            </div>
+                        </div>
+                    `).join('');
+        
+                    document.getElementById('recent-products-list').innerHTML = recentProductsHtml;
+                } else {
+                    throw new Error(data.message || 'Dashboard bilgileri alınamadı');
+                }
+            } catch (error) {
+                console.error('Dashboard error:', error);
+                showError(error.message);
+            }
+        }
+        
+        // Profil yükleme
+        async function loadProfile() {
+            try {
+                const response = await authenticatedFetch(`${API_URL}/auth/profile`);
+                if (!response || !response.ok) {
+                    throw new Error('Profil bilgileri alınamadı');
+                }
+        
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('company-name').value = data.manufacturer?.companyName || '';
+                    document.getElementById('tax-number').value = data.manufacturer?.taxNumber || '';
+                    document.getElementById('address').value = data.manufacturer?.address || '';
+                    document.getElementById('phone').value = data.manufacturer?.phone || '';
+                    document.getElementById('business-area').value = data.manufacturer?.businessArea || '';
+                    document.getElementById('contact-name').value = data.manufacturer?.contactName || '';
+                } else {
+                    throw new Error(data.message || 'Profil bilgileri alınamadı');
+                }
+            } catch (error) {
+                console.error('Profile error:', error);
+                showError(error.message);
+            }
+        }
+        
+        // Çıkış yapma
+        async function logout() {
+            try {
+                await authenticatedFetch(`${API_URL}/auth/logout`, {
+                    method: 'POST'
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            } finally {
+                localStorage.clear();
+                window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
+            }
+        }
+        
+        // Profil güncelleme
+        async function updateProfile() {
+            try {
+                const formData = new FormData();
+                formData.append('companyName', document.getElementById('company-name').value);
+                formData.append('address', document.getElementById('address').value);
+                formData.append('phone', document.getElementById('phone').value);
+                formData.append('businessArea', document.getElementById('business-area').value);
+                formData.append('contactName', document.getElementById('contact-name').value);
+        
+                const documents = document.getElementById('company-documents').files;
+                for (let i = 0; i < documents.length; i++) {
+                    formData.append('documents', documents[i]);
+                }
+        
+                const response = await authenticatedFetch(`${API_URL}/auth/profile`, {
+                    method: 'PUT',
+                    body: formData
+                });
+        
+                if (!response || !response.ok) {
+                    throw new Error('Profil güncellenemedi');
+                }
+        
                 const data = await response.json();
                 if (data.success) {
-                    showNotification('Belge silindi');
+                    showNotification('Profil başarıyla güncellendi');
                     loadProfile();
                 } else {
-                    throw new Error(data.message || 'Belge silinemedi');
+                    throw new Error(data.message || 'Profil güncellenemedi');
                 }
+            } catch (error) {
+                console.error('Update profile error:', error);
+                showError(error.message);
             }
-        } catch (error) {
-            showError(error.message || 'Belge silinirken hata oluştu');
         }
-    }
-}
-
-// Çıkış yap
-// Çıkış yap
-async function logout() {
-    try {
-        // Önce API'ye logout isteği gönder
-        const response = await authenticatedFetch(`${API_URL}/manufacturer/logout`, {
-            method: 'POST'
-        });
-
-        console.log('Logout response:', response); // Debug için
-
-        // İstek başarılı olmasa bile local storage'ı temizle ve yönlendir
-        localStorage.clear(); // Tüm storage'ı temizle
-        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
-        
-    } catch (error) {
-        console.error('Logout error:', error);
-        // Hata durumunda da local storage'ı temizle ve yönlendir
-        localStorage.clear();
-        window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
-    }
-}
-
-// Yardımcı fonksiyonlar
-function showNotification(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast align-items-center text-white bg-${type} border-0`;
-    toast.setAttribute('role', 'alert');
-    toast.setAttribute('aria-live', 'assertive');
-    toast.setAttribute('aria-atomic', 'true');
-    
-    toast.innerHTML = `
-        <div class="d-flex">
-            <div class="toast-body">${message}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-        </div>
-    `;
-    document.querySelector('.toast-container').appendChild(toast);
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-    
-    toast.addEventListener('hidden.bs.toast', () => {
-        toast.remove();
-    });
-}
-
-function showError(message) {
-    showNotification(message, 'danger');
-}
-
-function previewImages(event) {
-    const preview = document.getElementById('images-preview');
-    preview.innerHTML = '';
-    
-    Array.from(event.target.files).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            preview.innerHTML += `
-                <img src="${e.target.result}" class="product-image me-2 mb-2" alt="preview">
-            `;
-        }
-        reader.readAsDataURL(file);
-    });
-}
-
-function previewDocuments(event) {
-    const preview = document.getElementById('documents-preview');
-    preview.innerHTML = '';
-    
-    Array.from(event.target.files).forEach(file => {
-        preview.innerHTML += `
-            <div class="document-preview">
-                <span>${file.name}</span>
-            </div>
-        `;
-    });
-}
-</script>
+    </script>
 </body>
 </html>
