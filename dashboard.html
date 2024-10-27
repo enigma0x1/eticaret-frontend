@@ -784,535 +784,538 @@
     <!-- Toastify JS -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
         <script>
-        const API_URL = 'https://eticaret-glif.onrender.com/api';
-    
-        // Sayfa yüklendiğinde çalışacak ana fonksiyon
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Token kontrolü
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    window.location.replace('loginForPro.html');
-                    return;
-                }
-    
-                // Token'ı doğrula
-                const response = await fetch(`${API_URL}/auth/verify-token`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-    
-                const data = await response.json();
-    
-                if (!data.success || data.userType !== 'professional') {
-                    throw new Error('Invalid token');
-                }
-    
-                // Token geçerliyse ProductManager'ı başlat
-                window.productManager = new ProductManager();
-    
-            } catch (error) {
-                console.error('Auth error:', error);
-                localStorage.clear();
-                window.location.replace('loginForPro.html');
-            }
-        });
-    
-        // Toast bildirimleri için yardımcı fonksiyon
-        function showToast(message, type = 'success') {
-            Toastify({
-                text: message,
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                style: {
-                    background: type === 'success' ? 
-                        "linear-gradient(to right, #00b09b, #96c93d)" : 
-                        "linear-gradient(to right, #ff5f6d, #ffc371)",
-                }
-            }).showToast();
-        }
-    
-        // Çıkış işlemi
-        async function handleLogout() {
-            try {
-                localStorage.clear();
-                window.location.replace('loginForPro.html');
-            } catch (error) {
-                console.error('Logout error:', error);
-                localStorage.clear();
-                window.location.replace('loginForPro.html');
-            }
-        }
+            // API URL ve Site URL
+            const API_URL = 'https://eticaret-glif.onrender.com/api';
+            const SITE_URL = 'https://enigma0x1.github.io/eticaret-frontend';
         
-        class ProductManager {
-            constructor() {
-                this.products = [];
-                this.filteredProducts = [];
-                this.cart = [];
-                this.page = 1;
-                this.loading = false;
-                this.hasMore = true;
-                this.activeFilters = new Set();
-        
-                this.headers = {
-                    'Authorization': `Bearer ${AUTH_TOKEN}`,
-                    'Content-Type': 'application/json'
-                };
-        
-                this.init();
-            }
-        
-            async init() {
+            // Sayfa yüklendiğinde çalışacak ana fonksiyon
+            document.addEventListener('DOMContentLoaded', async () => {
                 try {
-                    await this.verifyToken();
-                    await this.loadInitialProducts();
-                    await this.loadCart();
-                    this.setupEventListeners();
-                    this.setupInfiniteScroll();
-                    this.loadFromLocalStorage();
-                    this.hideLoader();
-                } catch (error) {
-                    this.handleError(error);
-                    if (error.message.includes('token')) {
-                        localStorage.clear();
-                        safeRedirect('loginForPro.html');
+                    // Token kontrolü
+                    const token = localStorage.getItem('token');
+                    if (!token) {
+                        window.location.replace(`${SITE_URL}/loginForPro.html`);
+                        return;
                     }
-                }
-            }
         
-            async verifyToken() {
-                const response = await fetch(`${API_URL}/auth/verify-token`, {
-                    headers: this.headers
-                });
-        
-                const data = await response.json();
-                if (!data.success || data.userType !== 'professional') {
-                    throw new Error('Invalid token or user type');
-                }
-        
-                document.getElementById('userName').textContent = 
-                    data.user.companyName || data.user.fullName;
-            }
-        
-            async loadInitialProducts() {
-                const response = await fetch(`${API_URL}/products?page=1&limit=12`, {
-                    headers: this.headers
-                });
-        
-                const data = await response.json();
-                if (!data.success) throw new Error(data.message);
-        
-                this.products = data.products;
-                this.filteredProducts = [...this.products];
-                this.loadProducts();
-            }
-        
-            async loadCart() {
-                // Cart loading logic will be implemented here
-                console.log('Loading cart...');
-            }
-        
-            loadFromLocalStorage() {
-                // Load saved filters and preferences from localStorage
-                console.log('Loading from localStorage...');
-            }
-        
-            setupEventListeners() {
-                // Ana kategori değişikliği
-                document.getElementById('mainCategory').addEventListener('change', 
-                    (e) => this.handleMainCategoryChange(e.target.value));
-        
-                // Alt kategori değişikliği
-                document.getElementById('subCategory').addEventListener('change',
-                    (e) => {
-                        if (e.target.value) {
-                            this.addActiveFilter('subCategory', e.target.value);
-                        } else {
-                            this.removeActiveFilter('subCategory');
-                        }
-                        this.filterProducts();
-                    });
-        
-                // Fiyat filtresi
-                document.querySelector('.apply-price').addEventListener('click',
-                    () => this.applyPriceFilter());
-        
-                // Format filtreleri
-                document.querySelectorAll('input[name="format"]').forEach(checkbox => {
-                    checkbox.addEventListener('change', () => this.handleFormatFilter());
-                });
-        
-                // Sıralama
-                document.getElementById('sorting').addEventListener('change',
-                    (e) => this.handleSorting(e.target.value));
-        
-                // Filtreleri temizle
-                document.getElementById('clearFilters').addEventListener('click',
-                    () => this.clearAllFilters());
-        
-                // Arama
-                const searchInput = document.querySelector('.search-bar');
-                searchInput.addEventListener('input', this.debounce((e) => {
-                    this.handleSearch(e.target.value);
-                }, 300));
-        
-                // Kullanıcı menüsü
-                document.getElementById('userMenuBtn').addEventListener('click',
-                    () => this.toggleUserMenu());
-        
-                // Sayfa dışı tıklama
-                document.addEventListener('click', (e) => {
-                    const userMenu = document.getElementById('userMenuModal');
-                    const userMenuBtn = document.getElementById('userMenuBtn');
-                    
-                    if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
-                        userMenu.style.display = 'none';
-                    }
-                });
-            }
-        
-            setupInfiniteScroll() {
-                const options = {
-                    root: null,
-                    rootMargin: '100px',
-                    threshold: 0.1
-                };
-        
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting && !this.loading && this.hasMore) {
-                            this.loadMoreProducts();
+                    // Token'ı doğrula
+                    const response = await fetch(`${API_URL}/auth/verify-token`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
                         }
                     });
-                }, options);
-        
-                const target = document.getElementById('loadingMore');
-                if (target) observer.observe(target);
-            }
-        
-            debounce(func, wait) {
-                let timeout;
-                return function executedFunction(...args) {
-                    const later = () => {
-                        clearTimeout(timeout);
-                        func(...args);
-                    };
-                    clearTimeout(timeout);
-                    timeout = setTimeout(later, wait);
-                };
-            }
-        
-            handleSearch(searchTerm) {
-                if (!searchTerm.trim()) {
-                    this.filteredProducts = [...this.products];
-                    this.loadProducts();
-                    return;
-                }
-        
-                const searchIn = Array.from(
-                    document.querySelectorAll('input[name="searchIn"]:checked')
-                ).map(input => input.value);
-        
-                this.filteredProducts = this.products.filter(product => {
-                    return searchIn.some(field => {
-                        const value = product[field]?.toString().toLowerCase() || '';
-                        return value.includes(searchTerm.toLowerCase());
-                    });
-                });
-        
-                this.loadProducts();
-            }
-        
-            async loadMoreProducts() {
-                if (this.loading || !this.hasMore) return;
-        
-                this.loading = true;
-                document.getElementById('loadingMore').style.display = 'flex';
-        
-                try {
-                    const response = await fetch(
-                        `${API_URL}/products?page=${++this.page}&limit=12`,
-                        { headers: this.headers }
-                    );
         
                     const data = await response.json();
-                    if (data.success) {
-                        this.products = [...this.products, ...data.products];
-                        this.hasMore = data.hasMore;
-                        this.filterProducts();
+        
+                    if (!data.success || data.userType !== 'professional') {
+                        throw new Error('Invalid token');
                     }
+        
+                    // Kullanıcı adını güncelle
+                    const user = JSON.parse(localStorage.getItem('user'));
+                    if (user) {
+                        document.getElementById('userName').textContent = user.fullName;
+                    }
+        
+                    // ProductManager'ı başlat
+                    window.productManager = new ProductManager();
+        
                 } catch (error) {
-                    this.handleError(error);
-                } finally {
+                    console.error('Auth error:', error);
+                    localStorage.clear();
+                    window.location.replace(`${SITE_URL}/loginForPro.html`);
+                }
+            });
+        
+            // Toast bildirimleri için yardımcı fonksiyon
+            function showToast(message, type = 'success') {
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    style: {
+                        background: type === 'success' ? 
+                            "linear-gradient(to right, #00b09b, #96c93d)" : 
+                            "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    }
+                }).showToast();
+            }
+        
+            // Çıkış işlemi
+            async function handleLogout() {
+                try {
+                    localStorage.clear();
+                    window.location.replace(`${SITE_URL}/loginForPro.html`);
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    localStorage.clear();
+                    window.location.replace(`${SITE_URL}/loginForPro.html`);
+                }
+            }
+                // ProductManager Class
+            class ProductManager {
+                constructor() {
+                    this.products = [];
+                    this.filteredProducts = [];
+                    this.cart = [];
+                    this.page = 1;
                     this.loading = false;
-                    document.getElementById('loadingMore').style.display = 'none';
-                }
-            }
+                    this.hasMore = true;
+                    this.activeFilters = new Set();
+                    this.token = localStorage.getItem('token');
         
-            handleMainCategoryChange(category) {
-                const subCategorySelect = document.getElementById('subCategory');
-                subCategorySelect.disabled = !category;
+                    this.headers = {
+                        'Authorization': `Bearer ${this.token}`,
+                        'Content-Type': 'application/json'
+                    };
         
-                if (category) {
-                    this.addActiveFilter('category', category);
-                    const subCategories = this.getSubCategories(category);
-                    this.populateSubCategories(subCategories);
-                } else {
-                    this.removeActiveFilter('category');
-                    subCategorySelect.innerHTML = '<option value="">Seçiniz</option>';
+                    this.init();
                 }
         
-                this.filterProducts();
-            }
-        
-            getSubCategories(mainCategory) {
-                const subCategories = {
-                    'Endüstriyel Ekipmanlar': ['Valfler', 'Pompalar', 'Filtreler'],
-                    'Makine Parçaları': ['Dişliler', 'Rulmanlar', 'Contalar'],
-                    'Otomasyon Sistemleri': ['PLC', 'Sensörler', 'Kontrol Üniteleri']
-                };
-                return subCategories[mainCategory] || [];
-            }
-        
-            populateSubCategories(subCategories) {
-                const select = document.getElementById('subCategory');
-                select.innerHTML = '<option value="">Seçiniz</option>' +
-                    subCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
-                select.disabled = false;
-            }
-        
-            applyPriceFilter() {
-                const minPrice = document.getElementById('minPrice').value;
-                const maxPrice = document.getElementById('maxPrice').value;
-        
-                if (minPrice || maxPrice) {
-                    this.addActiveFilter('price', `${minPrice || 0}₺ - ${maxPrice || '∞'}₺`);
-                } else {
-                    this.removeActiveFilter('price');
+                async init() {
+                    try {
+                        await this.loadInitialProducts();
+                        await this.loadCart();
+                        this.setupEventListeners();
+                        this.setupInfiniteScroll();
+                        this.hideLoader();
+                    } catch (error) {
+                        this.handleError(error);
+                    }
                 }
         
-                this.filterProducts();
-            }
+                async loadInitialProducts() {
+                    try {
+                        const response = await fetch(`${API_URL}/products?page=1&limit=12`, {
+                            headers: this.headers
+                        });
         
-            handleFormatFilter() {
-                const selectedFormats = Array.from(
-                    document.querySelectorAll('input[name="format"]:checked')
-                ).map(input => input.value);
+                        const data = await response.json();
+                        if (!data.success) throw new Error(data.message);
         
-                if (selectedFormats.length) {
-                    this.addActiveFilter('format', selectedFormats.join(', '));
-                } else {
-                    this.removeActiveFilter('format');
+                        this.products = data.products;
+                        this.filteredProducts = [...this.products];
+                        this.loadProducts();
+                    } catch (error) {
+                        this.handleError(error);
+                    }
                 }
         
-                this.filterProducts();
-            }
-        
-            handleSorting(sortType) {
-                // Implement sorting logic
-                console.log('Sorting by:', sortType);
-            }
-        
-            clearAllFilters() {
-                this.activeFilters.clear();
-                // Reset all form elements
-                document.getElementById('mainCategory').value = '';
-                document.getElementById('subCategory').value = '';
-                document.getElementById('minPrice').value = '';
-                document.getElementById('maxPrice').value = '';
-                document.querySelectorAll('input[name="format"]').forEach(cb => cb.checked = false);
-                
-                this.filterProducts();
-            }
-        
-            addActiveFilter(type, value) {
-                this.activeFilters.add(`${type}:${value}`);
-                this.updateActiveFiltersDisplay();
-            }
-        
-            removeActiveFilter(type) {
-                const filterToRemove = Array.from(this.activeFilters)
-                    .find(filter => filter.startsWith(`${type}:`));
-                if (filterToRemove) {
-                    this.activeFilters.delete(filterToRemove);
-                    this.updateActiveFiltersDisplay();
+                async loadCart() {
+                    // Cart loading logic will be implemented here
+                    console.log('Loading cart...');
                 }
-            }
         
-            updateActiveFiltersDisplay() {
-                const container = document.getElementById('activeFilters');
-                container.innerHTML = Array.from(this.activeFilters)
-                    .map(filter => {
-                        const [type, value] = filter.split(':');
-                        return `
-                            <div class="filter-tag">
-                                ${value}
-                                <i class="fas fa-times" onclick="productManager.removeActiveFilter('${type}')"></i>
-                            </div>
-                        `;
-                    })
-                    .join('');
-            }
+                setupEventListeners() {
+                    // Ana kategori değişikliği
+                    document.getElementById('mainCategory').addEventListener('change', 
+                        (e) => this.handleMainCategoryChange(e.target.value));
         
-            filterProducts() {
-                this.filteredProducts = this.products.filter(product => {
-                    return Array.from(this.activeFilters).every(filter => {
-                        const [type, value] = filter.split(':');
-                        switch (type) {
-                            case 'category':
-                                return product.category === value;
-                            case 'subCategory':
-                                return product.subCategory === value;
-                            case 'format':
-                                const formats = value.split(', ');
-                                return formats.some(format => 
-                                    product.modelFormats.includes(format));
-                            case 'price':
-                                const [min, max] = value.replace('₺', '').split(' - ');
-                                return product.price >= parseFloat(min) && 
-                                       (max === '∞' || product.price <= parseFloat(max));
-                            default:
-                                return true;
+                    // Alt kategori değişikliği
+                    document.getElementById('subCategory').addEventListener('change',
+                        (e) => {
+                            if (e.target.value) {
+                                this.addActiveFilter('subCategory', e.target.value);
+                            } else {
+                                this.removeActiveFilter('subCategory');
+                            }
+                            this.filterProducts();
+                        });
+        
+                    // Fiyat filtresi
+                    document.querySelector('.apply-price').addEventListener('click',
+                        () => this.applyPriceFilter());
+        
+                    // Format filtreleri
+                    document.querySelectorAll('input[name="format"]').forEach(checkbox => {
+                        checkbox.addEventListener('change', () => this.handleFormatFilter());
+                    });
+        
+                    // Sıralama
+                    document.getElementById('sorting').addEventListener('change',
+                        (e) => this.handleSorting(e.target.value));
+        
+                    // Filtreleri temizle
+                    document.getElementById('clearFilters').addEventListener('click',
+                        () => this.clearAllFilters());
+        
+                    // Arama
+                    const searchInput = document.querySelector('.search-bar');
+                    searchInput.addEventListener('input', this.debounce((e) => {
+                        this.handleSearch(e.target.value);
+                    }, 300));
+        
+                    // Kullanıcı menüsü
+                    document.getElementById('userMenuBtn').addEventListener('click',
+                        () => this.toggleUserMenu());
+        
+                    // Sayfa dışı tıklama
+                    document.addEventListener('click', (e) => {
+                        const userMenu = document.getElementById('userMenuModal');
+                        const userMenuBtn = document.getElementById('userMenuBtn');
+                        
+                        if (!userMenuBtn.contains(e.target) && !userMenu.contains(e.target)) {
+                            userMenu.style.display = 'none';
                         }
                     });
-                });
-        
-                this.loadProducts();
-            }
-        
-            loadProducts() {
-                const grid = document.getElementById('productGrid');
-                grid.innerHTML = '';
-        
-                if (this.filteredProducts.length === 0) {
-                    grid.innerHTML = `
-                        <div class="no-results">
-                            <i class="fas fa-search fa-3x"></i>
-                            <p>Sonuç bulunamadı</p>
-                        </div>
-                    `;
-                    return;
                 }
         
-                this.filteredProducts.forEach((product, index) => {
-                    const card = this.createProductCard(product);
-                    card.style.animationDelay = `${index * 50}ms`;
-                    grid.appendChild(card);
-                });
-            }
+                setupInfiniteScroll() {
+                    const options = {
+                        root: null,
+                        rootMargin: '100px',
+                        threshold: 0.1
+                    };
         
-            createProductCard(product) {
-                const article = document.createElement('article');
-                article.className = 'product-card fade-in';
-                article.innerHTML = `
-                    <div class="product-image-container">
-                        <img src="${product.image}" alt="${product.title}" class="product-image" loading="lazy">
-                        ${product.modelFormats.length ? `
-                            <span class="model-badge">
-                                <i class="fas fa-cube"></i>
-                                3B Model
-                            </span>
-                        ` : ''}
-                        ${product.bestSeller ? `
-                            <span class="bestseller-badge">
-                                <i class="fas fa-award"></i>
-                                Çok Satan
-                            </span>
-                        ` : ''}
-                    </div>
-                    <div class="product-content">
-                        <div class="product-category">${product.category}</div>
-                        <h3 class="product-title">${product.title}</h3>
-                        <div class="product-specs">
-                            ${product.specs.map(spec => `
-                                <span class="spec-tag">${spec}</span>
-                            `).join('')}
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting && !this.loading && this.hasMore) {
+                                this.loadMoreProducts();
+                            }
+                        });
+                    }, options);
+        
+                    const target = document.getElementById('loadingMore');
+                    if (target) observer.observe(target);
+                }
+        
+                async loadMoreProducts() {
+                    if (this.loading || !this.hasMore) return;
+        
+                    this.loading = true;
+                    document.getElementById('loadingMore').style.display = 'flex';
+        
+                    try {
+                        const response = await fetch(
+                            `${API_URL}/products?page=${++this.page}&limit=12`,
+                            { headers: this.headers }
+                        );
+        
+                        const data = await response.json();
+                        if (data.success) {
+                            this.products = [...this.products, ...data.products];
+                            this.hasMore = data.hasMore;
+                            this.filterProducts();
+                        }
+                    } catch (error) {
+                        this.handleError(error);
+                    } finally {
+                        this.loading = false;
+                        document.getElementById('loadingMore').style.display = 'none';
+                    }
+                }
+        
+                handleMainCategoryChange(category) {
+                    const subCategorySelect = document.getElementById('subCategory');
+                    subCategorySelect.disabled = !category;
+        
+                    if (category) {
+                        this.addActiveFilter('category', category);
+                        const subCategories = this.getSubCategories(category);
+                        this.popul
+        
+        ateSubCategories(subCategories);
+                    } else {
+                        this.removeActiveFilter('category');
+                        subCategorySelect.innerHTML = '<option value="">Seçiniz</option>';
+                    }
+        
+                    this.filterProducts();
+                }
+        
+                getSubCategories(mainCategory) {
+                    const subCategories = {
+                        'Endüstriyel Ekipmanlar': ['Valfler', 'Pompalar', 'Filtreler'],
+                        'Makine Parçaları': ['Dişliler', 'Rulmanlar', 'Contalar'],
+                        'Otomasyon Sistemleri': ['PLC', 'Sensörler', 'Kontrol Üniteleri']
+                    };
+                    return subCategories[mainCategory] || [];
+                }
+        
+                populateSubCategories(subCategories) {
+                    const select = document.getElementById('subCategory');
+                    select.innerHTML = '<option value="">Seçiniz</option>' +
+                        subCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+                    select.disabled = false;
+                }
+        
+                applyPriceFilter() {
+                    const minPrice = document.getElementById('minPrice').value;
+                    const maxPrice = document.getElementById('maxPrice').value;
+        
+                    if (minPrice || maxPrice) {
+                        this.addActiveFilter('price', `${minPrice || 0}₺ - ${maxPrice || '∞'}₺`);
+                    } else {
+                        this.removeActiveFilter('price');
+                    }
+        
+                    this.filterProducts();
+                }
+        
+                handleFormatFilter() {
+                    const selectedFormats = Array.from(
+                        document.querySelectorAll('input[name="format"]:checked')
+                    ).map(input => input.value);
+        
+                    if (selectedFormats.length) {
+                        this.addActiveFilter('format', selectedFormats.join(', '));
+                    } else {
+                        this.removeActiveFilter('format');
+                    }
+        
+                    this.filterProducts();
+                }
+        
+                handleSorting(sortType) {
+                    switch (sortType) {
+                        case 'priceAsc':
+                            this.filteredProducts.sort((a, b) => a.price - b.price);
+                            break;
+                        case 'priceDesc':
+                            this.filteredProducts.sort((a, b) => b.price - a.price);
+                            break;
+                        case 'newest':
+                            this.filteredProducts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                            break;
+                        case 'bestSelling':
+                            this.filteredProducts.sort((a, b) => b.salesCount - a.salesCount);
+                            break;
+                        default:
+                            // Önerilen sıralama (varsayılan)
+                            this.filteredProducts = [...this.products];
+                    }
+                    this.loadProducts();
+                }
+        
+                handleSearch(searchTerm) {
+                    if (!searchTerm.trim()) {
+                        this.filteredProducts = [...this.products];
+                        this.loadProducts();
+                        return;
+                    }
+        
+                    const searchIn = Array.from(
+                        document.querySelectorAll('input[name="searchIn"]:checked')
+                    ).map(input => input.value);
+        
+                    this.filteredProducts = this.products.filter(product => {
+                        return searchIn.some(field => {
+                            const value = product[field]?.toString().toLowerCase() || '';
+                            return value.includes(searchTerm.toLowerCase());
+                        });
+                    });
+        
+                    this.loadProducts();
+                }
+        
+                debounce(func, wait) {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                }
+        
+                clearAllFilters() {
+                    this.activeFilters.clear();
+                    document.getElementById('mainCategory').value = '';
+                    document.getElementById('subCategory').value = '';
+                    document.getElementById('minPrice').value = '';
+                    document.getElementById('maxPrice').value = '';
+                    document.querySelectorAll('input[name="format"]').forEach(cb => cb.checked = false);
+                    
+                    this.filterProducts();
+                    this.updateActiveFiltersDisplay();
+                }
+        
+                addActiveFilter(type, value) {
+                    this.activeFilters.add(`${type}:${value}`);
+                    this.updateActiveFiltersDisplay();
+                }
+        
+                removeActiveFilter(type) {
+                    const filterToRemove = Array.from(this.activeFilters)
+                        .find(filter => filter.startsWith(`${type}:`));
+                    if (filterToRemove) {
+                        this.activeFilters.delete(filterToRemove);
+                        this.updateActiveFiltersDisplay();
+                    }
+                }
+        
+                updateActiveFiltersDisplay() {
+                    const container = document.getElementById('activeFilters');
+                    container.innerHTML = Array.from(this.activeFilters)
+                        .map(filter => {
+                            const [type, value] = filter.split(':');
+                            return `
+                                <div class="filter-tag">
+                                    ${value}
+                                    <i class="fas fa-times" onclick="productManager.removeActiveFilter('${type}')"></i>
+                                </div>
+                            `;
+                        })
+                        .join('');
+                }
+        
+                filterProducts() {
+                    this.filteredProducts = this.products.filter(product => {
+                        return Array.from(this.activeFilters).every(filter => {
+                            const [type, value] = filter.split(':');
+                            switch (type) {
+                                case 'category':
+                                    return product.category === value;
+                                case 'subCategory':
+                                    return product.subCategory === value;
+                                case 'format':
+                                    const formats = value.split(', ');
+                                    return formats.some(format => 
+                                        product.modelFormats.includes(format));
+                                case 'price':
+                                    const [min, max] = value.replace('₺', '').split(' - ');
+                                    return product.price >= parseFloat(min) && 
+                                           (max === '∞' || product.price <= parseFloat(max));
+                                default:
+                                    return true;
+                            }
+                        });
+                    });
+        
+                    this.loadProducts();
+                }
+        
+                loadProducts() {
+                    const grid = document.getElementById('productGrid');
+                    grid.innerHTML = '';
+        
+                    if (this.filteredProducts.length === 0) {
+                        grid.innerHTML = `
+                            <div class="no-results">
+                                <i class="fas fa-search fa-3x"></i>
+                                <p>Sonuç bulunamadı</p>
+                            </div>
+                        `;
+                        return;
+                    }
+        
+                    this.filteredProducts.forEach((product, index) => {
+                        const card = this.createProductCard(product);
+                        card.style.animationDelay = `${index * 50}ms`;
+                        grid.appendChild(card);
+                    });
+                }
+        
+                createProductCard(product) {
+                    const article = document.createElement('article');
+                    article.className = 'product-card fade-in';
+                    article.innerHTML = `
+                        <div class="product-image-container">
+                            <img src="${product.image}" alt="${product.title}" class="product-image" loading="lazy">
+                            ${product.modelFormats.length ? `
+                                <span class="model-badge">
+                                    <i class="fas fa-cube"></i>
+                                    3B Model
+                                </span>
+                            ` : ''}
+                            ${product.bestSeller ? `
+                                <span class="bestseller-badge">
+                                    <i class="fas fa-award"></i>
+                                    Çok Satan
+                                </span>
+                            ` : ''}
                         </div>
-                        <div class="product-rating">
-                            ${this.generateRatingStars(product.rating)}
-                            <span class="stock-info">${product.stock} adet stokta</span>
-                        </div>
-                        <div class="product-footer">
-                            <div class="product-price">${this.formatPrice(product.price)}</div>
-                            <div class="product-actions">
-                                <button class="btn btn-secondary" onclick="productManager.viewProduct(${product.id})">
-                                    <i class="fas fa-eye"></i>
-                                    İncele
-                                </button>
-                                <button class="btn btn-primary" onclick="productManager.addToCart(${product.id})">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Sepete Ekle
-                                </button>
+                        <div class="product-content">
+                            <div class="product-category">${product.category}</div>
+                            <h3 class="product-title">${product.title}</h3>
+                            <div class="product-specs">
+                                ${product.specs.map(spec => `
+                                    <span class="spec-tag">${spec}</span>
+                                `).join('')}
+                            </div>
+                            <div class="product-rating">
+                                ${this.generateRatingStars(product.rating)}
+                                <span class="stock-info">${product.stock} adet stokta</span>
+                            </div>
+                            <div class="product-footer">
+                                <div class="product-price">${this.formatPrice(product.price)}</div>
+                                <div class="product-actions">
+                                    <button class="btn btn-secondary" onclick="productManager.viewProduct(${product.id})">
+                                        <i class="fas fa-eye"></i>
+                                        İncele
+                                    </button>
+                                    <button class="btn btn-primary" onclick="productManager.addToCart(${product.id})">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        Sepete Ekle
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
-                return article;
-            }
-        
-            generateRatingStars(rating) {
-                const fullStars = Math.floor(rating);
-                const hasHalfStar = rating % 1 !== 0;
-                let html = '<div class="stars">';
-                
-                for (let i = 0; i < fullStars; i++) {
-                    html += '<i class="fas fa-star"></i>';
+                    `;
+                    return article;
                 }
-                if (hasHalfStar) {
-                    html += '<i class="fas fa-star-half-alt"></i>';
+        
+                generateRatingStars(rating) {
+                    const fullStars = Math.floor(rating);
+                    const hasHalfStar = rating % 1 !== 0;
+                    let html = '<div class="stars">';
+                    
+                    for (let i = 0; i < fullStars; i++) {
+                        html += '<i class="fas fa-star"></i>';
+                    }
+                    if (hasHalfStar) {
+                        html += '<i class="fas fa-star-half-alt"></i>';
+                    }
+                    const emptyStars = 5 - Math.ceil(rating);
+                    for (let i = 0; i < emptyStars; i++) {
+                        html += '<i class="far fa-star"></i>';
+                    }
+                    
+                    html += `<span class="rating-text">(${rating})</span></div>`;
+                    return html;
                 }
-                const emptyStars = 5 - Math.ceil(rating);
-                for (let i = 0; i < emptyStars; i++) {
-                    html += '<i class="far fa-star"></i>';
+        
+                formatPrice(price) {
+                    return new Intl.NumberFormat('tr-TR', {
+                        style: 'currency',
+                        currency: 'TRY'
+                    }).format(price);
                 }
-                
-                html += `<span class="rating-text">(${rating})</span></div>`;
-                return html;
-            }
         
-            formatPrice(price) {
-                return new Intl.NumberFormat('tr-TR', {
-                    style: 'currency',
-                    currency: 'TRY'
-                }).format(price);
-            }
+                toggleUserMenu() {
+                    const menu = document.getElementById('userMenuModal');
+                    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+                }
         
-            toggleUserMenu() {
-                const menu = document.getElementById('userMenuModal');
-                menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-            }
+                viewProduct(productId) {
+                    // Implement product view logic
+                    console.log('Viewing product:', productId);
+                }
         
-            viewProduct(productId) {
-                // Implement product view logic
-                console.log('Viewing product:', productId);
-            }
+                addToCart(productId) {
+                    // Implement add to cart logic
+                    console.log('Adding to cart:', productId);
+                }
         
-            addToCart(productId) {
-                // Implement add to cart logic
-                console.log('Adding to cart:', productId);
-            }
+                handleError(error) {
+                    console.error('Error:', error);
+                    if (error.message.includes('token')) {
+                        localStorage.clear();
+                        window.location.replace(`${SITE_URL}/loginForPro.html`);
+                    } else {
+                        showToast(error.message || 'Bir hata oluştu', 'error');
+                    }
+                }
         
-            handleError(error) {
-                console.error('Error:', error);
-                showToast(error.message || 'Bir hata oluştu', 'error');
+                hideLoader() {
+                    const loader = document.querySelector('.loader-container');
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.style.display = 'none', 300);
+                }
             }
-        
-            hideLoader() {
-                const loader = document.querySelector('.loader-container');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 300);
-            }
-        }
-        
-        // Tek bir DOMContentLoaded event listener
-        document.addEventListener('DOMContentLoaded', async () => {
-            const isAuthenticated = await checkAuth();
-            if (isAuthenticated) {
-                window.productManager = new ProductManager();
-            }
-        });
-    </script>
+        </script>
 </body>
 </html>
