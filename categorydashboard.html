@@ -440,7 +440,7 @@
             const userType = localStorage.getItem('userType');
             
             if (!token || userType !== 'manufacturer') {
-                window.location.href = 'manufacturer-login.html';
+                window.location.href = 'ureticiLogin.html';
                 return;
             }
         
@@ -449,7 +449,7 @@
                 const verifyResult = await ApiService.verifyToken(token);
                 if (!verifyResult.success) {
                     localStorage.clear();
-                    window.location.href = 'manufacturer-login.html';
+                    window.location.href = 'ureticiLogin.html.html';
                     return;
                 }
         
@@ -471,7 +471,7 @@
             } catch (error) {
                 console.error('Dashboard error:', error);
                 localStorage.clear();
-                window.location.href = 'manufacturer-login.html';
+                window.location.href = 'ureticiLogin.html';
             }
         });
         
@@ -496,12 +496,12 @@
                 const data = await response.json();
                 if (data.success) {
                     localStorage.clear();
-                    window.location.href = 'manufacturer-login.html';
+                    window.location.href = 'ureticiLogin.html';
                 }
             } catch (error) {
                 console.error('Logout error:', error);
                 localStorage.clear();
-                window.location.href = 'manufacturer-login.html';
+                window.location.href = 'ureticiLogin.html';
             }
         }
         
