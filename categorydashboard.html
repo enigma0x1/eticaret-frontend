@@ -197,12 +197,12 @@
 
         /* Producer Panel Styles */
         .producer-panel {
-            position: fixed;
+            position: absolute;  /* fixed yerine absolute kullanacağız */
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
+            width: 150px;  /* boyutu biraz küçülttüm kesişim noktasına uyması için */
+            height: 150px;
             background: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
             border-radius: 50%;
             z-index: 1000;
@@ -214,6 +214,18 @@
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
             border: 8px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
+        }
+        
+        /* Dashboard container'a position: relative ekleyelim */
+        .dashboard-container {
+            position: relative;
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 1rem;
+            padding: 1rem;
         }
 
         .producer-panel:hover {
