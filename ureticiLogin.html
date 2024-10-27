@@ -732,9 +732,7 @@
                     window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/categorydashboard.html';
                 }, 1500);
             } else {
-                showToast(data.message || 'Giriş başarısız!', '
-    
-    error');
+                showToast(data.message || 'Giriş başarısız!', 'error'); 
             }
         } catch (error) {
             console.error('Login error:', error);
