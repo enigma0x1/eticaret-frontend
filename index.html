@@ -353,44 +353,89 @@
         }
 
         .mega-footer {
-            background: linear-gradient(to bottom, #111827, #1f2937);
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 1) 100%);
             color: #fff;
-            padding-top: 60px;
+            padding: 60px 0 0 0;
             margin-top: 80px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 40px;
+            padding: 0 20px;
+            margin-bottom: 40px;
         }
         
         .footer-column h4 {
-            color: #fff;
             font-size: 18px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            color: #fff;
             font-weight: 600;
-            background: linear-gradient(to right, #fff, #a7a7a7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
         }
         
         .footer-column ul li a {
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: all 0.3s ease;
+            font-size: 14px;
         }
         
         .footer-column ul li a:hover {
             color: #4facfe;
-            transform: translateX(5px);
-            display: inline-block;
         }
         
-        .contact-info li {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 15px;
+        .mobile-apps, .payment-methods {
+            padding: 30px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .footer-bottom {
             background: rgba(0, 0, 0, 0.2);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 25px 0;
-            margin-top: 40px;
+            padding: 20px;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        @media (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* Newsletter Section - Yeni stil */
@@ -442,140 +487,7 @@
             padding: 0 20px;
         }
         
-        /* Responsive tasarım için medya sorgusu */
-        @media (max-width: 768px) {
-            .newsletter-form {
-                flex-direction: column;
-                gap: 10px;
-            }
-        
-            .newsletter-form button {
-                width: 100%;
-            }
-        }
-        
-        .contact-info li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #999;
-        }
-
-        .social-media {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-media a {
-            color: #999;
-            font-size: 20px;
-            transition: color 0.3s ease;
-        }
-
-        .social-media a:hover {
-            color: #4facfe;
-        }
-
-        .mobile-apps {
-            border-top: 1px solid #333;
-            padding-top: 40px;
-            margin-bottom: 40px;
-        }
-
-        .app-buttons {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .app-button img {
-            height: 40px;
-        }
-
-        .payment-methods {
-            border-top: 1px solid #333;
-            padding-top: 40px;
-            margin-bottom: 40px;
-        }
-
-        .payment-icons {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .payment-icons img {
-            height: 30px;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #333;
-            padding: 20px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .copyright {
-            color: #999;
-        }
-
-        .security-badges {
-            display: flex;
-            gap: 20px;
-        }
-
-        .security-badges img {
-            height: 40px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .main-nav {
-                display: none;
-            }
-
-            .auth-section {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .footer-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .newsletter-form {
-                flex-direction: column;
-            }
-
-            .app-buttons, .payment-icons {
-                flex-wrap: wrap;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .footer-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+    
     </style>
 </head>
 <body>
