@@ -243,7 +243,53 @@
             align-items: center;
             gap: 1.5rem;
         }
-
+        /* Notification Styles - style tag'inin içine ekleyin */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            background: var(--white);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 9999;
+        }
+        
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .notification.error {
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .notification.fade-out {
+            opacity: 0;
+            transform: translateY(100%);
+        }
+        /* User Menu Styles - style tag'inin içine ekleyin */
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
+        .user-button:hover {
+            color: var(--primary-color);
+        }
         .nav-link {
             color: var(--text-color);
             text-decoration: none;
@@ -615,7 +661,7 @@
             gap: 0.25rem;
             color: var(--warning-color);
         }
-
+        
         .rating-count {
             color: var(--text-light);
             font-size: 0.875rem;
@@ -670,7 +716,7 @@
         .btn-secondary:hover {
             background: var(--border-color);
         }
-
+    
         /* Responsive Design */
         @media (max-width: 1024px) {
             .main-content {
@@ -1282,7 +1328,7 @@
                 });
             
                 return card;
-            }
+            },
         
             renderProducts() {
                 const grid = document.getElementById('productGrid');
