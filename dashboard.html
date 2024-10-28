@@ -1143,14 +1143,19 @@
             createProductCard(product) {
                 const card = document.createElement('article');
                 card.className = 'product-card slide-up';
-        
+            
+                // Resim URL'sini düzgün şekilde oluştur
+                const imageUrl = product.image 
+                    ? `${API_URL}/uploads/${product.image}`
+                    : 'https://via.placeholder.com/300x300?text=No+Image'; // Varsayılan resim için placeholder kullan
+            
                 card.innerHTML = `
                     <div class="product-image-container">
-                        <img src="${product.image || '/assets/images/no-image.png'}" 
+                        <img src="${imageUrl}" 
                              loading="lazy"
                              alt="${product.title}"
                              class="product-image"
-                             onerror="this.src='/assets/images/no-image.png'">
+                             onerror="this.onerror=null; this.src='https://via.placeholder.com/300x300?text=No+Image';">
                         <div class="product-badges">
                             ${product.modelFormats?.length ? `
                                 <span class="product-badge badge-3d">
