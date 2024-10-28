@@ -1375,12 +1375,12 @@
         };
         
         // Event Listeners ve Sayfa Yüklenme
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeApp();
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeApp();
             setupEventListeners();
         });
         
-        function initializeApp() {
+        async function initializeApp() {
             try {
                 showLoading(true);
                 auth.updateUI();
@@ -1486,18 +1486,43 @@
         }
         
         function setupPriceRangeSlider() {
-            const minInput = document.getElementById('minPriceInput');
-            const maxInput = document.getElementById('maxPriceInput');
+            const slider = document.getElementById('priceRangeSlider');
+            if (!slider || !window.noUiSlider) return;
         
-            [minInput, maxInput].forEach(input => {
-                input?.addEventListener('change', () => {
+            try {
+                noUiSlider.create(slider, {
+                    start: [0, 5000],
+                    connect: true,
+                    range: {
+                        'min': 0,
+                        'max': 5000
+                    },
+                    format: {
+                        to: value => Math.round(value),
+                        from: value => parseInt(value)
+                    }
+                });
+        
+                const minInput = document.getElementById('minPriceInput');
+                const maxInput = document.getElementById('maxPriceInput');
+        
+                slider.noUiSlider.on('update', (values, handle) => {
+                    const [min, max] = values;
+                    minInput.value = min;
+                    maxInput.value = max;
+                    
                     state.filters.priceRange = {
-                        min: minInput.value ? Number(minInput.value) : null,
-                        max: maxInput.value ? Number(maxInput.value) : null
+                        min: parseInt(min),
+                        max: parseInt(max)
                     };
+                });
+        
+                slider.noUiSlider.on('change', () => {
                     productManager.loadProducts(true);
                 });
-            });
+            } catch (error) {
+                console.warn('Price range slider initialization failed:', error);
+            }
         }
         
         // Yardımcı Fonksiyonlar
