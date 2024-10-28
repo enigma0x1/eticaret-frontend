@@ -14,6 +14,7 @@
             --cad-gradient: linear-gradient(135deg, #834d9b 0%, #d04ed6 100%);
             --inovasyon-gradient: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
             --producer-gradient: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
+            --kapasite-gradient: linear-gradient(135deg, #1D976C 0%, #93F9B9 100%);
             --card-bg: rgba(255, 255, 255, 0.1);
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.8);
@@ -107,7 +108,7 @@
             margin-top: 80px;
             min-height: calc(100vh - 80px);
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(2, 1fr);
             gap: 1rem;
             padding: 1rem;
@@ -144,6 +145,7 @@
         .hazir-urunler::before { background: var(--hazir-gradient); }
         .cad-dosyalari::before { background: var(--cad-gradient); }
         .inovasyon-hub::before { background: var(--inovasyon-gradient); }
+        .kapasite-borsasi::before { background: var(--kapasite-gradient); }
 
         .category-card:hover {
             transform: translateY(-5px);
@@ -221,14 +223,10 @@
         }
 
         /* Responsive Design */
-        @media (max-width: 1024px) {
+        @media (max-width: 1200px) {
             .dashboard-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: repeat(4, 1fr);
-            }
-
-            .category-card {
-                min-height: 400px;
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
             }
         }
 
@@ -246,6 +244,11 @@
             .producer-button {
                 padding: 0.6rem 1rem;
                 font-size: 0.9rem;
+            }
+
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(5, 1fr);
             }
 
             .category-title {
@@ -400,115 +403,147 @@
                 </div>
             </div>
         </div>
-    </div>
-    <script>
-        const ApiService = {
-            API_URL: 'https://eticaret-glif.onrender.com/api',
-        
-            async verifyToken(token) {
-                try {
-                    const response = await fetch(`${this.API_URL}/auth/verify-token`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    return await response.json();
-                } catch (error) {
-                    throw error;
-                }
-            },
-        
-            async getDashboardData(token) {
-                try {
-                    const response = await fetch(`${this.API_URL}/manufacturer/dashboard`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-                    return await response.json();
-                } catch (error) {
-                    throw error;
-                }
-            }
-        };
-        
-        // Sayfa yüklendiğinde
-        document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('token');
-            const userType = localStorage.getItem('userType');
+
+        <!-- Kapasite Borsası -->
+        <div class="category-card kapasite-borsasi" onclick="window.location.href='kapasite-borsasi.html'">
+            <div class="category-content">
+                    <!-- Kapasite Borsası -->
+            <div class="category-card kapasite-borsasi" onclick="window.location.href='kapasite-borsasi.html'">
+                <div class="category-content">
+                    <div class="category-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h2 class="category-title">Kapasite Borsası</h2>
+                    <p class="category-description">
+                        Üretim kapasitenizi değerlendirin.
+                        İş birliği fırsatlarını keşfedin.
+                    </p>
+                    <button class="category-button">
+                        Kapasite Platformu
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">250+</span>
+                        <span class="stat-label">Aktif Teklif</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">120+</span>
+                        <span class="stat-label">Eşleşme</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <script>
+            const ApiService = {
+                API_URL: 'https://eticaret-glif.onrender.com/api',
             
-            if (!token || userType !== 'manufacturer') {
-                window.location.href = 'ureticiLogin.html';
-                return;
-            }
-        
-            try {
-                // Token doğrulama
-                const verifyResult = await ApiService.verifyToken(token);
-                if (!verifyResult.success) {
-                    localStorage.clear();
+                async verifyToken(token) {
+                    try {
+                        const response = await fetch(`${this.API_URL}/auth/verify-token`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        return await response.json();
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+            
+                async getDashboardData(token) {
+                    try {
+                        const response = await fetch(`${this.API_URL}/manufacturer/dashboard`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        return await response.json();
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            };
+            
+            // Sayfa yüklendiğinde
+            document.addEventListener('DOMContentLoaded', async () => {
+                const token = localStorage.getItem('token');
+                const userType = localStorage.getItem('userType');
+                
+                if (!token || userType !== 'manufacturer') {
                     window.location.href = 'ureticiLogin.html';
                     return;
                 }
-        
-                // Kullanıcı bilgilerini göster
-                const user = JSON.parse(localStorage.getItem('user'));
-                if (user) {
-                    document.querySelector('.logo').innerHTML = `
-                        <i class="fas fa-industry"></i>
-                        IndustryHub MFG - ${user.companyName}
-                    `;
-                }
-        
-                // Dashboard verilerini yükle
-                const dashboardData = await ApiService.getDashboardData(token);
-                if (dashboardData.success) {
-                    updateDashboardStats(dashboardData);
-                }
-        
-            } catch (error) {
-                console.error('Dashboard error:', error);
-                localStorage.clear();
-                window.location.href = 'ureticiLogin.html';
-            }
-        });
-        
-        // Dashboard istatistiklerini güncelle
-        function updateDashboardStats(data) {
-            // Burada dashboard verilerini güncelleyebilirsiniz
-            // Örnek:
-            // document.querySelector('.total-products').textContent = data.totalProducts;
-        }
-        
-        // Çıkış yapma fonksiyonu
-        async function handleLogout() {
-            const token = localStorage.getItem('token');
-            try {
-                const response = await fetch(`${ApiService.API_URL}/manufacturer/logout`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+            
+                try {
+                    // Token doğrulama
+                    const verifyResult = await ApiService.verifyToken(token);
+                    if (!verifyResult.success) {
+                        localStorage.clear();
+                        window.location.href = 'ureticiLogin.html';
+                        return;
                     }
-                });
-        
-                const data = await response.json();
-                if (data.success) {
+            
+                    // Kullanıcı bilgilerini göster
+                    const user = JSON.parse(localStorage.getItem('user'));
+                    if (user) {
+                        document.querySelector('.logo').innerHTML = `
+                            <i class="fas fa-industry"></i>
+                            IndustryHub MFG - ${user.companyName}
+                        `;
+                    }
+            
+                    // Dashboard verilerini yükle
+                    const dashboardData = await ApiService.getDashboardData(token);
+                    if (dashboardData.success) {
+                        updateDashboardStats(dashboardData);
+                    }
+            
+                } catch (error) {
+                    console.error('Dashboard error:', error);
                     localStorage.clear();
                     window.location.href = 'ureticiLogin.html';
                 }
-            } catch (error) {
-                console.error('Logout error:', error);
-                localStorage.clear();
-                window.location.href = 'ureticiLogin.html';
+            });
+            
+            // Dashboard istatistiklerini güncelle
+            function updateDashboardStats(data) {
+                // Burada dashboard verilerini güncelleyebilirsiniz
+                // Örnek:
+                // document.querySelector('.total-products').textContent = data.totalProducts;
             }
-        }
-        
-        // Header'a çıkış butonu ekleyin
-        document.querySelector('.user-menu').innerHTML += `
-            <a href="#" title="Çıkış Yap" onclick="handleLogout()">
-                <i class="fas fa-sign-out-alt"></i>
-            </a>
-        `;
-    </script>
-</body>
-</html>
+            
+            // Çıkış yapma fonksiyonu
+            async function handleLogout() {
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch(`${ApiService.API_URL}/manufacturer/logout`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+            
+                    const data = await response.json();
+                    if (data.success) {
+                        localStorage.clear();
+                        window.location.href = 'ureticiLogin.html';
+                    }
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    localStorage.clear();
+                    window.location.href = 'ureticiLogin.html';
+                }
+            }
+            
+            // Header'a çıkış butonu ekleyin
+            document.querySelector('.user-menu').innerHTML += `
+                <a href="#" title="Çıkış Yap" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            `;
+        </script>
+    </body>
+    </html>
