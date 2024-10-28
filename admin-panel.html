@@ -441,25 +441,26 @@
             if (!confirm('Bu ürünü silmek istediğinizden emin misiniz?')) {
                 return;
             }
-
+        
             showLoading(true);
             try {
                 const response = await fetchAPI(`/products/${productId}`, {
                     method: 'DELETE'
                 });
-
-                if (response.success) {
+        
+                if (response && response.success) {
                     showNotification('Ürün başarıyla silindi', 'success');
-                    await loadData();
+                    await loadData(); // Listeyi yenile
+                } else {
+                    showNotification('Ürün silinirken bir hata oluştu', 'error');
                 }
             } catch (error) {
-                showNotification('Ürün silinirken hata oluştu', 'error');
                 console.error('Error deleting product:', error);
+                showNotification('Ürün silinirken bir hata oluştu', 'error');
             } finally {
                 showLoading(false);
             }
         }
-
         async function editProduct(productId) {
             const product = products.find(p => p._id === productId);
             if (!product) return;
@@ -584,7 +585,6 @@
             }
         }
 
-        // API Helper
         async function fetchAPI(endpoint, options = {}) {
             const token = localStorage.getItem(TOKEN_KEY);
             
@@ -597,21 +597,25 @@
                         ...options.headers
                     }
                 });
-
+        
                 if (!response.ok) {
                     if (response.status === 401) {
-                        logout();
+                        // Token geçersizse login sayfasına yönlendir
+                        localStorage.removeItem(TOKEN_KEY);
+                        window.location.href = '/adminLogin.html';
                         return null;
                     }
                     throw new Error('API request failed');
                 }
-
+        
                 return await response.json();
             } catch (error) {
                 console.error('API Error:', error);
                 throw error;
             }
         }
+
+
     </script>
 </body>
 </html>
