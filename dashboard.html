@@ -1737,8 +1737,7 @@
                         ...defaultHeaders,
                         ...options.headers
                     },
-                    mode: 'cors', // CORS modunu ekle
-                    credentials: 'include' // Credentials'ı ekle
+                    credentials: 'same-origin' // 'include' yerine 'same-origin' kullan
                 });
         
                 if (!response.ok) {
