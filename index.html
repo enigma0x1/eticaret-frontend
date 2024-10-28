@@ -333,9 +333,9 @@
             justify-content: center;
             text-align: center;
             position: relative;
-            overflow: hidden;
             margin-top: var(--header-height);
             padding: 2rem;
+            background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
         }
 
         .hero::before {
@@ -347,7 +347,7 @@
             animation: rotate 20s linear infinite;
             opacity: 0.1;
         }
-
+        
         @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -936,13 +936,14 @@
         <!-- Main Content -->
     <main id="main-content" role="main">
         <!-- Hero Section -->
-        <section class="hero" aria-labelledby="hero-title">
+        <section class="hero">
             <div class="hero-content">
-                <h1 id="hero-title" class="hero-title">
-                    Türkiye'nin En Büyük Sanayi Ekosistemi
-                    <span class="visually-hidden">Sanayi Kapısı</span>
-                </h1>
+                <h1 class="hero-title">Türkiye'nin En Büyük Sanayi Ekosistemi</h1>
                 <p class="hero-subtitle">65.000+ ürün, 1500+ tedarikçi ile profesyonel üretim çözümleri</p>
+                <div class="hero-buttons">
+                    <a href="/kayit" class="btn btn-primary">Hemen Ücretsiz Üye Ol</a>
+                    <a href="/nasil-calisir" class="btn btn-secondary">Nasıl Çalışır?</a>
+                </div>
             </div>
         </section>
 
