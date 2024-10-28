@@ -920,7 +920,78 @@
         const TOKEN_KEY = 'token';
         const USER_KEY = 'user';
         const FILTERS_KEY = 'product_filters';
-    
+        
+        // Hata Yönetimi Sınıfı
+        class ErrorHandler {
+            static async handleError(error, context) {
+                console.error(`[${context}] Error:`, error);
+                
+                if (error.name === 'NetworkError') {
+                    showNotification('İnternet bağlantınızı kontrol edin', 'error');
+                } else if (error.status === 404) {
+                    showNotification('Ürün bulunamadı', 'error');
+                } else {
+                    showNotification('Beklenmeyen bir hata oluştu', 'error');
+                }
+            }
+        }
+        
+        // Önbellek Yönetimi Sınıfı
+        class CacheManager {
+            constructor(options = {}) {
+                this.storage = new Map();
+                this.maxAge = options.maxAge || 5 * 60 * 1000; // 5 dakika
+                this.maxSize = options.maxSize || 100;
+                this.stats = { hits: 0, misses: 0 };
+            }
+        
+            set(key, value, customMaxAge) {
+                if (this.storage.size >= this.maxSize) {
+                    this.clearOldest();
+                }
+        
+                this.storage.set(key, {
+                    value,
+                    timestamp: Date.now(),
+                    maxAge: customMaxAge || this.maxAge
+                });
+            }
+        
+            get(key) {
+                const item = this.storage.get(key);
+                
+                if (!item) {
+                    this.stats.misses++;
+                    return null;
+                }
+        
+                if (Date.now() - item.timestamp > item.maxAge) {
+                    this.storage.delete(key);
+                    this.stats.misses++;
+                    return null;
+                }
+        
+                this.stats.hits++;
+                return item.value;
+            }
+        
+            clearOldest() {
+                let oldest = null;
+                let oldestKey = null;
+        
+                for (const [key, item] of this.storage) {
+                    if (!oldest || item.timestamp < oldest.timestamp) {
+                        oldest = item;
+                        oldestKey = key;
+                    }
+                }
+        
+                if (oldestKey) {
+                    this.storage.delete(oldestKey);
+                }
+            }
+        }
+        
         // State Yönetimi
         const state = {
             products: [],
@@ -939,26 +1010,22 @@
             },
             loading: false
         };
-    
-        // Cache Mekanizması
-        const cache = {
-            products: new Map(),
-            categories: null,
-            clearCache() {
-                this.products.clear();
-                this.categories = null;
-            }
-        };
-    
+        
+        // Cache Instance
+        const cache = new CacheManager({
+            maxAge: 5 * 60 * 1000,
+            maxSize: 100
+        });
+        
         // Auth Yönetimi
         const auth = {
             token: localStorage.getItem(TOKEN_KEY),
             user: JSON.parse(localStorage.getItem(USER_KEY)),
-    
+        
             isAuthenticated() {
                 return !!this.token;
             },
-    
+        
             setAuth(token, user) {
                 this.token = token;
                 this.user = user;
@@ -966,16 +1033,16 @@
                 localStorage.setItem(USER_KEY, JSON.stringify(user));
                 this.updateUI();
             },
-    
+        
             clearAuth() {
                 this.token = null;
                 this.user = null;
                 localStorage.removeItem(TOKEN_KEY);
                 localStorage.removeItem(USER_KEY);
-                cache.clearCache();
+                cache.clearOldest();
                 this.updateUI();
             },
-    
+        
             updateUI() {
                 const userNameEl = document.getElementById('userName');
                 if (this.isAuthenticated()) {
@@ -985,66 +1052,28 @@
                 }
             }
         };
-    
-        // API İstekleri
-        async function fetchAPI(endpoint, options = {}) {
-            try {
-                const defaultHeaders = {
-                    'Content-Type': 'application/json'
-                };
-    
-                if (auth.token) {
-                    defaultHeaders['Authorization'] = `Bearer ${auth.token}`;
-                }
-    
-                const response = await fetch(`${API_URL}${endpoint}`, {
-                    ...options,
-                    headers: {
-                        ...defaultHeaders,
-                        ...options.headers
-                    }
-                });
-    
-                if (response.status === 401) {
-                    auth.clearAuth();
-                    window.location.href = '/login.html';
-                    return null;
-                }
-    
-                const data = await response.json();
-    
-                if (!response.ok) {
-                    throw new Error(data.message || 'Bir hata oluştu');
-                }
-    
-                return data;
-            } catch (error) {
-                showNotification(error.message, 'error');
-                throw error;
-            }
-        }
-    
+        
         // Ürün Yönetimi
         const productManager = {
             async loadProducts(refresh = false) {
                 if (state.loading) return;
-    
+        
                 try {
                     state.loading = true;
                     showLoading(true);
-    
+        
                     if (refresh) {
                         state.pagination.page = 1;
                         state.pagination.hasMore = true;
                         document.getElementById('productGrid').innerHTML = '';
                     }
-    
+        
                     const queryParams = new URLSearchParams({
                         page: state.pagination.page,
                         limit: state.pagination.limit,
                         ...state.filters
                     });
-    
+        
                     const data = await fetchAPI(`/products?${queryParams}`);
                     
                     if (data.success) {
@@ -1053,50 +1082,47 @@
                         state.filteredProducts = this.applyFilters(products);
                         state.pagination.hasMore = data.hasMore;
                         state.pagination.page++;
-    
+        
                         this.renderProducts();
                         this.updateProductCount();
                         this.saveFiltersToStorage();
                     }
                 } catch (error) {
-                    console.error('Ürünler yüklenirken hata:', error);
+                    await ErrorHandler.handleError(error, 'loadProducts');
                 } finally {
                     state.loading = false;
                     showLoading(false);
                 }
             },
-    
+        
             applyFilters(products) {
                 return products.filter(product => {
-                    // Kategori filtresi
                     if (state.filters.categories.length > 0 && 
                         !state.filters.categories.includes(product.category)) {
                         return false;
                     }
-            
-                    // Fiyat aralığı filtresi
+        
                     if (state.filters.priceRange.min !== null && 
                         product.price < state.filters.priceRange.min) {
                         return false;
                     }
+        
                     if (state.filters.priceRange.max !== null && 
                         product.price > state.filters.priceRange.max) {
                         return false;
                     }
-            
-                    // Rating filtresi
+        
                     if (state.filters.rating && product.rating < state.filters.rating) {
                         return false;
                     }
-            
-                    // Arama filtresi - BU KISMI DEĞİŞTİRİN
+        
                     if (state.filters.search) {
                         const searchTerm = state.filters.search.toLowerCase();
                         return product.title.toLowerCase().includes(searchTerm) ||
                                product.description.toLowerCase().includes(searchTerm) ||
                                product.category.toLowerCase().includes(searchTerm);
                     }
-            
+        
                     return true;
                 }).sort((a, b) => {
                     switch (state.filters.sort) {
@@ -1113,384 +1139,325 @@
                     }
                 });
             },
-
-        renderProducts() {
-            const grid = document.getElementById('productGrid');
-            const fragment = document.createDocumentFragment();
-
-            state.filteredProducts.forEach((product, index) => {
-                const card = this.createProductCard(product);
-                card.style.animationDelay = `${index * 50}ms`;
-                fragment.appendChild(card);
-            });
-
-            if (state.pagination.page === 1) {
-                grid.innerHTML = '';
-            }
-            grid.appendChild(fragment);
-        },
-
-        createProductCard(product) {
-            const card = document.createElement('article');
-            card.className = 'product-card slide-up';
-            card.innerHTML = `
-                <div class="product-image-container">
-                    <img src="${API_URL}${product.image}" alt="${product.title}" loading="lazy" class="product-image">
-                    <div class="product-badges">
-                        ${product.modelFormats?.length ? `
-                            <span class="product-badge badge-3d">
-                                <i class="fas fa-cube"></i> 3B Model
-                            </span>
-                        ` : ''}
-                        ${this.isNewProduct(product) ? `
-                            <span class="product-badge badge-new">
-                                <i class="fas fa-star"></i> Yeni
-                            </span>
-                        ` : ''}
-                    </div>
-                </div>
-                <div class="product-content">
-                    <div class="product-category">${product.category}</div>
-                    <h3 class="product-title">${product.title}</h3>
-                    <div class="product-manufacturer">
-                        <i class="fas fa-industry"></i>
-                        <span>${product.manufacturer?.companyName || 'Bilinmeyen Üretici'}</span>
-                    </div>
-                    <div class="product-rating">
-                        ${this.generateRatingStars(product.rating)}
-                        <span class="rating-count">(${product.ratingCount || 0})</span>
-                    </div>
-                    <div class="product-footer">
-                        <div class="product-price">${this.formatPrice(product.price)}</div>
-                        <div class="product-actions">
-                            <button class="btn btn-secondary" onclick="productManager.showProductDetail('${product._id}')">
-                                <i class="fas fa-eye"></i>
-                                İncele
-                            </button>
-                            <button class="btn btn-primary" onclick="cartManager.addToCart('${product._id}')">
-                                <i class="fas fa-shopping-cart"></i>
-                                Sepete Ekle
-                            </button>
+            createProductCard(product) {
+                const card = document.createElement('article');
+                card.className = 'product-card slide-up';
+                card.innerHTML = `
+                    <div class="product-image-container">
+                        <img src="${product.image}" 
+                             loading="lazy"
+                             alt="${product.title}"
+                             class="product-image">
+                        <div class="product-badges">
+                            ${product.modelFormats?.length ? `
+                                <span class="product-badge badge-3d">
+                                    <i class="fas fa-cube"></i> 3B Model
+                                </span>
+                            ` : ''}
+                            ${this.isNewProduct(product) ? `
+                                <span class="product-badge badge-new">
+                                    <i class="fas fa-star"></i> Yeni
+                                </span>
+                            ` : ''}
                         </div>
                     </div>
-                </div>
-            `;
-            return card;
-        },
-
-        isNewProduct(product) {
-            const oneWeekAgo = new Date();
-            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-            return new Date(product.createdAt) > oneWeekAgo;
-        },
-
-        generateRatingStars(rating) {
-            const fullStars = Math.floor(rating);
-            const hasHalfStar = rating % 1 >= 0.5;
-            const emptyStars = 5 - Math.ceil(rating);
-            
-            return `
-                <div class="stars">
-                    ${Array(fullStars).fill('<i class="fas fa-star"></i>').join('')}
-                    ${hasHalfStar ? '<i class="fas fa-star-half-alt"></i>' : ''}
-                    ${Array(emptyStars).fill('<i class="far fa-star"></i>').join('')}
-                </div>
-            `;
-        },
-            
-
-        formatPrice(price) {
-            return new Intl.NumberFormat('tr-TR', {
-                style: 'currency',
-                currency: 'TRY'
-            }).format(price);
-        },
-
-        updateProductCount() {
-            const count = state.filteredProducts.length;
-            document.getElementById('productsCount').textContent = 
-                `${count} ürün bulundu`;
-        },
-
-        saveFiltersToStorage() {
-            localStorage.setItem(FILTERS_KEY, JSON.stringify(state.filters));
-        },
-
-        loadFiltersFromStorage() {
-            const savedFilters = localStorage.getItem(FILTERS_KEY);
-            if (savedFilters) {
-                state.filters = { ...state.filters, ...JSON.parse(savedFilters) };
-                this.updateFilterUI();
-            }
-        },
-
-        updateFilterUI() {
-            // Kategori filtrelerini güncelle
-            const categoryInputs = document.querySelectorAll('.category-item input');
-            categoryInputs.forEach(input => {
-                input.checked = state.filters.categories.includes(input.value);
-            });
-
-            // Fiyat aralığı filtrelerini güncelle
-            const { min, max } = state.filters.priceRange;
-            if (min !== null) document.getElementById('minPriceInput').value = min;
-            if (max !== null) document.getElementById('maxPriceInput').value = max;
-
-            // Sıralama seçeneğini güncelle
-            document.getElementById('sortSelect').value = state.filters.sort;
-
-            this.updateActiveFilters();
-        },
-
-        updateActiveFilters() {
-            const container = document.getElementById('activeFilters');
-            container.innerHTML = '';
-
-            // Kategori filtreleri
-            state.filters.categories.forEach(category => {
-                this.addActiveFilterTag(category, 'category');
-            });
-
-            // Fiyat aralığı filtresi
-            const { min, max } = state.filters.priceRange;
-            if (min !== null || max !== null) {
-                const priceText = `${min || 0}₺ - ${max || '∞'}₺`;
-                this.addActiveFilterTag(priceText, 'price');
-            }
-
-            // Rating filtresi
-            if (state.filters.rating) {
-                this.addActiveFilterTag(`${state.filters.rating}+ Yıldız`, 'rating');
-            }
-        },
-
-        addActiveFilterTag(text, type) {
-            const container = document.getElementById('activeFilters');
-            const tag = document.createElement('div');
-            tag.className = 'filter-tag';
-            tag.innerHTML = `
-                <span>${text}</span>
-                <i class="fas fa-times filter-tag-remove" onclick="productManager.removeFilter('${type}', '${text}')"></i>
-            `;
-            container.appendChild(tag);
-        },
-
-        removeFilter(type, value) {
-            switch (type) {
-                case 'category':
-                    state.filters.categories = state.filters.categories.filter(c => c !== value);
-                    break;
-                case 'price':
-                    state.filters.priceRange = { min: null, max: null };
-                    break;
-                case 'rating':
-                    state.filters.rating = null;
-                    break;
-            }
-
-            this.updateFilterUI();
-            this.loadProducts(true);
-        },
-
-        clearFilters() {
-            state.filters = {
-                categories: [],
-                priceRange: { min: null, max: null },
-                rating: null,
-                sort: 'newest',
-                search: ''
-            };
-
-            this.updateFilterUI();
-            this.loadProducts(true);
-            localStorage.removeItem(FILTERS_KEY);
-        }
-    };
-
-    // Sepet Yönetimi
-    const cartManager = {
-        async addToCart(productId, quantity = 1) {
-            try {
-                if (!auth.isAuthenticated()) {
-                    window.location.href = '/login.html';
-                    return;
-                }
-
-                showLoading(true);
-                const response = await fetchAPI('/cart/add', {
-                    method: 'POST',
-                    body: JSON.stringify({ productId, quantity })
+                    <div class="product-content">
+                        <div class="product-category">${product.category}</div>
+                        <h3 class="product-title">${product.title}</h3>
+                        <div class="product-manufacturer">
+                            <i class="fas fa-industry"></i>
+                            <span>${product.manufacturer || 'Bilinmeyen Üretici'}</span>
+                        </div>
+                        <div class="product-rating">
+                            ${this.generateRatingStars(product.rating)}
+                            <span class="rating-count">(${product.ratingCount || 0})</span>
+                        </div>
+                        <div class="product-footer">
+                            <div class="product-price">${this.formatPrice(product.price)}</div>
+                            <div class="product-actions">
+                                <button class="btn btn-secondary" 
+                                        onclick="productManager.showProductDetail('${product._id}')">
+                                    <i class="fas fa-eye"></i>
+                                    İncele
+                                </button>
+                                <button class="btn btn-primary" 
+                                        onclick="cartManager.addToCart('${product._id}')">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Sepete Ekle
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return card;
+            },
+        
+            renderProducts() {
+                const grid = document.getElementById('productGrid');
+                const fragment = document.createDocumentFragment();
+        
+                state.filteredProducts.forEach((product, index) => {
+                    const card = this.createProductCard(product);
+                    card.style.animationDelay = `${index * 50}ms`;
+                    fragment.appendChild(card);
                 });
-
-                if (response.success) {
-                    this.updateCartCount(response.cart.itemCount);
-                    showNotification('Ürün sepete eklendi', 'success');
+        
+                if (state.pagination.page === 1) {
+                    grid.innerHTML = '';
                 }
+                grid.appendChild(fragment);
+            },
+        
+            isNewProduct(product) {
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                return new Date(product.createdAt) > oneWeekAgo;
+            },
+        
+            generateRatingStars(rating) {
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 >= 0.5;
+                const emptyStars = 5 - Math.ceil(rating);
+                
+                return `
+                    <div class="stars">
+                        ${Array(fullStars).fill('<i class="fas fa-star"></i>').join('')}
+                        ${hasHalfStar ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                        ${Array(emptyStars).fill('<i class="far fa-star"></i>').join('')}
+                    </div>
+                `;
+            },
+        
+            formatPrice(price) {
+                return new Intl.NumberFormat('tr-TR', {
+                    style: 'currency',
+                    currency: 'TRY'
+                }).format(price);
+            },
+        
+            updateProductCount() {
+                const count = state.filteredProducts.length;
+                document.getElementById('productsCount').textContent = 
+                    `${count} ürün bulundu`;
+            },
+        
+            saveFiltersToStorage() {
+                localStorage.setItem(FILTERS_KEY, JSON.stringify(state.filters));
+            },
+        
+            showProductDetail(productId) {
+                // Ürün detay sayfasına yönlendirme
+                window.location.href = `/product/${productId}`;
+            }
+        };
+        
+        // Sepet Yönetimi
+        const cartManager = {
+            async addToCart(productId, quantity = 1) {
+                try {
+                    if (!auth.isAuthenticated()) {
+                        window.location.href = '/login.html';
+                        return;
+                    }
+        
+                    showLoading(true);
+                    const response = await fetchAPI('/cart/add', {
+                        method: 'POST',
+                        body: JSON.stringify({ productId, quantity })
+                    });
+        
+                    if (response.success) {
+                        this.updateCartCount(response.cart.itemCount);
+                        showNotification('Ürün sepete eklendi', 'success');
+                    }
+                } catch (error) {
+                    await ErrorHandler.handleError(error, 'addToCart');
+                } finally {
+                    showLoading(false);
+                }
+            },
+        
+            updateCartCount(count) {
+                document.getElementById('cartCount').textContent = count;
+            }
+        };
+        
+        // Event Listeners ve Sayfa Yüklenme
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeApp();
+            setupEventListeners();
+        });
+        
+        async function initializeApp() {
+            try {
+                showLoading(true);
+                auth.updateUI();
+                loadFiltersFromStorage();
+                await productManager.loadProducts();
+                setupPriceRangeSlider();
             } catch (error) {
-                console.error('Sepete ekleme hatası:', error);
-                showNotification('Ürün sepete eklenirken bir hata oluştu', 'error');
+                await ErrorHandler.handleError(error, 'initializeApp');
             } finally {
                 showLoading(false);
             }
-        },
-
-        updateCartCount(count) {
-            document.getElementById('cartCount').textContent = count;
         }
-    };
-
-    // Yardımcı Fonksiyonlar
-    function showLoading(show) {
-        document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
-    }
-
-    function showNotification(message, type = 'success') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type} slide-up`;
-        notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            <span>${message}</span>
-        `;
         
-        document.body.appendChild(notification);
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
-    }
-
-    // Event Listeners
-    document.addEventListener('DOMContentLoaded', () => {
-        // Sayfa yüklendiğinde yapılacak işlemler
-        initializeApp();
-        setupEventListeners();
-    });
-
-    async function initializeApp() {
-        try {
-            showLoading(true);
-            auth.updateUI();
-            productManager.loadFiltersFromStorage();
-            await productManager.loadProducts();
-            initializePriceRangeSlider();
-        } catch (error) {
-            console.error('Uygulama başlatılırken hata:', error);
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    function setupEventListeners() {
-        // Arama işlemi
-        const searchInput = document.getElementById('searchInput');
-        let searchTimeout;
-        searchInput?.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                state.filters.search = e.target.value.trim();
+        function setupEventListeners() {
+            // Arama işlemi
+            const searchInput = document.getElementById('searchInput');
+            let searchTimeout;
+            searchInput?.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    state.filters.search = e.target.value.trim();
+                    productManager.loadProducts(true);
+                }, 500);
+            });
+        
+            // Sıralama işlemi
+            document.getElementById('sortSelect')?.addEventListener('change', (e) => {
+                state.filters.sort = e.target.value;
                 productManager.loadProducts(true);
-            }, 500);
-        });
-
-        // Sıralama işlemi
-        document.getElementById('sortSelect')?.addEventListener('change', (e) => {
-            state.filters.sort = e.target.value;
-            productManager.loadProducts(true);
-        });
-
-        // Filtreleri temizleme
-        document.getElementById('clearFiltersBtn')?.addEventListener('click', () => {
-            productManager.clearFilters();
-        });
-        const userMenuBtn = document.getElementById('userMenuBtn');
-        const userDropdown = document.getElementById('userDropdown');
+            });
         
-        userMenuBtn?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userDropdown.classList.toggle('active');
-        });
+            // Filtreleri temizleme
+            document.getElementById('clearFiltersBtn')?.addEventListener('click', () => {
+                state.filters = {
+                    categories: [],
+                    priceRange: { min: null, max: null },
+                    rating: null,
+                    sort: 'newest',
+                    search: ''
+                };
+                productManager.loadProducts(true);
+                localStorage.removeItem(FILTERS_KEY);
+            });
         
-        // Dropdown dışına tıklandığında kapanması için
-        document.addEventListener('click', (e) => {
-            if (!userMenuBtn?.contains(e.target)) {
-                userDropdown?.classList.remove('active');
+            // Sonsuz scroll
+            setupInfiniteScroll();
+        
+            // Mobil menü
+            setupMobileMenu();
+        }
+        
+        function setupInfiniteScroll() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && state.pagination.hasMore && !state.loading) {
+                        productManager.loadProducts();
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '100px',
+                threshold: 0.1
+            });
+        
+            const loadingMore = document.getElementById('loadingMore');
+            if (loadingMore) {
+                observer.observe(loadingMore);
             }
-        });
-        // Sonsuz scroll
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && state.pagination.hasMore && !state.loading) {
-                    productManager.loadProducts();
+        }
+        
+        function setupMobileMenu() {
+            const hamburgerBtn = document.getElementById('mobileMenuBtn');
+            const navMenu = document.querySelector('.nav-menu');
+        
+            hamburgerBtn?.addEventListener('click', () => {
+                hamburgerBtn.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        
+            document.addEventListener('click', (e) => {
+                if (!hamburgerBtn?.contains(e.target) && !navMenu?.contains(e.target)) {
+                    hamburgerBtn?.classList.remove('active');
+                    navMenu?.classList.remove('active');
                 }
             });
-        }, {
-            root: null,
-            rootMargin: '100px',
-            threshold: 0.1
-        });
-
-        const loadingMore = document.getElementById('loadingMore');
-        if (loadingMore) {
-            observer.observe(loadingMore);
         }
-
-        // Mobil menü
-        const hamburgerBtn = document.getElementById('mobileMenuBtn');
-        const navMenu = document.querySelector('.nav-menu');
-
-        hamburgerBtn?.addEventListener('click', () => {
-            hamburgerBtn.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-
-        // Sayfa dışına tıklama ile menüyü kapatma
-        document.addEventListener('click', (e) => {
-            if (!hamburgerBtn?.contains(e.target) && !navMenu?.contains(e.target)) {
-                hamburgerBtn?.classList.remove('active');
-                navMenu?.classList.remove('active');
-            }
-        });
-    }
-    // setupEventListeners fonksiyonuna ekleyin
-
-    function initializePriceRangeSlider() {
-        const slider = document.getElementById('priceRangeSlider');
-        if (!slider) return;
-
-        noUiSlider.create(slider, {
-            start: [0, 5000],
-            connect: true,
-            range: {
-                'min': 0,
-                'max': 5000
-            },
-            format: {
-                to: value => Math.round(value),
-                from: value => parseInt(value)
-            }
-        });
-
-        const minInput = document.getElementById('minPriceInput');
-        const maxInput = document.getElementById('maxPriceInput');
-
-        slider.noUiSlider.on('update', (values, handle) => {
-            const [min, max] = values;
-            minInput.value = min;
-            maxInput.value = max;
-            
-            state.filters.priceRange.min = parseInt(min);
-            state.filters.priceRange.max = parseInt(max);
-            
-            productManager.loadProducts(true);
-        });
-
-        // Input değişikliklerini slider'a yansıt
-        [minInput, maxInput].forEach((input, index) => {
-            input.addEventListener('change', () => {
-                const values = [minInput.value, maxInput.value];
-                slider.noUiSlider.set(values);
+        
+        function setupPriceRangeSlider() {
+            const minInput = document.getElementById('minPriceInput');
+            const maxInput = document.getElementById('maxPriceInput');
+        
+            [minInput, maxInput].forEach(input => {
+                input?.addEventListener('change', () => {
+                    state.filters.priceRange = {
+                        min: minInput.value ? Number(minInput.value) : null,
+                        max: maxInput.value ? Number(maxInput.value) : null
+                    };
+                    productManager.loadProducts(true);
+                });
             });
-        });
-    }
-</script>
+        }
+        
+        // Yardımcı Fonksiyonlar
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+        
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type} slide-up`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        function loadFiltersFromStorage() {
+            const savedFilters = localStorage.getItem(FILTERS_KEY);
+            if (savedFilters) {
+                state.filters = { ...state.filters, ...JSON.parse(savedFilters) };
+            }
+        }
+        
+        // API İstekleri için Yardımcı Fonksiyon
+        async function fetchAPI(endpoint, options = {}) {
+            try {
+                const defaultHeaders = {
+                    'Content-Type': 'application/json'
+                };
+        
+                if (auth.token) {
+                    defaultHeaders['Authorization'] = `Bearer ${auth.token}`;
+                }
+        
+                const response = await fetch(`${API_URL}${endpoint}`, {
+                    ...options,
+                    headers: {
+                        ...defaultHeaders,
+                        ...options.headers
+                    }
+                });
+        
+                if (response.status === 401) {
+                    auth.clearAuth();
+                    window.location.href = '/login.html';
+                    return null;
+                }
+        
+                const data = await response.json();
+        
+                if (!response.ok) {
+                    throw new Error(data.message || 'Bir hata oluştu');
+                }
+        
+                return data;
+            } catch (error) {
+                await ErrorHandler.handleError(error, 'fetchAPI');
+                throw error;
+            }
+        }
+    </script>
 </body>
 </html>
