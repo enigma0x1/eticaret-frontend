@@ -14,14 +14,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        body {
-            min-height: 100vh;
-            background: #0f0c29;
-            background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
-            color: white;
-            overflow-x: hidden;
-        }
-
         /* Header Styles */
         .main-header {
             position: fixed;
@@ -180,14 +172,11 @@
     </header>
 
     <script>
-        // Header'ı sayfaya eklemek için kullanılacak kod
         class Header extends HTMLElement {
             connectedCallback() {
                 this.innerHTML = document.querySelector('.main-header').outerHTML;
             }
         }
-
-        // Custom element'i tanımla
         customElements.define('site-header', Header);
     </script>
 </body>
