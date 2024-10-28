@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kapasite Borsası - IndustryHub</title>
+    <title>Kapasite Borsası | IndustryHub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #2193b0;
-            --secondary-color: #6dd5ed;
-            --background: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
+            --primary: #2193b0;
+            --secondary: #6dd5ed;
             --success: #4CAF50;
             --warning: #FFC107;
             --danger: #FF5252;
+            --dark: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -27,24 +26,62 @@
         }
 
         body {
-            background: var(--background);
-            color: var(--text-primary);
-            min-height: 100vh;
+            background: var(--dark);
+            color: white;
+            line-height: 1.6;
         }
 
-        /* Header styles (aynı) */
-        .header {
-            /* Önceki header stilleri buraya */
-        }
-
-        .kapasite-container {
-            margin-top: 80px;
+        .container {
+            max-width: 1400px;
+            margin: 80px auto 0;
             padding: 2rem;
         }
 
-        .dashboard-stats {
+        /* Welcome Section */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .welcome-text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -53,58 +90,38 @@
             background: var(--card-bg);
             padding: 1.5rem;
             border-radius: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: var(--transition);
         }
 
-        .stat-card h3 {
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
             font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
 
-        .stat-card p {
-            color: var(--text-secondary);
+        .stat-label {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
         }
 
-        .kapasite-actions {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .action-card {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-        }
-
-        .action-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .action-button {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .action-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .kapasite-listings {
+        /* Listings Section */
+        .listings-section {
             background: var(--card-bg);
             border-radius: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .listings-header {
@@ -112,26 +129,55 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
-        }
-
-        .filter-options {
-            display: flex;
+            flex-wrap: wrap;
             gap: 1rem;
         }
 
-        .filter-button {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 0.5rem 1rem;
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 1rem;
+            padding-left: 3rem;
             border-radius: 0.5rem;
-            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.5);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: white;
             cursor: pointer;
+            transition: var(--transition);
         }
 
-        .filter-button.active {
-            background: var(--primary-color);
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
         }
 
+        /* Listings Grid */
         .listings-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -139,18 +185,29 @@
         }
 
         .listing-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.05);
             border-radius: 1rem;
             padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: var(--transition);
+        }
+
+        .listing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .listing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
 
         .listing-status {
-            display: inline-block;
             padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
+            border-radius: 2rem;
             font-size: 0.875rem;
-            margin-bottom: 1rem;
         }
 
         .status-active {
@@ -161,128 +218,192 @@
             background: var(--warning);
         }
 
+        .listing-company {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
         .listing-details {
-            margin-bottom: 1rem;
+            margin: 1rem 0;
+        }
+
+        .listing-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: rgba(255,255,255,0.8);
         }
 
         .listing-actions {
             display: flex;
             gap: 1rem;
+            margin-top: 1rem;
         }
 
-        .listing-button {
+        .listing-btn {
             flex: 1;
-            padding: 0.5rem;
+            padding: 0.75rem;
             border-radius: 0.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
             cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
-        @media (max-width: 1024px) {
-            .dashboard-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .kapasite-actions {
-                grid-template-columns: 1fr;
-            }
+        .listing-btn:hover {
+            background: rgba(255,255,255,0.2);
         }
 
         @media (max-width: 768px) {
-            .dashboard-stats {
-                grid-template-columns: 1fr;
+            .container {
+                padding: 1rem;
             }
 
-            .listings-grid {
-                grid-template-columns: 1fr;
+            .welcome-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .listings-header {
+                flex-direction: column;
+            }
+
+            .search-bar {
+                max-width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header aynı kalacak -->
-    <header class="header">
-        <!-- Header içeriği -->
-    </header>
+    <div class="container">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <div class="welcome-text">
+                <h1>Kapasite Borsası</h1>
+                <p>Üretim kapasitenizi değerlendirin, yeni iş fırsatları yakalayın</p>
+            </div>
+            <div class="quick-actions">
+                <button class="action-btn">
+                    <i class="fas fa-plus"></i>
+                    Yeni İlan Oluştur
+                </button>
+                <button class="action-btn">
+                    <i class="fas fa-search"></i>
+                    Kapasite Ara
+                </button>
+            </div>
+        </section>
 
-    <div class="kapasite-container">
-        <!-- İstatistikler -->
-        <div class="dashboard-stats">
+        <!-- Stats Grid -->
+        <div class="stats-grid">
             <div class="stat-card">
-                <h3>250</h3>
-                <p>Aktif İlan</p>
+                <i class="fas fa-chart-line stat-icon"></i>
+                <div class="stat-value">250</div>
+                <div class="stat-label">Aktif İlan</div>
             </div>
             <div class="stat-card">
-                <h3>120</h3>
-                <p>Tamamlanan Eşleşme</p>
+                <i class="fas fa-handshake stat-icon"></i>
+                <div class="stat-value">120</div>
+                <div class="stat-label">Başarılı Eşleşme</div>
             </div>
             <div class="stat-card">
-                <h3>85%</h3>
-                <p>Doluluk Oranı</p>
+                <i class="fas fa-industry stat-icon"></i>
+                <div class="stat-value">85%</div>
+                <div class="stat-label">Ortalama Doluluk</div>
             </div>
             <div class="stat-card">
-                <h3>45</h3>
-                <p>Bekleyen Teklif</p>
+                <i class="fas fa-clock stat-icon"></i>
+                <div class="stat-value">45</div>
+                <div class="stat-label">Bekleyen Teklif</div>
             </div>
         </div>
 
-        <!-- Aksiyonlar -->
-        <div class="kapasite-actions">
-            <div class="action-card">
-                <h3>Kapasite İlanı Ver</h3>
-                <p>Boş kapasitenizi değerlendirin</p>
-                <button class="action-button">
-                    <i class="fas fa-plus"></i> Yeni İlan
-                </button>
-            </div>
-            <div class="action-card">
-                <h3>Kapasite Ara</h3>
-                <p>İhtiyacınıza uygun kapasiteyi bulun</p>
-                <button class="action-button">
-                    <i class="fas fa-search"></i> Kapasite Bul
-                </button>
-            </div>
-        </div>
-
-        <!-- İlanlar Listesi -->
-        <div class="kapasite-listings">
+        <!-- Listings Section -->
+        <section class="listings-section">
             <div class="listings-header">
-                <h2>Aktif İlanlar</h2>
-                <div class="filter-options">
-                    <button class="filter-button active">Tümü</button>
-                    <button class="filter-button">Aktif</button>
-                    <button class="filter-button">Beklemede</button>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="İlan ara...">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active">Tümü</button>
+                    <button class="filter-btn">Aktif</button>
+                    <button class="filter-btn">Beklemede</button>
+                    <button class="filter-btn">Tamamlanan</button>
                 </div>
             </div>
 
             <div class="listings-grid">
-                <!-- İlan Kartı 1 -->
+                <!-- Listing Card -->
                 <div class="listing-card">
-                    <span class="listing-status status-active">Aktif</span>
+                    <div class="listing-header">
+                        <span class="listing-status status-active">Aktif</span>
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <div class="listing-company">Teknik Metal San.</div>
+                    <h3>CNC Torna Kapasitesi</h3>
                     <div class="listing-details">
-                        <h3>CNC Torna Kapasitesi</h3>
-                        <p>Kapasite: 100 saat/hafta</p>
-                        <p>Lokasyon: İstanbul</p>
+                        <div class="listing-detail">
+                            <i class="fas fa-clock"></i>
+                            <span>100 saat/hafta</span>
+                        </div>
+                        <div class="listing-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>İstanbul, Türkiye</span>
+                        </div>
+                        <div class="listing-detail">
+                            <i class="fas fa-calendar"></i>
+                            <span>Hemen Başlayabilir</span>
+                        </div>
                     </div>
                     <div class="listing-actions">
-                        <button class="listing-button">
-                            <i class="fas fa-eye"></i> İncele
+                        <button class="listing-btn">
+                            <i class="fas fa-eye"></i>
+                            Detaylar
                         </button>
-                        <button class="listing-button">
-                            <i class="fas fa-envelope"></i> İletişim
+                        <button class="listing-btn">
+                            <i class="fas fa-envelope"></i>
+                            İletişim
                         </button>
                     </div>
                 </div>
 
-                <!-- Diğer ilan kartları buraya eklenebilir -->
+                <!-- Daha fazla listing card buraya eklenebilir -->
             </div>
-        </div>
+        </section>
     </div>
 
     <script>
-        // JavaScript kodları buraya eklenecek
+        // Filter buttons functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+            });
+        });
+
+        // Add hover effects and animations
+        document.querySelectorAll('.listing-card').forEach(card => {
+            card.addEventListener('mouseover', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+            card.addEventListener('mouseout', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
     </script>
 </body>
 </html>
