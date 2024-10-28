@@ -404,31 +404,23 @@
         
         /* Category Filter */
         .category-list {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
         
         .category-item {
             display: flex;
             align-items: center;
-            padding: 8px;
-            border-radius: var(--radius-sm);
-            margin-bottom: 4px;
-            transition: background-color 0.2s;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.9rem;
         }
         
         .category-item:hover {
-            background-color: var(--background-color);
-        }
-        
-        .category-count {
-            margin-left: auto;
-            font-size: 0.8rem;
-            color: var(--text-light);
             background: var(--background-color);
-            padding: 2px 8px;
-            border-radius: 12px;
         }
         
         .category-checkbox {
@@ -1421,65 +1413,40 @@
             const slider = document.getElementById('priceRangeSlider');
             if (!slider || !window.noUiSlider) return;
         
-            noUiSlider.create(slider, {
-                start: [0, 5000],
-                connect: true,
-                range: {
-                    'min': 0,
-                    'max': 5000
-                },
-                step: 100,
-                format: {
-                    to: value => Math.round(value),
-                    from: value => parseInt(value)
-                },
-                tooltips: true,
-                pips: {
-                    mode: 'positions',
-                    values: [0, 25, 50, 75, 100],
-                    density: 4,
+            try {
+                noUiSlider.create(slider, {
+                    start: [0, 5000],
+                    connect: true,
+                    range: {
+                        'min': 0,
+                        'max': 5000
+                    },
                     format: {
-                        to: value => `${value}₺`
+                        to: value => Math.round(value),
+                        from: value => parseInt(value)
                     }
-                }
-            });
+                });
         
-            const minInput = document.getElementById('minPriceInput');
-            const maxInput = document.getElementById('maxPriceInput');
+                const minInput = document.getElementById('minPriceInput');
+                const maxInput = document.getElementById('maxPriceInput');
         
-            // Input değerleri değiştiğinde slider'ı güncelle
-            minInput.addEventListener('change', () => {
-                const min = parseInt(minInput.value);
-                const max = parseInt(maxInput.value);
-                if (!isNaN(min) && !isNaN(max) && min <= max) {
-                    slider.noUiSlider.set([min, max]);
-                }
-            });
+                slider.noUiSlider.on('update', (values, handle) => {
+                    const [min, max] = values;
+                    minInput.value = min;
+                    maxInput.value = max;
+                    
+                    state.filters.priceRange = {
+                        min: parseInt(min),
+                        max: parseInt(max)
+                    };
+                });
         
-            maxInput.addEventListener('change', () => {
-                const min = parseInt(minInput.value);
-                const max = parseInt(maxInput.value);
-                if (!isNaN(min) && !isNaN(max) && min <= max) {
-                    slider.noUiSlider.set([min, max]);
-                }
-            });
-        
-            // Slider değiştiğinde inputları güncelle
-            slider.noUiSlider.on('update', (values, handle) => {
-                const [min, max] = values;
-                minInput.value = min;
-                maxInput.value = max;
-            });
-        
-            // Değer değiştiğinde filtrelemeyi uygula
-            slider.noUiSlider.on('change', (values) => {
-                const [min, max] = values;
-                state.filters.priceRange = {
-                    min: parseInt(min),
-                    max: parseInt(max)
-                };
-                productManager.loadProducts(true);
-            });
+                slider.noUiSlider.on('change', () => {
+                    productManager.loadProducts(true);
+                });
+            } catch (error) {
+                console.warn('Price range slider initialization failed:', error);
+            }
         }
         function setupRatingFilter() {
             const ratingFilter = document.getElementById('ratingFilter');
@@ -1595,108 +1562,52 @@
             const activeFilters = document.getElementById('activeFilters');
             if (!activeFilters) return;
         
+            // Mevcut filtreleri temizle
             activeFilters.innerHTML = '';
-            let hasFilters = false;
         
-            // Kategori filtreleri
-            if (state.filters.categories.length > 0) {
-                hasFilters = true;
-                state.filters.categories.forEach(category => {
-                    const tag = createFilterTag('folder', category, () => removeFilter('category', category));
-                    activeFilters.appendChild(tag);
-                });
-            }
-        
-            // Fiyat filtresi
-            if (state.filters.priceRange.min !== null || state.filters.priceRange.max !== null) {
-                hasFilters = true;
-                const priceText = `${state.filters.priceRange.min || 0}₺ - ${state.filters.priceRange.max || '∞'}₺`;
-                const tag = createFilterTag('tag', priceText, () => removeFilter('price'));
-                activeFilters.appendChild(tag);
-            }
-        
-            // Değerlendirme filtresi
-            if (state.filters.rating) {
-                hasFilters = true;
-                const tag = createFilterTag('star', `${state.filters.rating}+ Yıldız`, () => removeFilter('rating'));
-                activeFilters.appendChild(tag);
-            }
-        
-            // Arama filtresi
-            if (state.filters.search) {
-                hasFilters = true;
-                const tag = createFilterTag('search', state.filters.search, () => {
-                    document.getElementById('searchInput').value = '';
-                    state.filters.search = '';
-                    productManager.loadProducts(true);
-                });
-                activeFilters.appendChild(tag);
-            }
-        
-            // Filtreleri temizle butonu
-            if (hasFilters) {
-                const clearAll = document.createElement('button');
-                clearAll.className = 'clear-all-filters';
-                clearAll.innerHTML = 'Tüm Filtreleri Temizle';
-                clearAll.onclick = () => {
-                    state.filters = {
-                        categories: [],
-                        priceRange: { min: null, max: null },
-                        rating: null,
-                        sort: state.filters.sort,
-                        search: ''
-                    };
-                    document.getElementById('searchInput').value = '';
-                    productManager.loadProducts(true);
-                    updateActiveFilters();
-                };
-                activeFilters.appendChild(clearAll);
-            }
-        }
-        function createFilterTag(icon, text, onRemove) {
-            const tag = document.createElement('div');
-            tag.className = 'filter-tag';
-            tag.innerHTML = `
-                <i class="fas fa-${icon}"></i>
-                <span>${text}</span>
-                <button class="filter-tag-remove" title="Filtreyi kaldır">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            tag.querySelector('.filter-tag-remove').onclick = onRemove;
-            return tag;
-        }
-
-        function setupMobileFilters() {
-            const filterToggle = document.createElement('button');
-            filterToggle.className = 'filter-toggle-btn';
-            filterToggle.innerHTML = '<i class="fas fa-filter"></i> Filtreleri Göster';
-            
-            const filterSidebar = document.querySelector('.filter-sidebar');
-            
-            if (window.innerWidth <= 768) {
-                filterSidebar.style.display = 'none';
-                document.querySelector('.products-header').prepend(filterToggle);
-            }
-        
-            filterToggle.onclick = () => {
-                const isVisible = filterSidebar.style.display !== 'none';
-                filterSidebar.style.display = isVisible ? 'none' : 'block';
-                filterToggle.innerHTML = isVisible ? 
-                    '<i class="fas fa-filter"></i> Filtreleri Göster' : 
-                    '<i class="fas fa-times"></i> Filtreleri Gizle';
-            };
-        
-            window.addEventListener('resize', () => {
-                if (window.innerWidth > 768) {
-                    filterSidebar.style.display = 'block';
-                    filterToggle.remove();
-                } else if (!document.contains(filterToggle)) {
-                    document.querySelector('.products-header').prepend(filterToggle);
-                    filterSidebar.style.display = 'none';
-                }
+            // Kategori filtrelerini ekle
+            state.filters.categories.forEach(category => {
+                const filterTag = document.createElement('div');
+                filterTag.className = 'filter-tag';
+                filterTag.innerHTML = `
+                    <i class="fas fa-folder"></i>
+                    <span>${category}</span>
+                    <button class="filter-tag-remove" onclick="removeFilter('category', '${category}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                activeFilters.appendChild(filterTag);
             });
+        
+            // Fiyat filtrelerini ekle
+            if (state.filters.priceRange.min || state.filters.priceRange.max) {
+                const filterTag = document.createElement('div');
+                filterTag.className = 'filter-tag';
+                filterTag.innerHTML = `
+                    <i class="fas fa-tag"></i>
+                    <span>${state.filters.priceRange.min || 0}₺ - ${state.filters.priceRange.max || '∞'}₺</span>
+                    <button class="filter-tag-remove" onclick="removeFilter('price')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                activeFilters.appendChild(filterTag);
+            }
+        
+            // Rating filtrelerini ekle
+            if (state.filters.rating) {
+                const filterTag = document.createElement('div');
+                filterTag.className = 'filter-tag';
+                filterTag.innerHTML = `
+                    <i class="fas fa-star"></i>
+                    <span>${state.filters.rating}+ Yıldız</span>
+                    <button class="filter-tag-remove" onclick="removeFilter('rating')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                activeFilters.appendChild(filterTag);
+            }
         }
+        
         // Filtre kaldırma fonksiyonu
         function removeFilter(type, value) {
             switch (type) {
