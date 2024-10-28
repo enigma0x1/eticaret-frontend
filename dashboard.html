@@ -913,10 +913,14 @@
 
     <!-- Required Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         // API ve Sabitler
-        const API_URL = 'https://eticaret-glif.onrender.com/api';
+        // API ve Sabitler
+        const API_URL = 'https://eticaret-glif.onrender.com/api'; // API URL
+        const UPLOADS_URL = `${API_URL}/uploads`; // Upload URL'si
+        const DEFAULT_IMAGE = '/assets/images/no-image.png'; // Varsayılan resim yolu
         const TOKEN_KEY = 'token';
         const USER_KEY = 'user';
         const FILTERS_KEY = 'product_filters';
@@ -1142,12 +1146,32 @@
             createProductCard(product) {
                 const card = document.createElement('article');
                 card.className = 'product-card slide-up';
+                
+                // Varsayılan resim URL'si
+                const defaultImage = '/assets/images/no-image.png';
+                
+                // Resim URL'sini kontrol et ve düzenle
+                const imageUrl = product.image ? 
+                    (product.image.startsWith('http') ? product.image : `${API_URL}/uploads/${product.image}`) : 
+                    defaultImage;
+            
+                // Fiyat formatını düzenle
+                const formattedPrice = this.formatPrice(product.price);
+                
+                // Tarih formatını düzenle
+                const formattedDate = new Date(product.createdAt).toLocaleDateString('tr-TR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            
                 card.innerHTML = `
                     <div class="product-image-container">
-                        <img src="${product.image}" 
+                        <img src="${imageUrl}" 
                              loading="lazy"
                              alt="${product.title}"
-                             class="product-image">
+                             class="product-image"
+                             onerror="this.src='${defaultImage}'">
                         <div class="product-badges">
                             ${product.modelFormats?.length ? `
                                 <span class="product-badge badge-3d">
@@ -1159,38 +1183,106 @@
                                     <i class="fas fa-star"></i> Yeni
                                 </span>
                             ` : ''}
+                            ${product.discount > 0 ? `
+                                <span class="product-badge badge-sale">
+                                    <i class="fas fa-tag"></i> %${product.discount} İndirim
+                                </span>
+                            ` : ''}
                         </div>
                     </div>
                     <div class="product-content">
-                        <div class="product-category">${product.category}</div>
-                        <h3 class="product-title">${product.title}</h3>
+                        <div class="product-category">
+                            <i class="fas fa-folder"></i>
+                            ${product.category || 'Kategorisiz'}
+                        </div>
+                        <h3 class="product-title" title="${product.title}">
+                            ${product.title}
+                        </h3>
                         <div class="product-manufacturer">
                             <i class="fas fa-industry"></i>
                             <span>${product.manufacturer || 'Bilinmeyen Üretici'}</span>
                         </div>
-                        <div class="product-rating">
-                            ${this.generateRatingStars(product.rating)}
-                            <span class="rating-count">(${product.ratingCount || 0})</span>
+                        <div class="product-description">
+                            ${product.description ? `
+                                <p>${product.description.length > 100 ? 
+                                    product.description.substring(0, 100) + '...' : 
+                                    product.description}</p>
+                            ` : ''}
+                        </div>
+                        <div class="product-meta">
+                            <div class="product-rating">
+                                ${this.generateRatingStars(product.rating)}
+                                <span class="rating-count">(${product.ratingCount || 0} değerlendirme)</span>
+                            </div>
+                            <div class="product-stock">
+                                ${product.stock > 0 ? `
+                                    <span class="stock-status in-stock">
+                                        <i class="fas fa-check-circle"></i> Stokta
+                                    </span>
+                                ` : `
+                                    <span class="stock-status out-of-stock">
+                                        <i class="fas fa-times-circle"></i> Stokta Yok
+                                    </span>
+                                `}
+                            </div>
                         </div>
                         <div class="product-footer">
-                            <div class="product-price">${this.formatPrice(product.price)}</div>
+                            <div class="product-price-container">
+                                ${product.oldPrice ? `
+                                    <span class="old-price">${this.formatPrice(product.oldPrice)}</span>
+                                ` : ''}
+                                <div class="product-price">${formattedPrice}</div>
+                            </div>
                             <div class="product-actions">
                                 <button class="btn btn-secondary" 
-                                        onclick="productManager.showProductDetail('${product._id}')">
+                                        onclick="productManager.showProductDetail('${product._id}')"
+                                        title="Ürün detaylarını görüntüle">
                                     <i class="fas fa-eye"></i>
-                                    İncele
+                                    <span>İncele</span>
                                 </button>
-                                <button class="btn btn-primary" 
-                                        onclick="cartManager.addToCart('${product._id}')">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Sepete Ekle
-                                </button>
+                                ${product.stock > 0 ? `
+                                    <button class="btn btn-primary" 
+                                            onclick="cartManager.addToCart('${product._id}')"
+                                            title="Ürünü sepete ekle">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <span>Sepete Ekle</span>
+                                    </button>
+                                ` : `
+                                    <button class="btn btn-disabled" disabled title="Ürün stokta yok">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <span>Stokta Yok</span>
+                                    </button>
+                                `}
                             </div>
+                        </div>
+                        <div class="product-date">
+                            <small>
+                                <i class="fas fa-calendar"></i>
+                                Eklenme: ${formattedDate}
+                            </small>
                         </div>
                     </div>
                 `;
+            
+                // Hover efektleri için event listener'lar
+                const image = card.querySelector('.product-image');
+                card.addEventListener('mouseenter', () => {
+                    image.style.transform = 'scale(1.05)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    image.style.transform = 'scale(1)';
+                });
+            
+                // Tıklanabilir kart
+                card.addEventListener('click', (e) => {
+                    // Eğer tıklanan element buton değilse
+                    if (!e.target.closest('.btn')) {
+                        productManager.showProductDetail(product._id);
+                    }
+                });
+            
                 return card;
-            },
+            }
         
             renderProducts() {
                 const grid = document.getElementById('productGrid');
@@ -1288,17 +1380,34 @@
             setupEventListeners();
         });
         
-        async function initializeApp() {
+        function initializeApp() {
             try {
                 showLoading(true);
                 auth.updateUI();
                 loadFiltersFromStorage();
                 await productManager.loadProducts();
                 setupPriceRangeSlider();
+                
+                // Select2'yi isteğe bağlı olarak başlat
+                if (typeof jQuery !== 'undefined' && jQuery.fn.select2) {
+                    initializeSelect2();
+                }
             } catch (error) {
                 await ErrorHandler.handleError(error, 'initializeApp');
             } finally {
                 showLoading(false);
+            }
+        }
+        
+        // Select2 başlatma fonksiyonu
+        function initializeSelect2() {
+            try {
+                $('.select2-select').select2({
+                    theme: 'bootstrap4',
+                    width: '100%'
+                });
+            } catch (error) {
+                console.warn('Select2 initialization failed:', error);
             }
         }
         
