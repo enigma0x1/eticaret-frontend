@@ -1723,7 +1723,8 @@
         async function fetchAPI(endpoint, options = {}) {
             try {
                 const defaultHeaders = {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 };
         
                 if (auth.token) {
@@ -1735,21 +1736,21 @@
                     headers: {
                         ...defaultHeaders,
                         ...options.headers
-                    }
+                    },
+                    mode: 'cors', // CORS modunu ekle
+                    credentials: 'include' // Credentials'ı ekle
                 });
         
-                if (response.status === 401) {
-                    auth.clearAuth();
-                    window.location.href = '/login.html';
-                    return null;
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        auth.clearAuth();
+                        window.location.href = '/login.html';
+                        return null;
+                    }
+                    throw new Error(response.statusText);
                 }
         
                 const data = await response.json();
-        
-                if (!response.ok) {
-                    throw new Error(data.message || 'Bir hata oluştu');
-                }
-        
                 return data;
             } catch (error) {
                 await ErrorHandler.handleError(error, 'fetchAPI');
