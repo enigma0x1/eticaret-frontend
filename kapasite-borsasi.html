@@ -16,14 +16,16 @@
         :root {
             --primary-color: #2193b0;
             --secondary-color: #6dd5ed;
-            --background: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
+            --background: #ffffff;
+            --card-bg: #f8f9fa;
+            --text-primary: #333333;
+            --text-secondary: #666666;
             --success: #4CAF50;
             --warning: #FFC107;
             --danger: #FF5252;
+            --border-color: #e0e0e0;
             --transition: all 0.3s ease;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         * {
@@ -64,8 +66,8 @@
 
         /* Header Styles */
         .header {
-            background: rgba(15, 23, 42, 0.9);
-            backdrop-filter: blur(10px);
+            background: var(--background);
+            box-shadow: var(--shadow);
             padding: 1rem 2rem;
             position: fixed;
             top: 0;
@@ -104,13 +106,11 @@
             height: calc(100vh - 120px);
             position: sticky;
             top: 100px;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            border: 1px solid var(--border-color);
         }
 
         .filter-section {
-            flex: 1;
+            margin-bottom: 1.5rem;
         }
 
         .filter-section h3 {
@@ -121,8 +121,8 @@
         .filter-input {
             width: 100%;
             padding: 0.8rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--background);
+            border: 1px solid var(--border-color);
             border-radius: 0.5rem;
             color: var(--text-primary);
             margin-bottom: 1rem;
@@ -133,169 +133,6 @@
             border-color: var(--primary-color);
         }
 
-        /* Content Area */
-        .content-area {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        /* Stats Cards */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-            color: var(--primary-color);
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(33, 147, 176, 0.1);
-            border-radius: 50%;
-        }
-
-        .stat-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-info p {
-            color: var(--text-secondary);
-        }
-
-        /* Capacity Grid */
-        .capacity-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .capacity-card {
-            background: var(--card-bg);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .capacity-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-color);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .capacity-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .company-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .company-logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .status-badge.active {
-            background: rgba(76, 175, 80, 0.1);
-            color: var(--success);
-        }
-
-        .status-badge.completed {
-            background: rgba(255, 82, 82, 0.1);
-            color: var(--danger);
-        }
-
-        .capacity-details {
-            margin: 1rem 0;
-        }
-
-        .detail-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-        }
-
-        .capacity-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .action-button {
-            flex: 1;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-weight: 600;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .primary-button {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .primary-button:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-
-        .secondary-button {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-
-        .secondary-button:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
         /* Modal Styles */
         .modal {
             display: none;
@@ -304,20 +141,36 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
 
         .modal-content {
             background: var(--background);
             border-radius: 1rem;
             padding: 2rem;
-            width: 90%;
-            max-width: 600px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
             position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: var(--card-bg);
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
         }
 
         .close-modal {
@@ -328,6 +181,9 @@
             cursor: pointer;
             color: var(--text-secondary);
             transition: var(--transition);
+            background: none;
+            border: none;
+            padding: 0.5rem;
         }
 
         .close-modal:hover {
@@ -341,11 +197,61 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--text-secondary);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--background);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(33, 147, 176, 0.1);
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
         }
 
         /* Responsive Design */
-        @media (max-width: 1024px) {
+        @media (max-width: 768px) {
             .main-container {
                 grid-template-columns: 1fr;
             }
@@ -354,21 +260,19 @@
                 height: auto;
                 position: static;
             }
-        }
 
-        @media (max-width: 768px) {
-            .stats-container {
-                grid-template-columns: 1fr;
+            .modal-content {
+                margin: 1rem;
+                padding: 1.5rem;
             }
 
-            .capacity-grid {
-                grid-template-columns: 1fr;
+            .form-group {
+                margin-bottom: 1rem;
             }
         }
     </style>
 </head>
-<body>
-    <!-- Header -->
+<body> 
     <header class="header">
         <a href="#" class="logo">
             <i class="fas fa-industry"></i>
@@ -399,7 +303,7 @@
                 <input type="number" class="filter-input" id="minCapacityFilter" placeholder="Minimum kapasite (saat)">
                 <input type="number" class="filter-input" id="maxRateFilter" placeholder="Maksimum saatlik ücret">
             </div>
-            <button class="action-button primary-button" onclick="showModal('newCapacityModal')">
+            <button class="btn btn-primary" onclick="showModal('newCapacityModal')">
                 <i class="fas fa-plus"></i> Yeni İlan Oluştur
             </button>
         </div>
@@ -413,7 +317,7 @@
                         <i class="fas fa-list"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="activeListings">0</h3>
+                        <h3 id="activeListings">-</h3>
                         <p>Aktif İlan</p>
                     </div>
                 </div>
@@ -422,7 +326,7 @@
                         <i class="fas fa-handshake"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="completedDeals">0</h3>
+                        <h3 id="completedDeals">-</h3>
                         <p>Tamamlanan Anlaşma</p>
                     </div>
                 </div>
@@ -431,7 +335,7 @@
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="averageRate">0 TL</h3>
+                        <h3 id="averageRate">-</h3>
                         <p>Ortalama Saatlik Ücret</p>
                     </div>
                 </div>
@@ -440,7 +344,7 @@
                         <i class="fas fa-clock"></i>
                     </div>
                     <div class="stat-info">
-                        <h3 id="totalCapacity">0 Saat</h3>
+                        <h3 id="totalCapacity">-</h3>
                         <p>Toplam Kapasite</p>
                     </div>
                 </div>
@@ -456,38 +360,47 @@
     <!-- New Capacity Modal -->
     <div class="modal" id="newCapacityModal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('newCapacityModal')">&times;</span>
-            <h2>Yeni Kapasite İlanı</h2>
+            <button class="close-modal" onclick="closeModal('newCapacityModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="modal-title">Yeni Kapasite İlanı</h2>
             <form id="newCapacityForm" class="capacity-form">
                 <div class="form-group">
-                    <label>Makine Tipi</label>
-                    <input type="text" class="filter-input" name="machineType" required>
+                    <label for="machineType">Makine Tipi</label>
+                    <select class="form-control" id="machineType" name="machineType" required>
+                        <option value="">Seçiniz</option>
+                        <option value="CNC">CNC Torna</option>
+                        <option value="LASER">Lazer Kesim</option>
+                        <option value="3D">3D Printer</option>
+                        <option value="PRESS">Pres</option>
+                        <option value="MILLING">Freze</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label>Kapasite Miktarı (Saat)</label>
-                    <input type="number" class="filter-input" name="capacity" required>
+                    <label for="capacity">Kapasite Miktarı (Saat)</label>
+                    <input type="number" class="form-control" id="capacity" name="capacity" min="1" required>
                 </div>
                 <div class="form-group">
-                    <label>Başlangıç Tarihi</label>
-                    <input type="date" class="filter-input" name="startDate" required>
+                    <label for="startDate">Başlangıç Tarihi</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate" required>
                 </div>
                 <div class="form-group">
-                    <label>Bitiş Tarihi</label>
-                    <input type="date" class="filter-input" name="endDate" required>
+                    <label for="endDate">Bitiş Tarihi</label>
+                    <input type="date" class="form-control" id="endDate" name="endDate" required>
                 </div>
                 <div class="form-group">
-                    <label>Saatlik Ücret (TL)</label>
-                    <input type="number" class="filter-input" name="hourlyRate" required>
+                    <label for="hourlyRate">Saatlik Ücret (TL)</label>
+                    <input type="number" class="form-control" id="hourlyRate" name="hourlyRate" min="1" required>
                 </div>
                 <div class="form-group">
-                    <label>Açıklama</label>
-                    <textarea class="filter-input" name="description" rows="4" required></textarea>
+                    <label for="description">Açıklama</label>
+                    <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
                 </div>
-                <div class="capacity-actions">
-                    <button type="submit" class="action-button primary-button">
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
                         <i class="fas fa-check"></i> İlan Ver
                     </button>
-                    <button type="button" class="action-button secondary-button" onclick="closeModal('newCapacityModal')">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('newCapacityModal')">
                         <i class="fas fa-times"></i> İptal
                     </button>
                 </div>
@@ -496,65 +409,50 @@
     </div>
 
     <script>
-        // Notification system
-        const notyf = new Notyf({
-            duration: 3000,
-            position: { x: 'right', y: 'top' },
-            types: [
-                {
-                    type: 'success',
-                    background: '#4CAF50',
-                    icon: false
-                },
-                {
-                    type: 'error',
-                    background: '#FF5252',
-                    icon: false
-                }
-            ]
-        });
-
         // API Service
         const ApiService = {
-            API_URL: 'https://api.example.com', // Backend API URL'nizi buraya ekleyin
+            BASE_URL: 'https://api.example.com/api/v1', // API URL'nizi buraya ekleyin
+            token: localStorage.getItem('token'),
 
-            async getCapacityListings() {
+            async request(endpoint, options = {}) {
+                const defaultOptions = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.token}`
+                    }
+                };
+
                 try {
-                    const response = await fetch(`${this.API_URL}/capacity-listings`);
-                    if (!response.ok) throw new Error('API error');
+                    const response = await fetch(`${this.BASE_URL}${endpoint}`, {
+                        ...defaultOptions,
+                        ...options
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
                     return await response.json();
                 } catch (error) {
                     console.error('API Error:', error);
                     throw error;
                 }
+            },
+
+            async getCapacityListings(filters = {}) {
+                const queryParams = new URLSearchParams(filters).toString();
+                return this.request(`/capacity-listings?${queryParams}`);
             },
 
             async getStatistics() {
-                try {
-                    const response = await fetch(`${this.API_URL}/statistics`);
-                    if (!response.ok) throw new Error('API error');
-                    return await response.json();
-                } catch (error) {
-                    console.error('API Error:', error);
-                    throw error;
-                }
+                return this.request('/statistics');
             },
 
             async createCapacityListing(data) {
-                try {
-                    const response = await fetch(`${this.API_URL}/capacity-listings`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    if (!response.ok) throw new Error('API error');
-                    return await response.json();
-                } catch (error) {
-                    console.error('API Error:', error);
-                    throw error;
-                }
+                return this.request('/capacity-listings', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
             }
         };
 
@@ -569,10 +467,12 @@
             async loadData() {
                 try {
                     this.showLoading();
-                    await Promise.all([
-                        this.loadStatistics(),
-                        this.loadCapacityListings()
+                    const [statistics, listings] = await Promise.all([
+                        ApiService.getStatistics(),
+                        ApiService.getCapacityListings()
                     ]);
+                    this.updateStatistics(statistics);
+                    this.renderCapacityListings(listings);
                 } catch (error) {
                     notyf.error('Veriler yüklenirken bir hata oluştu');
                 } finally {
@@ -581,123 +481,67 @@
             },
 
             showLoading() {
-                document.querySelector('.stats-container').classList.add('loading');
-                document.querySelector('.capacity-grid').classList.add('loading');
+                document.querySelector('.content-area').classList.add('loading');
             },
 
             hideLoading() {
-                document.querySelector('.stats-container').classList.remove('loading');
-                document.querySelector('.capacity-grid').classList.remove('loading');
-            },
-
-            async loadStatistics() {
-                try {
-                    const stats = await ApiService.getStatistics();
-                    this.updateStatistics(stats);
-                } catch (error) {
-                    console.error('Statistics loading error:', error);
-                }
-            },
-
-            async loadCapacityListings() {
-                try {
-                    const listings = await ApiService.getCapacityListings();
-                    this.renderCapacityListings(listings);
-                } catch (error) {
-                    console.error('Listings loading error:', error);
-                }
+                document.querySelector('.content-area').classList.remove('loading');
             },
 
             updateStatistics(stats) {
-                document.getElementById('activeListings').textContent = stats.activeListings;
-                document.getElementById('completedDeals').textContent = stats.completedDeals;
-                document.getElementById('averageRate').textContent = `${stats.averageRate} TL`;
-                document.getElementById('totalCapacity').textContent = `${stats.totalCapacity} Saat`;
+                Object.keys(stats).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.textContent = stats[key];
+                    }
+                });
             },
 
             renderCapacityListings(listings) {
                 const container = document.getElementById('capacityGrid');
-                container.innerHTML = listings.map(this.createCapacityCard).join('');
+                container.innerHTML = listings.length ? 
+                    listings.map(this.createCapacityCard).join('') :
+                    '<div class="no-data">Henüz ilan bulunmamaktadır.</div>';
             },
 
             createCapacityCard(listing) {
-                return `
-                    <div class="capacity-card">
-                        <div class="capacity-header">
-                            <div class="company-info">
-                                <div class="company-logo">
-                                    <i class="fas fa-industry"></i>
-                                </div>
-                                <div>
-                                    <h3>${listing.companyName}</h3>
-                                    <p>${listing.machineType}</p>
-                                </div>
-                            </div>
-                            <div class="status-badge ${listing.status}">
-                                ${listing.status === 'active' ? 'Aktif' : 'Tamamlandı'}
-                            </div>
-                        </div>
-                        <div class="capacity-details">
-                            <div class="detail-item">
-                                <span>Kapasite:</span>
-                                <span>${listing.capacity} Saat</span>
-                            </div>
-                            <div class="detail-item">
-                                <span>Tarih:</span>
-                                <span>${listing.startDate} - ${listing.endDate}</span>
-                            </div>
-                            <div class="detail-item">
-                                <span>Saatlik Ücret:</span>
-                                <span>${listing.hourlyRate} TL</span>
-                            </div>
-                        </div>
-                        <div class="capacity-actions">
-                            <button class="action-button primary-button" onclick="showOfferModal(${listing.id})">
-                                <i class="fas fa-handshake"></i> Teklif Ver
-                            </button>
-                            <button class="action-button secondary-button" onclick="showDetailModal(${listing.id})">
-                                <i class="fas fa-info-circle"></i> Detaylar
-                            </button>
-                        </div>
-                    </div>
-                `;
+                // Kart oluşturma mantığı...
             },
 
             initializeEventListeners() {
-                document.getElementById('newCapacityForm').addEventListener('submit', this.handleNewCapacity.bind(this));
-                
-                // Filtre olayları
+                // Form submit
+                document.getElementById('newCapacityForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const data = Object.fromEntries(formData.entries());
+
+                    try {
+                        this.showLoading();
+                        await ApiService.createCapacityListing(data);
+                        notyf.success('İlan başarıyla oluşturuldu');
+                        closeModal('newCapacityModal');
+                        e.target.reset();
+                        await this.loadData();
+                    } catch (error) {
+                        notyf.error('İlan oluşturulurken bir hata oluştu');
+                    } finally {
+                        this.hideLoading();
+                    }
+                });
+
+                // Filtreler
                 const filterInputs = document.querySelectorAll('.filter-input');
                 filterInputs.forEach(input => {
-                    input.addEventListener('input', this.handleFilterChange.bind(this));
+                    input.addEventListener('change', this.handleFilterChange.bind(this));
                 });
             },
 
             initializeDatePickers() {
                 flatpickr(".date-picker", {
                     dateFormat: "Y-m-d",
-                    locale: "tr"
+                    locale: "tr",
+                    minDate: "today"
                 });
-            },
-
-            async handleNewCapacity(event) {
-                event.preventDefault();
-                const form = event.target;
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData.entries());
-
-                try {
-                    this.showLoading();
-                    await ApiService.createCapacityListing(data);
-                    notyf.success('İlan başarıyla oluşturuldu');
-                    closeModal('newCapacityModal');
-                    form.reset();
-                    await this.loadData();
-                } catch (error) {
-                    notyf.error('İlan oluşturulurken bir hata oluştu');
-                } finally {
-                    this.hideLoading();
-                }
             },
 
             async handleFilterChange() {
@@ -730,75 +574,21 @@
             document.getElementById(modalId).style.display = 'none';
         }
 
-        function showOfferModal(listingId) {
-            // Teklif verme modalını göster
-            notyf.success('Teklif verme özelliği yakında eklenecek');
-        }
-
-        function showDetailModal(listingId) {
-            // Detay modalını göster
-            notyf.success('Detay görüntüleme özelliği yakında eklenecek');
-        }
-
-        // Initialize when document is ready
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             UIController.init();
-
-            // Örnek veri yükleme (API bağlantısı olmadan test için)
-            setTimeout(() => {
-                UIController.updateStatistics({
-                    activeListings: 156,
-                    completedDeals: 89,
-                    averageRate: 650,
-                    totalCapacity: 4500
-                });
-
-                UIController.renderCapacityListings([
-                    {
-                        id: 1,
-                        companyName: "Teknik Metal A.Ş.",
-                        machineType: "CNC Torna",
-                        capacity: 120,
-                        startDate: "2024-02-01",
-                        endDate: "2024-02-28",
-                        hourlyRate: 750,
-                        status: "active"
-                    },
-                    {
-                        id: 2,
-                        companyName: "İnovasyon Makina",
-                        machineType: "3D Printer",
-                        capacity: 80,
-                        startDate: "2024-02-05",
-                        endDate: "2024-02-25",
-                        hourlyRate: 500,
-                        status: "active"
-                    },
-                    {
-                        id: 3,
-                        companyName: "Yıldız Endüstri",
-                        machineType: "Lazer Kesim",
-                        capacity: 200,
-                        startDate: "2024-02-10",
-                        endDate: "2024-03-10",
-                        hourlyRate: 850,
-                        status: "completed"
-                    }
-                ]);
-            }, 1000);
         });
 
-        // Escape key ile modalları kapatma
+        // Close modal on escape key
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                const modals = document.querySelectorAll('.modal');
-                modals.forEach(modal => {
+                document.querySelectorAll('.modal').forEach(modal => {
                     modal.style.display = 'none';
                 });
             }
         });
 
-        // Modal dışı tıklama ile kapatma
+        // Close modal on outside click
         document.querySelectorAll('.modal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
