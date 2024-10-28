@@ -52,6 +52,16 @@
             --header-height: 4rem;
             --filter-width: 250px;
         }
+        html {
+            overflow-y: scroll;
+            overscroll-behavior: none; /* Zıplama efektini engeller */
+        }
+        
+        body {
+            overflow-x: hidden;
+            overscroll-behavior: none; /* Zıplama efektini engeller */
+            -webkit-overflow-scrolling: touch; /* iOS için düzgün kaydırma */
+        }
         
         /* Reset & Base Styles */
         * {
