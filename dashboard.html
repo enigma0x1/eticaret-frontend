@@ -962,83 +962,17 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
-        // API ve Sabitler
-        // API ve Sabitler
-        const API_URL = 'https://eticaret-glif.onrender.com/api'; // API URL
-        const UPLOADS_URL = `${API_URL}/uploads`; // Upload URL'si
-        const DEFAULT_IMAGE = '/assets/images/no-image.png'; // Varsayılan resim yolu
+                // API ve Sabitler
+        const API_URL = 'https://eticaret-glif.onrender.com/api';
         const TOKEN_KEY = 'token';
         const USER_KEY = 'user';
         const FILTERS_KEY = 'product_filters';
         
-        // Hata Yönetimi Sınıfı
+        // Hata Yönetimi
         class ErrorHandler {
             static async handleError(error, context) {
                 console.error(`[${context}] Error:`, error);
-                
-                if (error.name === 'NetworkError') {
-                    showNotification('İnternet bağlantınızı kontrol edin', 'error');
-                } else if (error.status === 404) {
-                    showNotification('Ürün bulunamadı', 'error');
-                } else {
-                    showNotification('Beklenmeyen bir hata oluştu', 'error');
-                }
-            }
-        }
-        
-        // Önbellek Yönetimi Sınıfı
-        class CacheManager {
-            constructor(options = {}) {
-                this.storage = new Map();
-                this.maxAge = options.maxAge || 5 * 60 * 1000; // 5 dakika
-                this.maxSize = options.maxSize || 100;
-                this.stats = { hits: 0, misses: 0 };
-            }
-        
-            set(key, value, customMaxAge) {
-                if (this.storage.size >= this.maxSize) {
-                    this.clearOldest();
-                }
-        
-                this.storage.set(key, {
-                    value,
-                    timestamp: Date.now(),
-                    maxAge: customMaxAge || this.maxAge
-                });
-            }
-        
-            get(key) {
-                const item = this.storage.get(key);
-                
-                if (!item) {
-                    this.stats.misses++;
-                    return null;
-                }
-        
-                if (Date.now() - item.timestamp > item.maxAge) {
-                    this.storage.delete(key);
-                    this.stats.misses++;
-                    return null;
-                }
-        
-                this.stats.hits++;
-                return item.value;
-            }
-        
-            clearOldest() {
-                let oldest = null;
-                let oldestKey = null;
-        
-                for (const [key, item] of this.storage) {
-                    if (!oldest || item.timestamp < oldest.timestamp) {
-                        oldest = item;
-                        oldestKey = key;
-                    }
-                }
-        
-                if (oldestKey) {
-                    this.storage.delete(oldestKey);
-                }
+                showNotification(error.message || 'Bir hata oluştu', 'error');
             }
         }
         
@@ -1058,14 +992,9 @@
                 limit: 12,
                 hasMore: true
             },
-            loading: false
+            loading: false,
+            categories: []
         };
-        
-        // Cache Instance
-        const cache = new CacheManager({
-            maxAge: 5 * 60 * 1000,
-            maxSize: 100
-        });
         
         // Auth Yönetimi
         const auth = {
@@ -1089,7 +1018,6 @@
                 this.user = null;
                 localStorage.removeItem(TOKEN_KEY);
                 localStorage.removeItem(USER_KEY);
-                cache.clearOldest();
                 this.updateUI();
             },
         
@@ -1169,8 +1097,8 @@
                     if (state.filters.search) {
                         const searchTerm = state.filters.search.toLowerCase();
                         return product.title.toLowerCase().includes(searchTerm) ||
-                               product.description.toLowerCase().includes(searchTerm) ||
-                               product.category.toLowerCase().includes(searchTerm);
+                               product.description?.toLowerCase().includes(searchTerm) ||
+                               product.category?.toLowerCase().includes(searchTerm);
                     }
         
                     return true;
@@ -1184,40 +1112,23 @@
                             return b.rating - a.rating;
                         case 'popular':
                             return b.views - a.views;
-                        default: // newest
+                        default:
                             return new Date(b.createdAt) - new Date(a.createdAt);
                     }
                 });
             },
+        
             createProductCard(product) {
                 const card = document.createElement('article');
                 card.className = 'product-card slide-up';
-                
-                // Varsayılan resim URL'si
-                const defaultImage = '/assets/images/no-image.png';
-                
-                // Resim URL'sini kontrol et ve düzenle
-                const imageUrl = product.image ? 
-                    (product.image.startsWith('http') ? product.image : `${API_URL}/uploads/${product.image}`) : 
-                    defaultImage;
-            
-                // Fiyat formatını düzenle
-                const formattedPrice = this.formatPrice(product.price);
-                
-                // Tarih formatını düzenle
-                const formattedDate = new Date(product.createdAt).toLocaleDateString('tr-TR', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            
+        
                 card.innerHTML = `
                     <div class="product-image-container">
-                        <img src="${imageUrl}" 
+                        <img src="${product.image || '/assets/images/no-image.png'}" 
                              loading="lazy"
                              alt="${product.title}"
                              class="product-image"
-                             onerror="this.src='${defaultImage}'">
+                             onerror="this.src='/assets/images/no-image.png'">
                         <div class="product-badges">
                             ${product.modelFormats?.length ? `
                                 <span class="product-badge badge-3d">
@@ -1277,7 +1188,7 @@
                                 ${product.oldPrice ? `
                                     <span class="old-price">${this.formatPrice(product.oldPrice)}</span>
                                 ` : ''}
-                                <div class="product-price">${formattedPrice}</div>
+                                <div class="product-price">${this.formatPrice(product.price)}</div>
                             </div>
                             <div class="product-actions">
                                 <button class="btn btn-secondary" 
@@ -1301,32 +1212,9 @@
                                 `}
                             </div>
                         </div>
-                        <div class="product-date">
-                            <small>
-                                <i class="fas fa-calendar"></i>
-                                Eklenme: ${formattedDate}
-                            </small>
-                        </div>
                     </div>
                 `;
-            
-                // Hover efektleri için event listener'lar
-                const image = card.querySelector('.product-image');
-                card.addEventListener('mouseenter', () => {
-                    image.style.transform = 'scale(1.05)';
-                });
-                card.addEventListener('mouseleave', () => {
-                    image.style.transform = 'scale(1)';
-                });
-            
-                // Tıklanabilir kart
-                card.addEventListener('click', (e) => {
-                    // Eğer tıklanan element buton değilse
-                    if (!e.target.closest('.btn')) {
-                        productManager.showProductDetail(product._id);
-                    }
-                });
-            
+        
                 return card;
             },
         
@@ -1384,7 +1272,6 @@
             },
         
             showProductDetail(productId) {
-                // Ürün detay sayfasına yönlendirme
                 window.location.href = `/product/${productId}`;
             }
         };
@@ -1420,7 +1307,7 @@
             }
         };
         
-        // Event Listeners ve Sayfa Yüklenme
+        // Event Listeners
         document.addEventListener('DOMContentLoaded', async () => {
             await initializeApp();
             setupEventListeners();
@@ -1433,11 +1320,6 @@
                 loadFiltersFromStorage();
                 await productManager.loadProducts();
                 setupPriceRangeSlider();
-                
-                // Select2'yi isteğe bağlı olarak başlat
-                if (typeof jQuery !== 'undefined' && jQuery.fn.select2) {
-                    initializeSelect2();
-                }
             } catch (error) {
                 await ErrorHandler.handleError(error, 'initializeApp');
             } finally {
@@ -1445,48 +1327,71 @@
             }
         }
         
-        // Select2 başlatma fonksiyonu
-        function initializeSelect2() {
-            try {
-                $('.select2-select').select2({
-                    theme: 'bootstrap4',
-                    width: '100%'
-                });
-            } catch (error) {
-                console.warn('Select2 initialization failed:', error);
-            }
-        }
-        
         function setupEventListeners() {
-            // Arama işlemi
+            // Arama
             const searchInput = document.getElementById('searchInput');
             let searchTimeout;
-            searchInput?.addEventListener('input', (e) => {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    state.filters.search = e.target.value.trim();
-                    productManager.loadProducts(true);
-                }, 500);
-            });
+            
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        state.filters.search = e.target.value.trim();
+                        productManager.loadProducts(true);
+                    }, 500);
+                });
+            }
         
-            // Sıralama işlemi
-            document.getElementById('sortSelect')?.addEventListener('change', (e) => {
-                state.filters.sort = e.target.value;
-                productManager.loadProducts(true);
-            });
+            // Sıralama
+            const sortSelect = document.getElementById('sortSelect');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', (e) => {
+                    state.filters.sort = e.target.value;
+                    productManager.loadProducts(true);
+                });
+            }
         
             // Filtreleri temizleme
-            document.getElementById('clearFiltersBtn')?.addEventListener('click', () => {
-                state.filters = {
-                    categories: [],
-                    priceRange: { min: null, max: null },
-                    rating: null,
-                    sort: 'newest',
-                    search: ''
-                };
-                productManager.loadProducts(true);
-                localStorage.removeItem(FILTERS_KEY);
-            });
+            const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+            if (clearFiltersBtn) {
+                clearFiltersBtn.addEventListener('click', () => {
+                    state.filters = {
+                        categories: [],
+                        priceRange: { min: null, max: null },
+                        rating: null,
+                        sort: 'newest',
+                        search: ''
+                    };
+                    productManager.loadProducts(true);
+                    localStorage.removeItem(FILTERS_KEY);
+                });
+            }
+        
+            // Kullanıcı menüsü
+            const userMenuBtn = document.getElementById('userMenuBtn');
+            const userDropdown = document.getElementById('userDropdown');
+            
+            if (userMenuBtn && userDropdown) {
+                userMenuBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('active');
+                });
+        
+                document.addEventListener('click', (e) => {
+                    if (!userMenuBtn.contains(e.target)) {
+                        userDropdown.classList.remove('active');
+                    }
+                });
+            }
+        
+            // Çıkış butonu
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    auth.clearAuth();
+                    window.location.href = '/login.html';
+                });
+            }
         
             // Sonsuz scroll
             setupInfiniteScroll();
