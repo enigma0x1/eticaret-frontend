@@ -14,7 +14,6 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Header Styles */
         .main-header {
             position: fixed;
             top: 0;
@@ -105,7 +104,6 @@
             box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
         }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
             .nav-list {
                 display: none !important;
@@ -128,18 +126,6 @@
             .login-btn, .register-btn {
                 padding: 0.4rem 0.8rem;
                 font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .logo-icon {
-                width: 32px;
-                height: 32px;
-            }
-
-            .auth-section {
-                flex-direction: column;
-                gap: 0.3rem;
             }
         }
     </style>
@@ -170,14 +156,5 @@
             </div>
         </div>
     </header>
-
-    <script>
-        class Header extends HTMLElement {
-            connectedCallback() {
-                this.innerHTML = document.querySelector('.main-header').outerHTML;
-            }
-        }
-        customElements.define('site-header', Header);
-    </script>
 </body>
 </html>
