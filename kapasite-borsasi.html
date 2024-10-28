@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kapasite Borsası - IndustryHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2193b0;
+            --secondary-color: #6dd5ed;
+            --background: #0f172a;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #FF5252;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Header styles (aynı) */
+        .header {
+            /* Önceki header stilleri buraya */
+        }
+
+        .kapasite-container {
+            margin-top: 80px;
+            padding: 2rem;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: var(--text-secondary);
+        }
+
+        .kapasite-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .action-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .kapasite-listings {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+        }
+
+        .listings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .filter-button.active {
+            background: var(--primary-color);
+        }
+
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .listing-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .listing-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-active {
+            background: var(--success);
+        }
+
+        .status-pending {
+            background: var(--warning);
+        }
+
+        .listing-details {
+            margin-bottom: 1rem;
+        }
+
+        .listing-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .listing-button {
+            flex: 1;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .kapasite-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .listings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header aynı kalacak -->
+    <header class="header">
+        <!-- Header içeriği -->
+    </header>
+
+    <div class="kapasite-container">
+        <!-- İstatistikler -->
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h3>250</h3>
+                <p>Aktif İlan</p>
+            </div>
+            <div class="stat-card">
+                <h3>120</h3>
+                <p>Tamamlanan Eşleşme</p>
+            </div>
+            <div class="stat-card">
+                <h3>85%</h3>
+                <p>Doluluk Oranı</p>
+            </div>
+            <div class="stat-card">
+                <h3>45</h3>
+                <p>Bekleyen Teklif</p>
+            </div>
+        </div>
+
+        <!-- Aksiyonlar -->
+        <div class="kapasite-actions">
+            <div class="action-card">
+                <h3>Kapasite İlanı Ver</h3>
+                <p>Boş kapasitenizi değerlendirin</p>
+                <button class="action-button">
+                    <i class="fas fa-plus"></i> Yeni İlan
+                </button>
+            </div>
+            <div class="action-card">
+                <h3>Kapasite Ara</h3>
+                <p>İhtiyacınıza uygun kapasiteyi bulun</p>
+                <button class="action-button">
+                    <i class="fas fa-search"></i> Kapasite Bul
+                </button>
+            </div>
+        </div>
+
+        <!-- İlanlar Listesi -->
+        <div class="kapasite-listings">
+            <div class="listings-header">
+                <h2>Aktif İlanlar</h2>
+                <div class="filter-options">
+                    <button class="filter-button active">Tümü</button>
+                    <button class="filter-button">Aktif</button>
+                    <button class="filter-button">Beklemede</button>
+                </div>
+            </div>
+
+            <div class="listings-grid">
+                <!-- İlan Kartı 1 -->
+                <div class="listing-card">
+                    <span class="listing-status status-active">Aktif</span>
+                    <div class="listing-details">
+                        <h3>CNC Torna Kapasitesi</h3>
+                        <p>Kapasite: 100 saat/hafta</p>
+                        <p>Lokasyon: İstanbul</p>
+                    </div>
+                    <div class="listing-actions">
+                        <button class="listing-button">
+                            <i class="fas fa-eye"></i> İncele
+                        </button>
+                        <button class="listing-button">
+                            <i class="fas fa-envelope"></i> İletişim
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Diğer ilan kartları buraya eklenebilir -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript kodları buraya eklenecek
+    </script>
+</body>
+</html>
