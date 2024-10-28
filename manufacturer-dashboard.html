@@ -1,4 +1,3 @@
-<!-- BÖLÜM 1 BAŞLANGIÇ - HTML ve CSS -->
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -192,57 +191,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Kapasite Borsası Styles */
-        .capacity-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .capacity-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .capacity-status {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        /* İnovasyon Hub Styles */
-        .innovation-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .innovation-card:hover {
-            transform: translateY(-3px);
-        }
-
-        .project-status {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .project-progress {
-            height: 8px;
-            margin: 1rem 0;
-            border-radius: var(--border-radius);
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -256,10 +205,43 @@
                 margin-left: 0;
             }
         }
+
+        /* Custom Components */
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--light-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--accent-color);
+        }
+
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            margin: 0.5rem;
+            border-radius: var(--border-radius);
+        }
     </style>
 </head>
-<!-- BÖLÜM 1 BİTİŞ -->
-<!-- BÖLÜM 2 BAŞLANGIÇ - BODY ve ANA YAPILAR -->
 <body>
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
@@ -301,20 +283,6 @@
                     <i class="fas fa-box"></i>
                     <span>Ürünlerim</span>
                     <span class="badge bg-primary ms-auto" id="productCount">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#capacity" class="nav-link" data-page="capacity">
-                    <i class="fas fa-exchange-alt"></i>
-                    <span>Kapasite Borsası</span>
-                    <span class="badge bg-success ms-auto" id="capacityBadge" style="display: none;">0</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#innovation" class="nav-link" data-page="innovation">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>İnovasyon Hub</span>
-                    <span class="badge bg-warning ms-auto" id="innovationBadge" style="display: none;">0</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -360,9 +328,7 @@
 
     <!-- Main Content Container -->
     <div class="main-content">
-<!-- BÖLÜM 2 BİTİŞ -->
-        <!-- BÖLÜM 3 BAŞLANGIÇ - DASHBOARD VE DİĞER SAYFALAR -->
-        <!-- Dashboard Page -->
+                <!-- Dashboard Page -->
         <div id="dashboard-page" class="page active">
             <div class="content-header">
                 <h1 class="page-title">Hoş Geldiniz, <span id="welcomeName">Yetkili</span></h1>
@@ -403,22 +369,22 @@
                 <div class="col-md-3">
                     <div class="stats-card">
                         <div class="stats-icon bg-warning text-white">
-                            <i class="fas fa-exchange-alt"></i>
+                            <i class="fas fa-exclamation-triangle"></i>
                         </div>
                         <div class="stats-info">
-                            <h3 id="activeCapacityOffers">0</h3>
-                            <p>Aktif Kapasite Teklifi</p>
+                            <h3 id="lowStock">0</h3>
+                            <p>Düşük Stok</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="stats-card">
                         <div class="stats-icon bg-info text-white">
-                            <i class="fas fa-lightbulb"></i>
+                            <i class="fas fa-eye"></i>
                         </div>
                         <div class="stats-info">
-                            <h3 id="activeProjects">0</h3>
-                            <p>Aktif Proje</p>
+                            <h3 id="totalViews">0</h3>
+                            <p>Toplam Görüntülenme</p>
                         </div>
                     </div>
                 </div>
@@ -429,25 +395,25 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Satış ve Kapasite Grafiği</h5>
+                            <h5 class="card-title mb-0">Satış Grafiği</h5>
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-secondary" onclick="updateMainChart('weekly')">Haftalık</button>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="updateMainChart('monthly')">Aylık</button>
-                                <button class="btn btn-sm btn-outline-secondary" onclick="updateMainChart('yearly')">Yıllık</button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="updateSalesChart('weekly')">Haftalık</button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="updateSalesChart('monthly')">Aylık</button>
+                                <button class="btn btn-sm btn-outline-secondary" onclick="updateSalesChart('yearly')">Yıllık</button>
                             </div>
                         </div>
                         <div class="card-body">
-                            <canvas id="mainChart" height="300"></canvas>
+                            <canvas id="salesChart" height="300"></canvas>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Aktivite Dağılımı</h5>
+                            <h5 class="card-title mb-0">Kategori Dağılımı</h5>
                         </div>
                         <div class="card-body">
-                            <canvas id="activityChart" height="300"></canvas>
+                            <canvas id="categoryChart" height="300"></canvas>
                         </div>
                     </div>
                 </div>
@@ -458,20 +424,20 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Son Kapasite Teklifleri</h5>
+                            <h5 class="card-title mb-0">Son Siparişler</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Teklif Türü</th>
-                                            <th>Miktar</th>
+                                            <th>Sipariş No</th>
+                                            <th>Müşteri</th>
+                                            <th>Tutar</th>
                                             <th>Durum</th>
-                                            <th>Tarih</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="recentCapacityList"></tbody>
+                                    <tbody id="recentOrdersList"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -480,348 +446,187 @@
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">İnovasyon Projeleri</h5>
+                            <h5 class="card-title mb-0">Stok Uyarıları</h5>
                         </div>
                         <div class="card-body">
-                            <div id="innovationProjectsList"></div>
+                            <div id="stockAlertsList"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Kapasite Borsası Page -->
-        <div id="capacity-page" class="page" style="display: none;">
+        <!-- Products Page -->
+        <div id="products-page" class="page" style="display: none;">
             <div class="content-header">
-                <h1 class="page-title">Kapasite Borsası</h1>
+                <h1 class="page-title">Ürün Yönetimi</h1>
                 <div class="header-actions">
-                    <button class="btn btn-primary" onclick="openNewCapacityModal()">
-                        <i class="fas fa-plus"></i> Yeni Kapasite Teklifi
+                    <button class="btn btn-outline-primary me-2" onclick="openBulkOperationsModal()">
+                        <i class="fas fa-tasks"></i> Toplu İşlemler
+                    </button>
+                    <button class="btn btn-primary" onclick="openAddProductModal()">
+                        <i class="fas fa-plus"></i> Yeni Ürün
                     </button>
                 </div>
             </div>
 
-            <!-- Kapasite Filtreleri -->
+            <!-- Products Filter -->
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <label class="form-label">Kapasite Türü</label>
-                            <select class="form-select" id="capacityTypeFilter">
+                            <label class="form-label">Kategori</label>
+                            <select class="form-select" id="productFilterCategory">
                                 <option value="">Tümü</option>
-                                <option value="manufacturing">Üretim</option>
-                                <option value="assembly">Montaj</option>
-                                <option value="packaging">Paketleme</option>
+                                <option value="elektronik">Elektronik</option>
+                                <option value="mekanik">Mekanik</option>
+                                <option value="kimyasal">Kimyasal</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Durum</label>
-                            <select class="form-select" id="capacityStatusFilter">
+                            <select class="form-select" id="productFilterStatus">
                                 <option value="">Tümü</option>
                                 <option value="active">Aktif</option>
-                                <option value="pending">Beklemede</option>
-                                <option value="completed">Tamamlandı</option>
+                                <option value="inactive">Pasif</option>
+                                <option value="out_of_stock">Stok Dışı</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Tarih Aralığı</label>
-                            <input type="date" class="form-control" id="capacityDateFilter">
+                            <label class="form-label">Fiyat Aralığı</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="priceMin" placeholder="Min">
+                                <input type="number" class="form-control" id="priceMax" placeholder="Max">
+                            </div>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Sıralama</label>
-                            <select class="form-select" id="capacitySort">
+                            <select class="form-select" id="productSort">
                                 <option value="newest">En Yeni</option>
                                 <option value="oldest">En Eski</option>
-                                <option value="capacity_asc">Kapasite (Artan)</option>
-                                <option value="capacity_desc">Kapasite (Azalan)</option>
+                                <option value="price_asc">Fiyat (Artan)</option>
+                                <option value="price_desc">Fiyat (Azalan)</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Aktif Kapasite Teklifleri -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Aktif Tekliflerim</h5>
-                </div>
+            <!-- Products Table -->
+            <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table" id="capacityTable">
+                        <table class="table table-hover" id="productsTable">
                             <thead>
                                 <tr>
-                                    <th>Kapasite Türü</th>
-                                    <th>Miktar/Süre</th>
-                                    <th>Başlangıç</th>
-                                    <th>Bitiş</th>
+                                    <th>
+                                        <input type="checkbox" class="form-check-input" id="selectAllProducts">
+                                    </th>
+                                    <th>Görsel</th>
+                                    <th>Ürün Adı</th>
+                                    <th>Kategori</th>
                                     <th>Fiyat</th>
+                                    <th>Stok</th>
                                     <th>Durum</th>
                                     <th>İşlemler</th>
                                 </tr>
                             </thead>
-                            <tbody id="capacityTableBody"></tbody>
+                            <tbody id="productsTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
-            <!-- Gelen Talepler -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Gelen Talepler</h5>
-                </div>
-                <div class="card-body">
-                    <div id="incomingCapacityRequests"></div>
-                </div>
-            </div>
         </div>
 
-        <!-- İnovasyon Hub Page -->
-        <div id="innovation-page" class="page" style="display: none;">
-            <div class="content-header">
-                <h1 class="page-title">İnovasyon Hub</h1>
-                <div class="header-actions">
-                    <button class="btn btn-primary" onclick="openNewProjectModal()">
-                        <i class="fas fa-plus"></i> Yeni Proje Önerisi
-                    </button>
-                </div>
-            </div>
+        <!-- Orders Page -->
+        <div id="orders-page" class="page" style="display: none;">
+            <!-- Orders content will be added here -->
+        </div>
 
-            <!-- Proje Filtreleri -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label">Proje Kategorisi</label>
-                            <select class="form-select" id="projectCategoryFilter">
-                                <option value="">Tümü</option>
-                                <option value="rd">Ar-Ge</option>
-                                <option value="innovation">İnovasyon</option>
-                                <option value="improvement">İyileştirme</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Durum</label>
-                            <select class="form-select" id="projectStatusFilter">
-                                <option value="">Tümü</option>
-                                <option value="active">Aktif</option>
-                                <option value="planning">Planlama</option>
-                                <option value="completed">Tamamlandı</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Bütçe Aralığı</label>
-                            <div class="input-group">
-                                <input type="number" class="form-control" id="budgetMin" placeholder="Min">
-                                <input type="number" class="form-control" id="budgetMax" placeholder="Max">
+        <!-- Inventory Page -->
+        <div id="inventory-page" class="page" style="display: none;">
+            <!-- Inventory content will be added here -->
+        </div>
+
+        <!-- Analytics Page -->
+        <div id="analytics-page" class="page" style="display: none;">
+            <!-- Analytics content will be added here -->
+        </div>
+
+        <!-- Profile Page -->
+        <div id="profile-page" class="page" style="display: none;">
+            <!-- Profile content will be added here -->
+        </div>
+
+        <!-- Settings Page -->
+        <div id="settings-page" class="page" style="display: none;">
+            <!-- Settings content will be added here -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalTitle">Yeni Ürün Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Ürün Adı</label>
+                                <input type="text" class="form-control" id="productName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select" id="productCategory" required>
+                                    <option value="">Seçiniz</option>
+                                    <option value="elektronik">Elektronik</option>
+                                    <option value="mekanik">Mekanik</option>
+                                    <option value="kimyasal">Kimyasal</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Açıklama</label>
+                                <textarea class="form-control" id="productDescription" rows="3" required></textarea>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Fiyat</label>
+                                <input type="number" class="form-control" id="productPrice" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Stok</label>
+                                <input type="number" class="form-control" id="productStock" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Durum</label>
+                                <select class="form-select" id="productStatus" required>
+                                    <option value="active">Aktif</option>
+                                    <option value="inactive">Pasif</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Ürün Görseli</label>
+                                <div class="file-upload-area" onclick="document.getElementById('productImage').click()">
+                                    <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                                    <p class="mb-0">Görsel yüklemek için tıklayın veya sürükleyin</p>
+                                    <input type="file" id="productImage" hidden accept="image/*">
+                                </div>
+                                <div id="imagePreview" class="mt-2 d-flex flex-wrap gap-2"></div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Sıralama</label>
-                            <select class="form-select" id="projectSort">
-                                <option value="newest">En Yeni</option>
-                                <option value="oldest">En Eski</option>
-                                <option value="budget_asc">Bütçe (Artan)</option>
-                                <option value="budget_desc">Bütçe (Azalan)</option>
-                            </select>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-            </div>
-
-            <!-- Aktif Projeler -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Katıldığım Projeler</h5>
-                </div>
-                <div class="card-body">
-                    <div id="activeProjectsList"></div>
-                </div>
-            </div>
-
-            <!-- Proje Fırsatları -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Proje Fırsatları</h5>
-                </div>
-                <div class="card-body">
-                    <div id="projectOpportunities"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">Kaydet</button>
                 </div>
             </div>
         </div>
-<!-- BÖLÜM 3 BİTİŞ -->
-<!-- BÖLÜM 4 BAŞLANGIÇ - MODALLER -->
-        <!-- Yeni Kapasite Teklifi Modal -->
-        <div class="modal fade" id="capacityModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="capacityModalTitle">Yeni Kapasite Teklifi</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="capacityForm">
-                            <input type="hidden" id="capacityId">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Kapasite Türü</label>
-                                    <select class="form-select" id="capacityType" required>
-                                        <option value="">Seçiniz</option>
-                                        <option value="manufacturing">Üretim</option>
-                                        <option value="assembly">Montaj</option>
-                                        <option value="packaging">Paketleme</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Birim</label>
-                                    <select class="form-select" id="capacityUnit" required>
-                                        <option value="hour">Saat</option>
-                                        <option value="piece">Adet</option>
-                                        <option value="kg">KG</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Miktar</label>
-                                    <input type="number" class="form-control" id="capacityAmount" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Fiyat (Birim Başına)</label>
-                                    <input type="number" class="form-control" id="capacityPrice" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Başlangıç Tarihi</label>
-                                    <input type="date" class="form-control" id="capacityStartDate" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Bitiş Tarihi</label>
-                                    <input type="date" class="form-control" id="capacityEndDate" required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Açıklama</label>
-                                    <textarea class="form-control" id="capacityDescription" rows="3" required></textarea>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Özel Şartlar</label>
-                                    <textarea class="form-control" id="capacityTerms" rows="2"></textarea>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                        <button type="button" class="btn btn-primary" onclick="saveCapacityOffer()">Kaydet</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Yeni Proje Modal -->
-        <div class="modal fade" id="projectModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="projectModalTitle">Yeni Proje Önerisi</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="projectForm">
-                            <input type="hidden" id="projectId">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">Proje Adı</label>
-                                    <input type="text" class="form-control" id="projectName" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Kategori</label>
-                                    <select class="form-select" id="projectCategory" required>
-                                        <option value="">Seçiniz</option>
-                                        <option value="rd">Ar-Ge</option>
-                                        <option value="innovation">İnovasyon</option>
-                                        <option value="improvement">İyileştirme</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Proje Açıklaması</label>
-                                    <textarea class="form-control" id="projectDescription" rows="3" required></textarea>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Tahmini Bütçe</label>
-                                    <input type="number" class="form-control" id="projectBudget" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Süre (Ay)</label>
-                                    <input type="number" class="form-control" id="projectDuration" required>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Gerekli Uzmanlıklar</label>
-                                    <select class="form-select" id="projectSkills" multiple>
-                                        <option value="mechanical">Mekanik</option>
-                                        <option value="electrical">Elektrik</option>
-                                        <option value="software">Yazılım</option>
-                                        <option value="chemical">Kimya</option>
-                                    </select>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label">Proje Dokümanları</label>
-                                    <div class="file-upload-area" onclick="document.getElementById('projectFiles').click()">
-                                        <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
-                                        <p class="mb-0">Dosya yüklemek için tıklayın veya sürükleyin</p>
-                                        <input type="file" id="projectFiles" hidden multiple>
-                                    </div>
-                                    <div id="filesList" class="mt-2"></div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
-                        <button type="button" class="btn btn-primary" onclick="saveProject()">Kaydet</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Kapasite Teklif Detay Modal -->
-        <div class="modal fade" id="capacityDetailModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Kapasite Teklifi Detayı</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="capacityDetailContent"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                        <button type="button" class="btn btn-success" onclick="acceptCapacityOffer()">Kabul Et</button>
-                        <button type="button" class="btn btn-danger" onclick="rejectCapacityOffer()">Reddet</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Proje Detay Modal -->
-        <div class="modal fade" id="projectDetailModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Proje Detayı</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="projectDetailContent"></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
-                        <button type="button" class="btn btn-success" onclick="joinProject()">Projeye Katıl</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-<!-- BÖLÜM 4 BİTİŞ -->
-<!-- BÖLÜM 5 BAŞLANGIÇ - JAVASCRIPT -->
-    </div> <!-- main-content div'ini kapatıyoruz -->
+    </div>
 
     <!-- Required Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -831,14 +636,12 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
     <script>
         // API URL'i
         const API_URL = 'https://eticaret-glif.onrender.com/api';
-        let capacityModal;
-        let projectModal;
-        let mainChart;
-        let activityChart;
+        let productModal;
+        let salesChart;
+        let categoryChart;
 
         // Sayfa yüklendiğinde
         document.addEventListener('DOMContentLoaded', async () => {
@@ -855,7 +658,7 @@
             const userName = localStorage.getItem('userName');
 
             if (!token || userType !== 'manufacturer') {
-                window.location.href = 'ureticiLogin.html';
+                window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
                 return false;
             }
 
@@ -870,7 +673,7 @@
                     throw new Error('Token geçersiz');
                 }
 
-                // Kullanıcı bilgilerini göster
+                // Kullanıcı adını göster
                 document.getElementById('welcomeName').textContent = userName || 'Yetkili';
                 document.getElementById('userName').textContent = userName || 'Yetkili';
                 
@@ -883,18 +686,15 @@
                 return true;
             } catch (error) {
                 console.error('Auth error:', error);
-                window.location.href = 'ureticiLogin.html';
+                window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
                 return false;
             }
         }
 
         // Uygulama başlatma
         function initializeApp() {
-            // Bootstrap modalları initialize et
-            capacityModal = new bootstrap.Modal(document.getElementById('capacityModal'));
-            projectModal = new bootstrap.Modal(document.getElementById('projectModal'));
-            
-            // Select2'yi initialize et
+            // Bootstrap modal ve select2 inicializasyonu
+            productModal = new bootstrap.Modal(document.getElementById('productModal'));
             initializeSelect2();
             
             // Event listener'ları ayarla
@@ -909,9 +709,9 @@
 
         // Select2 inicializasyonu
         function initializeSelect2() {
-            $('#projectSkills').select2({
-                placeholder: 'Uzmanlık alanları seçin',
-                dropdownParent: $('#projectModal')
+            $('#productCategory').select2({
+                placeholder: 'Kategori seçin',
+                dropdownParent: $('#productModal')
             });
         }
 
@@ -928,17 +728,8 @@
                 }
             });
 
-            // Dosya yükleme
-            setupFileUploadListeners();
-
-            // Filtreler
-            setupFilterListeners();
-        }
-
-        // Dosya yükleme listener'ları
-        function setupFileUploadListeners() {
+            // Ürün görseli yükleme
             const dropZone = document.querySelector('.file-upload-area');
-            
             dropZone.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 dropZone.classList.add('dragover');
@@ -954,25 +745,16 @@
                 handleFileUpload(e.dataTransfer.files);
             });
 
-            document.getElementById('projectFiles').addEventListener('change', (e) => {
+            document.getElementById('productImage').addEventListener('change', (e) => {
                 handleFileUpload(e.target.files);
             });
-        }
 
-        // Filtre listener'ları
-        function setupFilterListeners() {
-            // Kapasite Borsası filtreleri
-            document.getElementById('capacityTypeFilter').addEventListener('change', filterCapacityOffers);
-            document.getElementById('capacityStatusFilter').addEventListener('change', filterCapacityOffers);
-            document.getElementById('capacityDateFilter').addEventListener('change', filterCapacityOffers);
-            document.getElementById('capacitySort').addEventListener('change', filterCapacityOffers);
-
-            // İnovasyon Hub filtreleri
-            document.getElementById('projectCategoryFilter').addEventListener('change', filterProjects);
-            document.getElementById('projectStatusFilter').addEventListener('change', filterProjects);
-            document.getElementById('projectSort').addEventListener('change', filterProjects);
-            document.getElementById('budgetMin').addEventListener('input', filterProjects);
-            document.getElementById('budgetMax').addEventListener('input', filterProjects);
+            // Ürün filtreleme
+            document.getElementById('productFilterCategory').addEventListener('change', filterProducts);
+            document.getElementById('productFilterStatus').addEventListener('change', filterProducts);
+            document.getElementById('productSort').addEventListener('change', filterProducts);
+            document.getElementById('priceMin').addEventListener('input', filterProducts);
+            document.getElementById('priceMax').addEventListener('input', filterProducts);
         }
 
         // Sayfa navigasyonu
@@ -997,11 +779,23 @@
                 case 'dashboard':
                     loadDashboard();
                     break;
-                case 'capacity':
-                    loadCapacityOffers();
+                case 'products':
+                    loadProducts();
                     break;
-                case 'innovation':
-                    loadProjects();
+                case 'orders':
+                    loadOrders();
+                    break;
+                case 'inventory':
+                    loadInventory();
+                    break;
+                case 'analytics':
+                    loadAnalytics();
+                    break;
+                case 'profile':
+                    loadProfile();
+                    break;
+                case 'settings':
+                    loadSettings();
                     break;
             }
         }
@@ -1019,13 +813,19 @@
                 const data = await response.json();
                 
                 // İstatistikleri güncelle
-                updateDashboardStats(data);
+                document.getElementById('totalProducts').textContent = data.totalProducts;
+                document.getElementById('totalSales').textContent = data.totalSales;
+                document.getElementById('lowStock').textContent = data.lowStockProducts;
+                document.getElementById('totalViews').textContent = data.totalViews;
 
                 // Grafikleri güncelle
                 updateCharts(data);
 
-                // Son aktiviteleri listele
-                updateRecentActivities(data);
+                // Son siparişleri listele
+                updateRecentOrders(data.recentOrders);
+
+                // Stok uyarılarını göster
+                updateStockAlerts(data.stockAlerts);
 
             } catch (error) {
                 console.error('Dashboard error:', error);
@@ -1035,288 +835,57 @@
             }
         }
 
-        // Kapasite tekliflerini yükleme
-        async function loadCapacityOffers() {
+        // Ürün yönetimi
+        async function loadProducts() {
             try {
                 showLoading();
-                const response = await authenticatedFetch(`${API_URL}/manufacturer/capacity-offers`);
+                const response = await authenticatedFetch(`${API_URL}/products/my-products`);
                 
                 if (!response.ok) {
-                    throw new Error('Kapasite teklifleri alınamadı');
+                    throw new Error('Ürünler yüklenemedi');
                 }
 
                 const data = await response.json();
                 
-                // Kapasite tekliflerini listele
-                updateCapacityTable(data.offers);
-                
-                // Gelen talepleri göster
-                updateIncomingRequests(data.requests);
+                // Ürün tablosunu güncelle
+                updateProductsTable(data.products);
 
             } catch (error) {
-                console.error('Capacity offers error:', error);
-                showNotification('Kapasite teklifleri yüklenirken bir hata oluştu', 'error');
+                console.error('Products error:', error);
+                showNotification('Ürünler yüklenirken bir hata oluştu', 'error');
             } finally {
                 hideLoading();
             }
         }
-
-        // Projeleri yükleme
-        async function loadProjects() {
-            try {
-                showLoading();
-                const response = await authenticatedFetch(`${API_URL}/manufacturer/innovation-projects`);
-                
-                if (!response.ok) {
-                    throw new Error('Projeler alınamadı');
-                }
-
-                const data = await response.json();
-                
-                // Aktif projeleri listele
-                updateActiveProjects(data.activeProjects);
-                
-                // Proje fırsatlarını göster
-                updateProjectOpportunities(data.opportunities);
-
-            } catch (error) {
-                console.error('Projects error:', error);
-                showNotification('Projeler yüklenirken bir hata oluştu', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Kapasite teklifi kaydetme
-        async function saveCapacityOffer() {
-            try {
-                const form = document.getElementById('capacityForm');
-                if (!form.checkValidity()) {
-                    form.reportValidity();
-                    return;
-                }
-
-                showLoading();
-                const capacityId = document.getElementById('capacityId').value;
-                const formData = {
-                    type: document.getElementById('capacityType').value,
-                    unit: document.getElementById('capacityUnit').value,
-                    amount: document.getElementById('capacityAmount').value,
-                    price: document.getElementById('capacityPrice').value,
-                    startDate: document.getElementById('capacityStartDate').value,
-                    endDate: document.getElementById('capacityEndDate').value,
-                    description: document.getElementById('capacityDescription').value,
-                    terms: document.getElementById('capacityTerms').value
-                };
-
-                const url = capacityId ? 
-                    `${API_URL}/manufacturer/capacity-offers/${capacityId}` : 
-                    `${API_URL}/manufacturer/capacity-offers`;
-
-                const response = await authenticatedFetch(url, {
-                    method: capacityId ? 'PUT' : 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                if (!response.ok) {
-                    throw new Error('Kapasite teklifi kaydedilemedi');
-                }
-
-                showNotification(capacityId ? 'Teklif güncellendi' : 'Yeni teklif oluşturuldu', 'success');
-                capacityModal.hide();
-                loadCapacityOffers();
-                loadDashboard();
-
-            } catch (error) {
-                console.error('Save capacity offer error:', error);
-                showNotification('Teklif kaydedilirken bir hata oluştu', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Proje kaydetme
-        async function saveProject() {
-            try {
-                const form = document.getElementById('projectForm');
-                if (!form.checkValidity()) {
-                    form.reportValidity();
-                    return;
-                }
-
-                showLoading();
-                const formData = new FormData();
-                const projectId = document.getElementById('projectId').value;
-
-                                // Form verilerini ekle
-                formData.append('name', document.getElementById('projectName').value);
-                formData.append('category', document.getElementById('projectCategory').value);
-                formData.append('description', document.getElementById('projectDescription').value);
-                formData.append('budget', document.getElementById('projectBudget').value);
-                formData.append('duration', document.getElementById('projectDuration').value);
-                formData.append('skills', JSON.stringify($('#projectSkills').val()));
-
-                // Dosyaları ekle
-                const files = document.getElementById('projectFiles').files;
-                Array.from(files).forEach(file => {
-                    formData.append('files', file);
-                });
-
-                const url = projectId ? 
-                    `${API_URL}/manufacturer/innovation-projects/${projectId}` : 
-                    `${API_URL}/manufacturer/innovation-projects`;
-
-                const response = await authenticatedFetch(url, {
-                    method: projectId ? 'PUT' : 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('Proje kaydedilemedi');
-                }
-
-                showNotification(projectId ? 'Proje güncellendi' : 'Yeni proje oluşturuldu', 'success');
-                projectModal.hide();
-                loadProjects();
-                loadDashboard();
-
-            } catch (error) {
-                console.error('Save project error:', error);
-                showNotification('Proje kaydedilirken bir hata oluştu', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Kapasite teklifi kabul etme
-        async function acceptCapacityOffer(offerId) {
-            try {
-                const result = await Swal.fire({
-                    title: 'Teklifi Kabul Et',
-                    text: 'Bu teklifi kabul etmek istediğinizden emin misiniz?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Evet, Kabul Et',
-                    cancelButtonText: 'İptal'
-                });
-
-                if (result.isConfirmed) {
-                    showLoading();
-                    const response = await authenticatedFetch(`${API_URL}/manufacturer/capacity-offers/${offerId}/accept`, {
-                        method: 'POST'
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Teklif kabul edilemedi');
-                    }
-
-                    showNotification('Teklif başarıyla kabul edildi', 'success');
-                    loadCapacityOffers();
-                    loadDashboard();
-                }
-            } catch (error) {
-                console.error('Accept capacity offer error:', error);
-                showNotification('Teklif kabul edilirken bir hata oluştu', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Projeye katılma
-        async function joinProject(projectId) {
-            try {
-                const result = await Swal.fire({
-                    title: 'Projeye Katıl',
-                    text: 'Bu projeye katılmak istediğinizden emin misiniz?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Evet, Katıl',
-                    cancelButtonText: 'İptal'
-                });
-
-                if (result.isConfirmed) {
-                    showLoading();
-                    const response = await authenticatedFetch(`${API_URL}/manufacturer/innovation-projects/${projectId}/join`, {
-                        method: 'POST'
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Projeye katılınamadı');
-                    }
-
-                    showNotification('Projeye başarıyla katıldınız', 'success');
-                    loadProjects();
-                    loadDashboard();
-                }
-            } catch (error) {
-                console.error('Join project error:', error);
-                showNotification('Projeye katılırken bir hata oluştu', 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // Dashboard istatistiklerini güncelleme
-        function updateDashboardStats(data) {
-            document.getElementById('totalProducts').textContent = data.totalProducts || 0;
-            document.getElementById('totalSales').textContent = data.totalSales || 0;
-            document.getElementById('activeCapacityOffers').textContent = data.activeCapacityOffers || 0;
-            document.getElementById('activeProjects').textContent = data.activeProjects || 0;
-        }
-
-        // Grafikleri güncelleme
-        function updateCharts(data) {
-            // Ana grafik güncelleme
-            mainChart.data.labels = data.chartData.labels;
-            mainChart.data.datasets = [
-                {
-                    label: 'Satışlar',
-                    data: data.chartData.sales,
-                    borderColor: '#3498db',
-                    tension: 0.4
-                },
-                {
-                    label: 'Kapasite Kullanımı',
-                    data: data.chartData.capacity,
-                    borderColor: '#2ecc71',
-                    tension: 0.4
-                }
-            ];
-            mainChart.update();
-
-            // Aktivite grafiği güncelleme
-            activityChart.data.labels = data.activityData.labels;
-            activityChart.data.datasets[0].data = data.activityData.values;
-            activityChart.update();
-        }
-
-        // Kapasite tablosunu güncelleme
-        function updateCapacityTable(offers) {
-            const tbody = document.getElementById('capacityTableBody');
+        // Ürün tablosunu güncelleme fonksiyonu
+        function updateProductsTable(products) {
+            const tbody = document.getElementById('productsTableBody');
             tbody.innerHTML = '';
-
-            offers.forEach(offer => {
+        
+            products.forEach(product => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${formatCapacityType(offer.type)}</td>
-                    <td>${offer.amount} ${formatUnit(offer.unit)}</td>
-                    <td>${formatDate(offer.startDate)}</td>
-                    <td>${formatDate(offer.endDate)}</td>
-                    <td>${formatPrice(offer.price)}</td>
                     <td>
-                        <span class="badge ${getStatusBadgeClass(offer.status)}">
-                            ${formatStatus(offer.status)}
-                        </span>
+                        <input type="checkbox" class="form-check-input" value="${product._id}">
+                    </td>
+                    <td>
+                        <img src="${product.image}" alt="${product.title}" class="product-image">
+                    </td>
+                    <td>${product.title}</td>
+                    <td>${product.category}</td>
+                    <td>${formatPrice(product.price)}</td>
+                    <td>
+                        <span class="badge ${getStockBadgeClass(product.stock)}">${product.stock}</span>
+                    </td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(product.status)}">${formatStatus(product.status)}</span>
                     </td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-sm btn-outline-primary" onclick="editCapacityOffer('${offer._id}')">
+                            <button class="btn btn-sm btn-outline-primary" onclick="editProduct('${product._id}')">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteCapacityOffer('${offer._id}')">
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct('${product._id}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -1324,118 +893,561 @@
                 `;
                 tbody.appendChild(tr);
             });
-        }
-
-        // Aktif projeleri güncelleme
-        function updateActiveProjects(projects) {
-            const container = document.getElementById('activeProjectsList');
-            container.innerHTML = '';
-
-            projects.forEach(project => {
-                const card = document.createElement('div');
-                card.className = 'innovation-card';
-                card.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <h5 class="mb-1">${project.name}</h5>
-                            <p class="text-muted mb-2">${project.category}</p>
-                        </div>
-                        <span class="badge ${getProjectStatusBadgeClass(project.status)}">
-                            ${formatProjectStatus(project.status)}
-                        </span>
-                    </div>
-                    <p>${project.description}</p>
-                    <div class="progress project-progress">
-                        <div class="progress-bar" role="progressbar" style="width: ${project.progress}%">
-                            ${project.progress}%
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="project-members">
-                            ${project.members.map(member => `
-                                <div class="member-avatar" title="${member.name}">
-                                    ${member.name.charAt(0)}
-                                </div>
-                            `).join('')}
-                        </div>
-                        <button class="btn btn-sm btn-outline-primary" onclick="viewProjectDetails('${project._id}')">
-                            Detaylar
-                        </button>
-                    </div>
-                `;
-                container.appendChild(card);
+        
+            // DataTable'ı başlat veya yenile
+            if ($.fn.DataTable.isDataTable('#productsTable')) {
+                $('#productsTable').DataTable().destroy();
+            }
+            
+            $('#productsTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Turkish.json'
+                },
+                responsive: true,
+                order: [[2, 'asc']] // Ürün adına göre sırala
             });
         }
-
+        
+        // Son siparişleri güncelleme fonksiyonu
+        function updateRecentOrders(orders) {
+            const tbody = document.getElementById('recentOrdersList');
+            tbody.innerHTML = '';
+        
+            orders.forEach(order => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>#${order.orderNumber}</td>
+                    <td>${order.customerName}</td>
+                    <td>${formatPrice(order.total)}</td>
+                    <td>
+                        <span class="badge ${getOrderStatusBadgeClass(order.status)}">
+                            ${formatOrderStatus(order.status)}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // Stok uyarılarını güncelleme fonksiyonu
+        function updateStockAlerts(alerts) {
+            const container = document.getElementById('stockAlertsList');
+            container.innerHTML = '';
+        
+            if (alerts.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Stok uyarısı bulunmuyor.</div>';
+                return;
+            }
+        
+            alerts.forEach(alert => {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-warning d-flex justify-content-between align-items-center';
+                alertDiv.innerHTML = `
+                    <div>
+                        <strong>${alert.productName}</strong>
+                        <br>
+                        <small>Mevcut stok: ${alert.currentStock}</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-warning" onclick="updateStock('${alert.productId}')">
+                        Stok Güncelle
+                    </button>
+                `;
+                container.appendChild(alertDiv);
+            });
+        }
+        
+        // Ürün düzenleme fonksiyonu
+        async function editProduct(productId) {
+            try {
+                showLoading();
+                const response = await authenticatedFetch(`${API_URL}/products/${productId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Ürün bilgileri alınamadı');
+                }
+        
+                const product = await response.json();
+                
+                // Form alanlarını doldur
+                document.getElementById('productId').value = product._id;
+                document.getElementById('productName').value = product.title;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productStock').value = product.stock;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productStatus').value = product.status;
+        
+                // Görsel önizleme
+                if (product.image) {
+                    document.getElementById('imagePreview').innerHTML = `
+                        <img src="${product.image}" class="preview-image">
+                    `;
+                }
+        
+                // Modal başlığını güncelle
+                document.getElementById('productModalTitle').textContent = 'Ürün Düzenle';
+                
+                // Modalı aç
+                productModal.show();
+        
+            } catch (error) {
+                console.error('Edit product error:', error);
+                showNotification('Ürün düzenleme sırasında bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Ürün silme fonksiyonu
+        async function deleteProduct(productId) {
+            try {
+                const result = await Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: "Bu işlem geri alınamaz!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Evet, sil!',
+                    cancelButtonText: 'İptal'
+                });
+        
+                if (result.isConfirmed) {
+                    showLoading();
+                    const response = await authenticatedFetch(`${API_URL}/products/${productId}`, {
+                        method: 'DELETE'
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Ürün silinemedi');
+                    }
+        
+                    showNotification('Ürün başarıyla silindi', 'success');
+                    loadProducts();
+                    loadDashboard();
+                }
+            } catch (error) {
+                console.error('Delete product error:', error);
+                showNotification('Ürün silinirken bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Stok güncelleme fonksiyonu
+        async function updateStock(productId) {
+            try {
+                const { value: newStock } = await Swal.fire({
+                    title: 'Stok Güncelle',
+                    input: 'number',
+                    inputLabel: 'Yeni stok miktarı',
+                    inputPlaceholder: 'Stok miktarını girin',
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        if (!value || value < 0) {
+                            return 'Geçerli bir stok miktarı girin!';
+                        }
+                    }
+                });
+        
+                if (newStock) {
+                    showLoading();
+                    const response = await authenticatedFetch(`${API_URL}/products/${productId}/stock`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ stock: newStock })
+                    });
+        
+                    if (!response.ok) {
+                        throw new Error('Stok güncellenemedi');
+                    }
+        
+                    showNotification('Stok başarıyla güncellendi', 'success');
+                    loadProducts();
+                    loadDashboard();
+                }
+            } catch (error) {
+                console.error('Update stock error:', error);
+                showNotification('Stok güncellenirken bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
         // Yardımcı fonksiyonlar
-        function formatCapacityType(type) {
-            const types = {
-                'manufacturing': 'Üretim',
-                'assembly': 'Montaj',
-                'packaging': 'Paketleme'
-            };
-            return types[type] || type;
-        }
-
-        function formatUnit(unit) {
-            const units = {
-                'hour': 'Saat',
-                'piece': 'Adet',
-                'kg': 'KG'
-            };
-            return units[unit] || unit;
-        }
-
-        function formatDate(date) {
-            return new Date(date).toLocaleDateString('tr-TR');
-        }
-
         function formatPrice(price) {
             return new Intl.NumberFormat('tr-TR', {
                 style: 'currency',
                 currency: 'TRY'
             }).format(price);
         }
-
+        
         function formatStatus(status) {
-            const statuses = {
+            const statusMap = {
                 'active': 'Aktif',
-                'pending': 'Beklemede',
-                'completed': 'Tamamlandı',
-                'cancelled': 'İptal'
+                'inactive': 'Pasif',
+                'out_of_stock': 'Stok Dışı'
             };
-            return statuses[status] || status;
+            return statusMap[status] || status;
         }
-
+        
+        function formatOrderStatus(status) {
+            const statusMap = {
+                'pending': 'Beklemede',
+                'processing': 'İşleniyor',
+                'shipped': 'Kargoda',
+                'delivered': 'Teslim Edildi',
+                'cancelled': 'İptal Edildi'
+            };
+            return statusMap[status] || status;
+        }
+        
+        function getStockBadgeClass(stock) {
+            if (stock <= 0) return 'bg-danger';
+            if (stock <= 10) return 'bg-warning';
+            return 'bg-success';
+        }
+        
         function getStatusBadgeClass(status) {
-            const classes = {
+            const classMap = {
                 'active': 'bg-success',
+                'inactive': 'bg-secondary',
+                'out_of_stock': 'bg-danger'
+            };
+            return classMap[status] || 'bg-secondary';
+        }
+        
+        function getOrderStatusBadgeClass(status) {
+            const classMap = {
                 'pending': 'bg-warning',
-                'completed': 'bg-info',
+                'processing': 'bg-info',
+                'shipped': 'bg-primary',
+                'delivered': 'bg-success',
                 'cancelled': 'bg-danger'
             };
-            return classes[status] || 'bg-secondary';
+            return classMap[status] || 'bg-secondary';
+        }
+        
+        // Ürün filtreleme fonksiyonu
+        function filterProducts() {
+            const category = document.getElementById('productFilterCategory').value;
+            const status = document.getElementById('productFilterStatus').value;
+            const minPrice = document.getElementById('priceMin').value;
+            const maxPrice = document.getElementById('priceMax').value;
+            const sort = document.getElementById('productSort').value;
+        
+            // DataTable filtreleme
+            const table = $('#productsTable').DataTable();
+            
+            // Custom filtreleme fonksiyonu
+            $.fn.dataTable.ext.search.push(
+                function(settings, data, dataIndex) {
+                    const productCategory = data[3]; // Kategori kolonu
+                    const productStatus = data[6]; // Durum kolonu
+                    const productPrice = parseFloat(data[4].replace(/[^\d.-]/g, '')); // Fiyat kolonu
+                    
+                    if (category && productCategory !== category) return false;
+                    if (status && !productStatus.includes(status)) return false;
+                    if (minPrice && productPrice < minPrice) return false;
+                    if (maxPrice && productPrice > maxPrice) return false;
+                    
+                    return true;
+                }
+            );
+        
+            // Sıralama
+            switch(sort) {
+                case 'newest':
+                    table.order([2, 'desc']).draw();
+                    break;
+                case 'oldest':
+                    table.order([2, 'asc']).draw();
+                    break;
+                case 'price_asc':
+                    table.order([4, 'asc']).draw();
+                    break;
+                case 'price_desc':
+                    table.order([4, 'desc']).draw();
+                    break;
+            }
+        
+            table.draw();
+        }
+        
+        // Dosya yükleme işleyicisi
+        function handleFileUpload(files) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = '';
+        
+            Array.from(files).forEach(file => {
+                if (!file.type.startsWith('image/')) {
+                    showNotification('Lütfen sadece resim dosyası yükleyin', 'warning');
+                    return;
+                }
+        
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-image';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+        // Ürün kaydetme
+        async function saveProduct() {
+            try {
+                const form = document.getElementById('productForm');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+        
+                showLoading();
+                const formData = new FormData();
+                const productId = document.getElementById('productId').value;
+                const manufacturerId = localStorage.getItem('userId'); // Üretici ID'sini localStorage'dan al
+        
+                // Form verilerini ekle
+                formData.append('title', document.getElementById('productName').value);
+                formData.append('description', document.getElementById('productDescription').value);
+                formData.append('price', document.getElementById('productPrice').value);
+                formData.append('category', document.getElementById('productCategory').value);
+                formData.append('stock', document.getElementById('productStock').value);
+                formData.append('status', document.getElementById('productStatus').value);
+                formData.append('manufacturer', manufacturerId); // Üretici ID'sini ekle
+        
+                // Görsel ekle
+                const imageFile = document.getElementById('productImage').files[0];
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+        
+                const url = productId ? 
+                    `${API_URL}/products/${productId}` : 
+                    `${API_URL}/products`;
+        
+                const response = await authenticatedFetch(url, {
+                    method: productId ? 'PUT' : 'POST',
+                    body: formData
+                });
+        
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Ürün kaydedilemedi');
+                }
+        
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification(productId ? 'Ürün güncellendi' : 'Ürün eklendi', 'success');
+                    productModal.hide();
+                    loadProducts();
+                    loadDashboard();
+                } else {
+                    throw new Error(result.message);
+                }
+        
+            } catch (error) {
+                console.error('Save product error:', error);
+                showNotification(error.message || 'Ürün kaydedilirken bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        // Authenticated Fetch Utility
+        async function authenticatedFetch(url, options = {}) {
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        ...options.headers
+                    },
+                    credentials: 'include'
+                });
+
+                if (response.status === 401) {
+                    localStorage.clear();
+                    window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
+                    return null;
+                }
+
+                return response;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                throw error;
+            }
+        }
+        // Dashboard yenileme fonksiyonu
+        function refreshDashboard() {
+            loadDashboard();
+            showNotification('Dashboard yenilendi', 'success');
+        }
+        
+        // Yeni ürün ekleme modalını açma fonksiyonu
+        function openAddProductModal() {
+            // Form alanlarını temizle
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            
+            // Modal başlığını güncelle
+            document.getElementById('productModalTitle').textContent = 'Yeni Ürün Ekle';
+            
+            // Modalı aç
+            productModal.show();
+        }
+        
+        // Toplu işlemler modalını açma fonksiyonu
+        function openBulkOperationsModal() {
+            // Toplu işlemler modalı için gerekli kodlar
+            Swal.fire({
+                title: 'Toplu İşlemler',
+                html: `
+                    <div class="mb-3">
+                        <select class="form-select" id="bulkAction">
+                            <option value="">İşlem Seçin</option>
+                            <option value="delete">Toplu Sil</option>
+                            <option value="status">Durum Güncelle</option>
+                            <option value="price">Fiyat Güncelle</option>
+                        </select>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Uygula',
+                cancelButtonText: 'İptal',
+                preConfirm: () => {
+                    const action = document.getElementById('bulkAction').value;
+                    if (!action) {
+                        Swal.showValidationMessage('Lütfen bir işlem seçin');
+                    }
+                    return action;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    handleBulkOperation(result.value);
+                }
+            });
+        }
+        
+        // Toplu işlemleri handle etme fonksiyonu
+        async function handleBulkOperation(action) {
+            const selectedProducts = getSelectedProducts();
+            
+            if (selectedProducts.length === 0) {
+                showNotification('Lütfen ürün seçin', 'warning');
+                return;
+            }
+        
+            try {
+                showLoading();
+                
+                let endpoint = '';
+                let data = { productIds: selectedProducts };
+                
+                switch(action) {
+                    case 'delete':
+                        endpoint = '/bulk-delete';
+                        break;
+                    case 'status':
+                        const status = await promptForStatus();
+                        if (!status) return;
+                        data.status = status;
+                        endpoint = '/bulk-status-update';
+                        break;
+                    case 'price':
+                        const priceAction = await promptForPriceAction();
+                        if (!priceAction) return;
+                        data = { ...data, ...priceAction };
+                        endpoint = '/bulk-price-update';
+                        break;
+                }
+        
+                const response = await authenticatedFetch(`${API_URL}/products${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+        
+                if (!response.ok) {
+                    throw new Error('İşlem başarısız');
+                }
+        
+                showNotification('Toplu işlem başarıyla tamamlandı', 'success');
+                loadProducts();
+            } catch (error) {
+                console.error('Bulk operation error:', error);
+                showNotification('İşlem sırasında bir hata oluştu', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // Seçili ürünleri alma fonksiyonu
+        function getSelectedProducts() {
+            const checkboxes = document.querySelectorAll('#productsTableBody input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+        
+        // Durum seçimi için prompt
+        function promptForStatus() {
+            return Swal.fire({
+                title: 'Durum Seçin',
+                input: 'select',
+                inputOptions: {
+                    'active': 'Aktif',
+                    'inactive': 'Pasif',
+                    'out_of_stock': 'Stok Dışı'
+                },
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Lütfen bir durum seçin';
+                    }
+                }
+            }).then(result => result.isConfirmed ? result.value : null);
+        }
+        
+        // Fiyat güncelleme için prompt
+        function promptForPriceAction() {
+            return Swal.fire({
+                title: 'Fiyat Güncelleme',
+                html: `
+                    <select class="form-select mb-3" id="priceUpdateType">
+                        <option value="percentage">Yüzde</option>
+                        <option value="fixed">Sabit Tutar</option>
+                    </select>
+                    <input type="number" id="priceUpdateValue" class="form-control mb-3" placeholder="Değer">
+                    <select class="form-select" id="priceUpdateOperation">
+                        <option value="increase">Artır</option>
+                        <option value="decrease">Azalt</option>
+                    </select>
+                `,
+                showCancelButton: true,
+                preConfirm: () => {
+                    const type = document.getElementById('priceUpdateType').value;
+                    const value = document.getElementById('priceUpdateValue').value;
+                    const operation = document.getElementById('priceUpdateOperation').value;
+                    
+                    if (!value || value <= 0) {
+                        Swal.showValidationMessage('Geçerli bir değer girin');
+                        return false;
+                    }
+                    
+                    return { type, value, operation };
+                }
+            }).then(result => result.isConfirmed ? result.value : null);
         }
 
-        function formatProjectStatus(status) {
-            const statuses = {
-                'planning': 'Planlama',
-                'active': 'Aktif',
-                'completed': 'Tamamlandı'
-            };
-            return statuses[status] || status;
-        }
-
-        function getProjectStatusBadgeClass(status) {
-            const classes = {
-                'planning': 'bg-warning',
-                'active': 'bg-success',
-                'completed': 'bg-info'
-            };
-            return classes[status] || 'bg-secondary';
-        }
-
-        // Loading göstergesi
+        // Yardımcı fonksiyonlar
         function showLoading() {
             document.getElementById('loadingOverlay').style.display = 'flex';
         }
@@ -1444,7 +1456,6 @@
             document.getElementById('loadingOverlay').style.display = 'none';
         }
 
-        // Bildirim gösterme
         function showNotification(message, type = 'success') {
             Swal.fire({
                 title: type === 'success' ? 'Başarılı!' : 'Hata!',
@@ -1458,73 +1469,6 @@
             });
         }
 
-        // Authenticated Fetch Utility
-        async function authenticatedFetch(url, options = {}) {
-            const token = localStorage.getItem('token');
-            
-            try {
-                const response = await fetch(url, {
-                    ...options,
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        ...options.headers
-                    }
-                });
-
-                if (response.status === 401) {
-                    localStorage.clear();
-                    window.location.href = 'ureticiLogin.html';
-                    return null;
-                }
-
-                return response;
-            } catch (error) {
-                console.error('Fetch error:', error);
-                throw error;
-            }
-        }
-
-        // Grafikleri başlatma
-        function initializeCharts() {
-            const mainCtx = document.getElementById('mainChart').getContext('2d');
-            mainChart = new Chart(mainCtx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: []
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    }
-                }
-            });
-
-            const activityCtx = document.getElementById('activityChart').getContext('2d');
-            activityChart = new Chart(activityCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        data: [],
-                        backgroundColor: [
-                            '#3498db',
-                            '#2ecc71',
-                            '#f1c40f',
-                            '#e74c3c'
-                        ]
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-        }
-
         // Çıkış yapma
         async function logout() {
             try {
@@ -1535,8 +1479,63 @@
                 console.error('Logout error:', error);
             } finally {
                 localStorage.clear();
-                window.location.href = 'ureticiLogin.html';
+                window.location.href = 'https://enigma0x1.github.io/eticaret-frontend/ureticiLogin.html';
             }
+        }
+
+        // Grafik fonksiyonları
+        function initializeCharts() {
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            salesChart = new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Satışlar',
+                        data: [],
+                        borderColor: '#3498db',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+            categoryChart = new Chart(categoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [
+                            '#3498db',
+                            '#2ecc71',
+                            '#f1c40f',
+                            '#e74c3c',
+                            '#9b59b6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updateCharts(data) {
+            // Satış grafiği güncelleme
+            salesChart.data.labels = data.salesData.labels;
+            salesChart.data.datasets[0].data = data.salesData.values;
+            salesChart.update();
+
+            // Kategori grafiği güncelleme
+            categoryChart.data.labels = data.categoryData.labels;
+            categoryChart.data.datasets[0].data = data.categoryData.values;
+            categoryChart.update();
         }
     </script>
 </body>
