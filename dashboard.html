@@ -175,7 +175,35 @@
         .dropdown-item.danger {
             color: var(--danger-color);
         }
+        .category-description {
+            margin-left: 0.5rem;
+            color: var(--text-light);
+            cursor: help;
+        }
         
+        .filter-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--background-color);
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+        }
+        
+        .filter-tag-remove {
+            border: none;
+            background: none;
+            padding: 0;
+            margin: 0;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: var(--transition-base);
+        }
+        
+        .filter-tag-remove:hover {
+            color: var(--danger-color);
+        }
         .dropdown-divider {
             margin: 0.5rem 0;
             border: none;
@@ -1562,22 +1590,33 @@
                 const categoryList = document.getElementById('categoryList');
                 if (!categoryList) return;
         
+                // Kategorileri API'den çek
                 const response = await fetchAPI('/categories');
+                
                 if (response.success) {
+                    // Kategorileri state'e kaydet
                     state.categories = response.categories;
                     
-                    categoryList.innerHTML = state.categories.map(category => `
-                        <div class="category-item">
-                            <input type="checkbox" 
-                                   id="cat_${category._id}" 
-                                   value="${category.name}"
-                                   ${state.filters.categories.includes(category.name) ? 'checked' : ''}>
-                            <label for="cat_${category._id}">
-                                <span class="category-checkbox"></span>
-                                ${category.name}
-                            </label>
-                        </div>
-                    `).join('');
+                    // Kategori listesini oluştur
+                    categoryList.innerHTML = state.categories
+                        .filter(category => category.status === 'active') // Sadece aktif kategorileri göster
+                        .map(category => `
+                            <div class="category-item">
+                                <input type="checkbox" 
+                                       id="cat_${category._id}" 
+                                       value="${category.name}"
+                                       ${state.filters.categories.includes(category.name) ? 'checked' : ''}>
+                                <label for="cat_${category._id}">
+                                    <span class="category-checkbox"></span>
+                                    ${category.name}
+                                    ${category.description ? `
+                                        <span class="category-description" title="${category.description}">
+                                            <i class="fas fa-info-circle"></i>
+                                        </span>
+                                    ` : ''}
+                                </label>
+                            </div>
+                        `).join('');
         
                     // Kategori değişikliklerini dinle
                     categoryList.addEventListener('change', (e) => {
@@ -1593,12 +1632,93 @@
                             productManager.loadProducts(true);
                         }
                     });
+        
+                    // Aktif filtreleri güncelle
+                    updateActiveFilters();
                 }
             } catch (error) {
                 await ErrorHandler.handleError(error, 'loadCategories');
             }
         }
-                
+        
+        // Aktif filtreleri gösteren fonksiyon
+        function updateActiveFilters() {
+            const activeFilters = document.getElementById('activeFilters');
+            if (!activeFilters) return;
+        
+            // Mevcut filtreleri temizle
+            activeFilters.innerHTML = '';
+        
+            // Kategori filtrelerini ekle
+            state.filters.categories.forEach(category => {
+                const filterTag = document.createElement('div');
+                filterTag.className = 'filter-tag';
+                filterTag.innerHTML = `
+                    <i class="fas fa-folder"></i>
+                    <span>${category}</span>
+                    <button class="filter-tag-remove" onclick="removeFilter('category', '${category}')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                activeFilters.appendChild(filterTag);
+            });
+        
+            // Fiyat filtrelerini ekle
+            if (state.filters.priceRange.min || state.filters.priceRange.max) {
+                const filterTag = document.createElement('div');
+                filterTag.className = 'filter-tag';
+                filterTag.innerHTML = `
+                    <i class="fas fa-tag"></i>
+                    <span>${state.filters.priceRange.min || 0}₺ - ${state.filters.priceRange.max || '∞'}₺</span>
+                    <button class="filter-tag-remove" onclick="removeFilter('price')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                activeFilters.appendChild(filterTag);
+            }
+        
+            // Rating filtrelerini ekle
+            if (state.filters.rating) {
+                const filterTag = document.createElement('div');
+                filterTag.className = 'filter-tag';
+                filterTag.innerHTML = `
+                    <i class="fas fa-star"></i>
+                    <span>${state.filters.rating}+ Yıldız</span>
+                    <button class="filter-tag-remove" onclick="removeFilter('rating')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                activeFilters.appendChild(filterTag);
+            }
+        }
+        
+        // Filtre kaldırma fonksiyonu
+        function removeFilter(type, value) {
+            switch (type) {
+                case 'category':
+                    state.filters.categories = state.filters.categories.filter(cat => cat !== value);
+                    break;
+                case 'price':
+                    state.filters.priceRange = { min: null, max: null };
+                    // Price slider'ı sıfırla
+                    const slider = document.getElementById('priceRangeSlider');
+                    if (slider && slider.noUiSlider) {
+                        slider.noUiSlider.reset();
+                    }
+                    break;
+                case 'rating':
+                    state.filters.rating = null;
+                    // Rating radio butonlarını sıfırla
+                    document.querySelectorAll('[name="rating"]').forEach(radio => {
+                        radio.checked = false;
+                    });
+                    break;
+            }
+        
+            // Filtreleri güncelle ve ürünleri yeniden yükle
+            productManager.loadProducts(true);
+            updateActiveFilters();
+        }
         // API İstekleri için Yardımcı Fonksiyon
         async function fetchAPI(endpoint, options = {}) {
             try {
