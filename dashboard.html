@@ -626,7 +626,29 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-
+        .rating-item {
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .rating-item label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .rating-item input[type="radio"] {
+            display: none;
+        }
+        
+        .rating-item:hover {
+            background: var(--background-color);
+        }
+        
+        .rating-item input[type="radio"]:checked + .stars {
+            color: var(--warning-color);
+        }
         .product-title {
             font-size: 1.125rem;
             font-weight: 600;
@@ -1318,8 +1340,10 @@
                 showLoading(true);
                 auth.updateUI();
                 loadFiltersFromStorage();
+                await loadCategories();
                 await productManager.loadProducts();
                 setupPriceRangeSlider();
+                setupRatingFilter(); // Burada çağrılıyor
             } catch (error) {
                 await ErrorHandler.handleError(error, 'initializeApp');
             } finally {
@@ -1475,7 +1499,31 @@
                 console.warn('Price range slider initialization failed:', error);
             }
         }
+        / Yeni rating filter setup fonksiyonu
+        function setupRatingFilter() {
+            const ratingFilter = document.getElementById('ratingFilter');
+            if (!ratingFilter) return;
         
+            const ratings = [5, 4, 3, 2, 1];
+            ratings.forEach(rating => {
+                const div = document.createElement('div');
+                div.className = 'rating-item';
+                div.innerHTML = `
+                    <label>
+                        <input type="radio" name="rating" value="${rating}">
+                        ${productManager.generateRatingStars(rating)} ve üzeri
+                    </label>
+                `;
+                ratingFilter.appendChild(div);
+            });
+        
+            ratingFilter.addEventListener('change', (e) => {
+                if (e.target.type === 'radio') {
+                    state.filters.rating = Number(e.target.value);
+                    productManager.loadProducts(true);
+                }
+            });
+        }
         // Yardımcı Fonksiyonlar
         function showLoading(show) {
             document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
@@ -1505,7 +1553,48 @@
                 state.filters = { ...state.filters, ...JSON.parse(savedFilters) };
             }
         }
+        async function loadCategories() {
+            try {
+                const categoryList = document.getElementById('categoryList');
+                if (!categoryList) return;
         
+                const response = await fetchAPI('/categories');
+                if (response.success) {
+                    state.categories = response.categories;
+                    
+                    categoryList.innerHTML = state.categories.map(category => `
+                        <div class="category-item">
+                            <input type="checkbox" 
+                                   id="cat_${category._id}" 
+                                   value="${category.name}"
+                                   ${state.filters.categories.includes(category.name) ? 'checked' : ''}>
+                            <label for="cat_${category._id}">
+                                <span class="category-checkbox"></span>
+                                ${category.name}
+                            </label>
+                        </div>
+                    `).join('');
+        
+                    // Kategori değişikliklerini dinle
+                    categoryList.addEventListener('change', (e) => {
+                        if (e.target.type === 'checkbox') {
+                            const categories = [...state.filters.categories];
+                            if (e.target.checked) {
+                                categories.push(e.target.value);
+                            } else {
+                                const index = categories.indexOf(e.target.value);
+                                if (index > -1) categories.splice(index, 1);
+                            }
+                            state.filters.categories = categories;
+                            productManager.loadProducts(true);
+                        }
+                    });
+                }
+            } catch (error) {
+                await ErrorHandler.handleError(error, 'loadCategories');
+            }
+        }
+                
         // API İstekleri için Yardımcı Fonksiyon
         async function fetchAPI(endpoint, options = {}) {
             try {
