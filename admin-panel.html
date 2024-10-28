@@ -584,7 +584,6 @@
                 modal.remove();
             }
         }
-
         async function fetchAPI(endpoint, options = {}) {
             const token = localStorage.getItem(TOKEN_KEY);
             
@@ -599,7 +598,7 @@
                 });
         
                 if (!response.ok) {
-                    if (response.status === 401) {
+                    if (response.status === 401 || response.status === 403) {
                         // Token geçersizse login sayfasına yönlendir
                         localStorage.removeItem(TOKEN_KEY);
                         window.location.href = '/adminLogin.html';
