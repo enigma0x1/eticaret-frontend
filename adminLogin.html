@@ -236,7 +236,7 @@
             setLoading(true);
             
             try {
-                const response = await fetch(`${API_URL}/auth/login`, {
+                const response = await fetch(`${API_URL}/auth/admin/login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -318,7 +318,7 @@
         // Check if already logged in
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem(TOKEN_KEY)) {
-                window.location.href = '/admin.html';
+                window.location.href = '/admin-panel.html';
             }
         });
     </script>
