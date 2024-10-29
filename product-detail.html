@@ -132,6 +132,62 @@
             display: flex;
             align-items: center;
         }
+        /* Accordion Styles */
+        .product-detail-accordion {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .accordion-item {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .accordion-header:hover {
+            background-color: #f8f8f8;
+        }
+        
+        .accordion-header span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .accordion-header i {
+            color: #666;
+            transition: transform 0.3s ease;
+        }
+        
+        .accordion-item.active .accordion-header i {
+            transform: rotate(45deg);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background-color: #f8f8f8;
+        }
+        
+        .accordion-item.active .accordion-content {
+            max-height: 500px; /* Ayarlanabilir değer */
+            padding: 20px;
+        }
 
         .header-container {
             width: 100%;
@@ -943,6 +999,28 @@
             }
         }
     </style>
+    
+    <script>
+        // Accordion İşlevselliği
+        document.addEventListener('DOMContentLoaded', function() {
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            
+            accordionItems.forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                
+                header.addEventListener('click', () => {
+                    // Aktif olan diğer itemları kapat
+                    const currentlyActive = document.querySelector('.accordion-item.active');
+                    if(currentlyActive && currentlyActive !== item) {
+                        currentlyActive.classList.remove('active');
+                    }
+                    
+                    // Tıklanan itemı aç/kapat
+                    item.classList.toggle('active');
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <body>
@@ -1101,7 +1179,28 @@
                 shadow-intensity="1">
             </model-viewer>
         </div>
-
+        <!-- Main Content -->
+        <div class="product-detail-grid">
+            <!-- Product Gallery -->
+            <div class="product-gallery">
+                <!-- ... -->
+            </div>
+    
+            <!-- Product Info -->
+            <div class="product-info">
+                <!-- ... -->
+            </div>
+        </div>
+    
+        <!-- Buraya Accordion'u ekleyin -->
+        <div class="product-detail-accordion">
+            <!-- Accordion içeriği -->
+        </div>
+    
+        <!-- Similar Products -->
+        <div class="similar-products">
+            <!-- ... -->
+        </div>
         <!-- Similar Products -->
         <div class="similar-products">
             <h2 class="section-title">Benzer Ürünler</h2>
