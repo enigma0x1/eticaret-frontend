@@ -2,307 +2,1720 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, private">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ürün Detay</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <title>IndustryHub - Ürün Detay</title>
+
+    <!-- Fonts ve Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Photoswipe - Görsel galerisi için -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.7/photoswipe.min.css">
+    
+    <!-- Swiper - Benzer ürünler için -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    
+    <!-- Model Viewer - 3D modeller için -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer"></script>
+
+    <!-- Auth kontrolü -->
+    <script src="auth.js"></script>
+    <script>
+        (function() {
+            function checkAuth() {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    document.body.style.display = 'none';
+                    window.location.replace('login');
+                    return false;
+                }
+                return true;
+            }
+            if (!checkAuth()) return;
+            window.history.pushState(null, document.title, window.location.href);
+            window.addEventListener('popstate', function() {
+                window.history.pushState(null, document.title, window.location.href);
+                checkAuth();
+            });
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    checkAuth();
+                }
+            });
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'token' && !e.newValue) {
+                    document.body.style.display = 'none';
+                    window.location.replace('login');
+                }
+            });
+        })();
+    </script>
 
     <style>
-        .zoom-container:hover img {
-            transform: scale(1.5);
-            transition: transform 0.3s ease;
+        /* Root Variables */
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: #3b82f6;
+            --secondary-color: #64748b;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --white: #ffffff;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-full: 9999px;
+            
+            --transition-base: all 0.3s ease;
+            --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            
+            --container-width: 1400px;
+            --header-height: 4rem;
         }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #718096;
-            border-radius: 3px;
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--background-color);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary-color);
+            border-radius: var(--radius-full);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Header Styles */
+        .header {
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            transition: var(--transition-base);
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: var(--background-color);
+        }
+
+        .nav-link.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            max-width: var(--container-width);
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Product Detail Grid */
+        .product-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+                /* Product Gallery Styles */
+        .product-gallery {
+            position: sticky;
+            top: calc(var(--header-height) + 1rem);
+        }
+
+        .main-image {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            cursor: zoom-in;
+            transition: var(--transition-base);
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+        }
+
+        .thumbnail {
+            position: relative;
+            padding-top: 100%;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-base);
+        }
+
+        .thumbnail.active {
+            border: 2px solid var(--primary-color);
+        }
+
+        .thumbnail:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Product Info Styles */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .product-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        .product-category {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .product-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .product-meta {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stars {
+            color: var(--warning-color);
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .product-price-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .price-container {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+        }
+
+        .current-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .old-price {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+        }
+
+        .discount-badge {
+            background: var(--danger-color);
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .in-stock {
+            color: var(--success-color);
+        }
+
+        .out-of-stock {
+            color: var(--danger-color);
+        }
+
+        /* Variant Selection */
+        .variant-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .variant-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .color-option {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-full);
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+
+        .color-option.active {
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+
+        .size-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .size-option {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+
+        .size-option.active {
+            background: var(--primary-color);
+            color: var(--white);
+            border-color: var(--primary-color);
+        }
+
+        .size-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* Quantity Selector */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+        }
+
+        .quantity-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+
+        .quantity-btn:hover {
+            background: var(--background-color);
+        }
+
+        .quantity-input {
+            width: 3rem;
+            text-align: center;
+            border: none;
+            font-size: 1rem;
+            -moz-appearance: textfield;
+        }
+
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Action Buttons */
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: var(--transition-base);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: var(--white);
+            flex: 2;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--background-color);
+            color: var(--text-color);
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        /* Product Description */
+        .product-description {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .description-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .description-content {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        /* Technical Specs */
+        .technical-specs {
+            margin-top: 2rem;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .spec-item {
+            display: flex;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .spec-label {
+            flex: 1;
+                        font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .spec-value {
+            flex: 2;
+            font-weight: 600;
+        }
+
+        /* Similar Products */
+        .similar-products {
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .products-slider {
+            position: relative;
+            padding: 1rem;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: var(--primary-color);
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            margin-top: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .review-stats {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .overall-rating {
+            text-align: center;
+        }
+
+        .rating-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .rating-stars {
+            color: var(--warning-color);
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .rating-count {
+            color: var(--text-light);
+        }
+
+        .rating-breakdown {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stars-label {
+            min-width: 60px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: var(--radius-full);
+        }
+
+        .bar-count {
+            min-width: 40px;
+            text-align: right;
+            color: var(--text-light);
+        }
+
+        /* Review List */
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .review-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .reviewer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .reviewer-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .reviewer-meta {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+        }
+
+        .review-date {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .review-rating {
+            color: var(--warning-color);
+        }
+
+        .review-content {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .review-images {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .review-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .review-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 3D Model Viewer */
+        .model-viewer {
+            width: 100%;
+            height: 500px;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            --poster-color: transparent;
+        }
+
+        /* Loading States */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-gallery {
+                position: static;
+            }
+
+            .main-image img {
+                height: 300px;
+            }
+
+            .thumbnail-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .product-title {
+                font-size: 1.5rem;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .review-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .rating-breakdown {
+                max-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="app" class="container mx-auto px-4 py-8">
-        <!-- Ürün Başlık -->
-        <h1 class="text-3xl font-bold mb-8">{{ product.name }}</h1>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Sol Kolon: Ürün Görselleri -->
-            <div>
-                <div class="overflow-hidden rounded-lg mb-4 zoom-container">
-                    <img :src="selectedImage" class="w-full h-96 object-cover" />
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="/" class="logo">
+                <i class="fas fa-industry"></i>
+                IndustryHub Pro
+            </a>
+
+            <nav class="nav-menu">
+                <a href="/products" class="nav-link">Ürünler</a>
+                <a href="/models" class="nav-link">3B Modeller</a>
+                <a href="/technical" class="nav-link">Teknik Çizimler</a>
+                <a href="/cart" class="cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+                <div class="user-menu">
+                    <button class="user-button" id="userMenuBtn">
+                        <i class="fas fa-user"></i>
+                        <span id="userName">Hesap</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="/profile" class="dropdown-item">
+                            <i class="fas fa-user-circle"></i>
+                            Profilim
+                        </a>
+                        <a href="/orders" class="dropdown-item">
+                            <i class="fas fa-box"></i>
+                            Siparişlerim
+                        </a>
+                        <hr class="dropdown-divider">
+                        <button class="dropdown-item danger" onclick="AuthManager.logout(); return false;">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Çıkış Yap
+                        </button>
+                    </div>
                 </div>
-                <div class="grid grid-cols-4 gap-2">
-                    <template v-for="(img, index) in product.images">
-                        <div 
-                            :key="index"
-                            @click="selectedImage = img"
-                            class="cursor-pointer border-2 rounded-lg"
-                            :class="{'border-blue-500': selectedImage === img}"
-                        >
-                            <img :src="img" class="w-full h-24 object-cover rounded-lg" />
-                        </div>
-                    </template>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="product-detail-grid">
+            <!-- Product Gallery -->
+            <div class="product-gallery">
+                <div class="main-image" id="mainImage">
+                    <img src="" alt="" id="currentImage">
+                </div>
+                <div class="thumbnail-grid" id="thumbnailGrid">
+                    <!-- Thumbnails will be loaded dynamically -->
                 </div>
             </div>
 
-            <!-- Sağ Kolon: Ürün Bilgileri -->
-            <div>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
-                        <div class="text-2xl font-bold">{{ formatPrice(product.price) }}</div>
-                        <div class="flex items-center">
-                            <span class="text-yellow-400">★★★★☆</span>
-                            <span class="ml-2 text-gray-600">(128 değerlendirme)</span>
+            <!-- Product Info -->
+            <div class="product-info">
+                <div class="product-header">
+                    <div class="product-category">
+                        <i class="fas fa-folder"></i>
+                        <span id="productCategory">Kategori</span>
+                    </div>
+                    <h1 class="product-title" id="productTitle">Ürün Adı</h1>
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-industry"></i>
+                            <span id="manufacturer">Üretici</span>
+                        </div>
+                        <div class="product-rating">
+                            <div class="stars" id="ratingStars"></div>
+                            <span class="rating-count" id="ratingCount">(0 değerlendirme)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-price-section">
+                    <div class="price-container">
+                        <span class="current-price" id="currentPrice">₺0.00</span>
+                        <span class="old-price" id="oldPrice">₺0.00</span>
+                        <span class="discount-badge" id="discountBadge">%0 İndirim</span>
+                    </div>
+                    <div class="stock-info">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="stockStatus">Stok durumu</span>
+                    </div>
+                </div>
+
+                <div class="variant-section">
+                    <div class="color-selection">
+                        <span class="variant-title">Renk Seçimi</span>
+                        <div class="color-options" id="colorOptions">
+                            <!-- Color options will be loaded dynamically -->
                         </div>
                     </div>
 
-                    <div class="space-y-2">
-                        <h3 class="font-semibold">Renk Seçimi</h3>
-                        <div class="flex gap-2">
-                            <template v-for="color in product.colors">
-                                <button 
-                                    :key="color"
-                                    @click="selectedColor = color"
-                                    class="w-8 h-8 rounded-full border-2"
-                                    :class="{'ring-2 ring-blue-500': selectedColor === color}"
-                                    :style="`background-color: ${color}`"
-                                ></button>
-                            </template>
+                    <div class="size-selection">
+                        <span class="variant-title">Boyut Seçimi</span>
+                        <div class="size-options" id="sizeOptions">
+                            <!-- Size options will be loaded dynamically -->
                         </div>
                     </div>
+                </div>
 
-                    <div class="space-y-2">
-                        <h3 class="font-semibold">Beden</h3>
-                        <div class="flex gap-2">
-                            <template v-for="size in product.sizes">
-                                <button 
-                                    :key="size"
-                                    @click="selectedSize = size"
-                                    class="px-4 py-2 border rounded-md"
-                                    :class="{'bg-blue-500 text-white': selectedSize === size}"
-                                >
-                                    {{ size }}
-                                </button>
-                            </template>
-                        </div>
+                <div class="quantity-selector">
+                    <span class="variant-title">Adet</span>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                        <input type="number" class="quantity-input" id="quantityInput" value="1" min="1" max="99">
+                        <button class="quantity-btn" onclick="increaseQuantity()">+</button>
                     </div>
+                </div>
 
-                    <div class="space-y-2">
-                        <h3 class="font-semibold">Adet</h3>
-                        <div class="flex items-center gap-2">
-                            <button 
-                                @click="quantity > 1 && quantity--"
-                                class="px-3 py-1 border rounded-md"
-                            >-</button>
-                            <span class="px-4 py-1">{{ quantity }}</span>
-                            <button 
-                                @click="quantity++"
-                                class="px-3 py-1 border rounded-md"
-                            >+</button>
-                        </div>
-                    </div>
-
-                    <button 
-                        @click="addToCart"
-                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
-                    >
+                <div class="product-actions">
+                    <button class="btn btn-primary" onclick="addToCart()">
+                        <i class="fas fa-shopping-cart"></i>
                         Sepete Ekle
+                    </button>
+                    <button class="btn btn-secondary" onclick="addToFavorites()">
+                        <i class="fas fa-heart"></i>
+                        Favorilere Ekle
                     </button>
                 </div>
 
-                <!-- Ürün Açıklaması -->
-                <div class="mt-8">
-                    <h3 class="font-semibold mb-2">Ürün Açıklaması</h3>
-                    <p class="text-gray-600">{{ product.description }}</p>
+                <div class="product-description">
+                    <h2 class="description-title">Ürün Açıklaması</h2>
+                    <div class="description-content" id="productDescription">
+                        <!-- Product description will be loaded dynamically -->
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Benzer Ürünler -->
-        <div class="mt-16">
-            <h2 class="text-2xl font-bold mb-6">Benzer Ürünler</h2>
-            <div class="swiper similarProducts">
-                <div class="swiper-wrapper">
-                    <template v-for="item in similarProducts">
-                        <div class="swiper-slide">
-                            <div class="border rounded-lg p-4">
-                                <img :src="item.image" class="w-full h-48 object-cover rounded-lg mb-4">
-                                <h3 class="font-semibold">{{ item.name }}</h3>
-                                <p class="text-gray-600">{{ formatPrice(item.price) }}</p>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-                <div class="swiper-pagination"></div>
+        <!-- Technical Specifications -->
+        <div class="technical-specs">
+            <h2 class="section-title">Teknik Özellikler</h2>
+            <div class="specs-grid" id="specsGrid">
+                <!-- Technical specs will be loaded dynamically -->
             </div>
         </div>
 
-        <!-- Yorumlar -->
-        <div class="mt-16">
-            <h2 class="text-2xl font-bold mb-6">Müşteri Yorumları</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="space-y-4 custom-scrollbar max-h-[500px] overflow-y-auto">
-                    <template v-for="review in product.reviews">
-                        <div class="border rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <div class="font-semibold">
-                                                                    {{ review.user }}
-                                </div>
-                                <div class="text-yellow-400">
-                                    {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5-review.rating) }}
-                                </div>
-                            </div>
-                            <p class="text-gray-600">{{ review.comment }}</p>
-                            <div class="mt-2 text-sm text-gray-500">{{ review.date }}</div>
-                        </div>
-                    </template>
-                </div>
+        <!-- 3D Model Viewer (if available) -->
+        <div class="model-viewer" id="modelViewer" style="display: none;">
+            <model-viewer 
+                id="modelViewerElement"
+                camera-controls
+                auto-rotate
+                ar
+                shadow-intensity="1">
+            </model-viewer>
+        </div>
 
-                <!-- Yorum Formu -->
-                <div class="border rounded-lg p-6">
-                    <h3 class="text-xl font-semibold mb-4">Yorum Yap</h3>
-                    <form @submit.prevent="submitReview" class="space-y-4">
-                        <div>
-                            <label class="block mb-2">Puanınız</label>
-                            <div class="flex gap-2">
-                                <template v-for="n in 5">
-                                    <button 
-                                        type="button"
-                                        @click="newReview.rating = n"
-                                        class="text-2xl"
-                                        :class="n <= newReview.rating ? 'text-yellow-400' : 'text-gray-300'"
-                                    >★</button>
-                                </template>
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block mb-2">Yorumunuz</label>
-                            <textarea 
-                                v-model="newReview.comment"
-                                class="w-full border rounded-lg p-2 h-32"
-                                required
-                            ></textarea>
-                        </div>
-                        <button 
-                            type="submit"
-                            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-                        >
-                            Yorum Gönder
-                        </button>
-                    </form>
+        <!-- Similar Products -->
+        <div class="similar-products">
+            <h2 class="section-title">Benzer Ürünler</h2>
+            <div class="products-slider">
+                <div class="swiper" id="similarProductsSwiper">
+                    <div class="swiper-wrapper">
+                        <!-- Similar products will be loaded dynamically -->
+                    </div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        const { createApp } = Vue
+        <!-- Reviews Section -->
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h2 class="section-title">Müşteri Değerlendirmeleri</h2>
+                <button class="btn btn-primary" onclick="showReviewForm()">
+                    <i class="fas fa-star"></i>
+                    Değerlendirme Yap
+                </button>
+            </div>
 
-        createApp({
-            data() {
-                return {
-                    product: {
-                        id: 1,
-                        name: "Premium Deri Ceket",
-                        price: 2499.99,
-                        description: "Yüksek kaliteli gerçek deri, modern kesim. İç astar ve çoklu cep detayları. Sonbahar/Kış sezonu için ideal.",
-                        images: [
-                            "https://picsum.photos/800/800?random=1",
-                            "https://picsum.photos/800/800?random=2",
-                            "https://picsum.photos/800/800?random=3",
-                            "https://picsum.photos/800/800?random=4"
-                        ],
-                        colors: ['#000000', '#8B4513', '#808080', '#F5F5DC'],
-                        sizes: ['S', 'M', 'L', 'XL'],
-                        reviews: [
-                            {
-                                user: "Ahmet Y.",
-                                rating: 5,
-                                comment: "Harika bir ürün, kalitesi çok iyi.",
-                                date: "2023-10-15"
-                            },
-                            {
-                                user: "Mehmet K.",
-                                rating: 4,
-                                comment: "Güzel ürün ama biraz pahalı.",
-                                date: "2023-10-14"
-                            }
-                        ]
-                    },
-                    similarProducts: [
-                        {
-                            id: 2,
-                            name: "Klasik Deri Ceket",
-                            price: 1999.99,
-                            image: "https://picsum.photos/800/800?random=5"
-                        },
-                        {
-                            id: 3,
-                            name: "Spor Deri Ceket",
-                            price: 2199.99,
-                            image: "https://picsum.photos/800/800?random=6"
-                        },
-                        {
-                            id: 4,
-                            name: "Vintage Deri Ceket",
-                            price: 2299.99,
-                            image: "https://picsum.photos/800/800?random=7"
-                        }
-                    ],
-                    selectedImage: "https://picsum.photos/800/800?random=1",
-                    selectedColor: '#000000',
-                    selectedSize: 'M',
-                    quantity: 1,
-                    newReview: {
-                        rating: 5,
-                        comment: ""
-                    }
-                }
-            },
-            methods: {
-                formatPrice(price) {
-                    return new Intl.NumberFormat('tr-TR', {
-                        style: 'currency',
-                        currency: 'TRY'
-                    }).format(price)
-                },
-                addToCart() {
-                    alert('Ürün sepete eklendi!')
-                },
-                submitReview() {
-                    const review = {
-                        user: "Kullanıcı",
-                        rating: this.newReview.rating,
-                        comment: this.newReview.comment,
-                        date: new Date().toISOString().split('T')[0]
-                    }
-                    this.product.reviews.unshift(review)
-                    this.newReview.comment = ""
-                    alert('Yorumunuz başarıyla eklendi!')
-                }
-            },
-            mounted() {
-                new Swiper('.similarProducts', {
-                    slidesPerView: 1,
-                    spaceBetween: 20,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true
-                    },
-                    breakpoints: {
-                        640: {
-                            slidesPerView: 2,
-                        },
-                        768: {
-                            slidesPerView: 3,
-                        }
-                    }
-                })
+            <div class="review-stats">
+                <div class="overall-rating">
+                    <div class="rating-number" id="averageRating">0.0</div>
+                    <div class="rating-stars" id="averageRatingStars"></div>
+                    <div class="rating-count" id="totalReviews">0 değerlendirme</div>
+                </div>
+
+                <div class="rating-breakdown" id="ratingBreakdown">
+                    <!-- Rating breakdown will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div class="review-list" id="reviewList">
+                <!-- Reviews will be loaded dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Required Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.3.7/photoswipe.umd.min.js"></script>
+<script>
+    // API ve Sabitler
+    const API_URL = 'https://eticaret-glif.onrender.com/api';
+    const CURRENCY_FORMAT = new Intl.NumberFormat('tr-TR', {
+        style: 'currency',
+        currency: 'TRY'
+    });
+
+    // State Yönetimi
+    const state = {
+        product: null,
+        selectedVariants: {
+            color: null,
+            size: null
+        },
+        quantity: 1,
+        loading: false,
+        similarProducts: [],
+        reviews: [],
+        images: []
+    };
+
+    // Sayfa Yükleme
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            await initializeProduct();
+        } catch (error) {
+            console.error('Initialization error:', error);
+            showNotification('Ürün yüklenirken bir hata oluştu', 'error');
+        }
+    });
+
+    async function initializeProduct() {
+        showLoading(true);
+        
+        // URL'den ürün ID'sini al
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        if (!productId) {
+            window.location.href = '/products';
+            return;
+        }
+
+        try {
+            // Ürün detaylarını yükle
+            const productData = await fetchAPI(`/products/${productId}`);
+            if (!productData.success) throw new Error('Ürün bulunamadı');
+
+            state.product = productData.product;
+            
+            // UI'ı güncelle
+            updateProductUI();
+            
+            // Benzer ürünleri yükle
+            loadSimilarProducts();
+            
+            // Yorumları yükle
+            loadReviews();
+
+        } catch (error) {
+            console.error('Product loading error:', error);
+            showNotification('Ürün yüklenirken bir hata oluştu', 'error');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    function updateProductUI() {
+        const product = state.product;
+
+        // Temel bilgiler
+        document.getElementById('productTitle').textContent = product.title;
+        document.getElementById('productCategory').textContent = product.category;
+        document.getElementById('manufacturer').textContent = product.manufacturer;
+        document.getElementById('productDescription').innerHTML = product.description;
+
+        // Fiyat bilgileri
+        updatePriceUI();
+
+        // Stok durumu
+        updateStockUI();
+
+        // Görsel galerisi
+        initializeGallery();
+
+        // Varyantlar
+        initializeVariants();
+
+        // Teknik özellikler
+        updateSpecifications();
+
+        // 3D Model (varsa)
+        initializeModelViewer();
+
+        // Sayfa başlığını güncelle
+        document.title = `${product.title} - IndustryHub Pro`;
+    }
+
+    function updatePriceUI() {
+        const product = state.product;
+        const currentPrice = document.getElementById('currentPrice');
+        const oldPrice = document.getElementById('oldPrice');
+        const discountBadge = document.getElementById('discountBadge');
+
+        currentPrice.textContent = CURRENCY_FORMAT.format(product.price);
+
+        if (product.oldPrice && product.oldPrice > product.price) {
+            oldPrice.textContent = CURRENCY_FORMAT.format(product.oldPrice);
+            oldPrice.style.display = 'inline';
+            
+            const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
+            discountBadge.textContent = `%${discount} İndirim`;
+            discountBadge.style.display = 'inline';
+        } else {
+            oldPrice.style.display = 'none';
+            discountBadge.style.display = 'none';
+        }
+    }
+
+    function updateStockUI() {
+        const product = state.product;
+        const stockStatus = document.getElementById('stockStatus');
+        const addToCartBtn = document.querySelector('.btn-primary');
+
+        if (product.stock > 0) {
+            stockStatus.innerHTML = `<i class="fas fa-check-circle"></i> Stokta (${product.stock} adet)`;
+            stockStatus.className = 'stock-info in-stock';
+            addToCartBtn.disabled = false;
+        } else {
+            stockStatus.innerHTML = `<i class="fas fa-times-circle"></i> Stokta Yok`;
+            stockStatus.className = 'stock-info out-of-stock';
+            addToCartBtn.disabled = true;
+        }
+    }
+
+    function initializeGallery() {
+        const product = state.product;
+        state.images = product.images || [];
+
+        const mainImage = document.getElementById('currentImage');
+        const thumbnailGrid = document.getElementById('thumbnailGrid');
+
+        // Ana görsel
+        if (state.images.length > 0) {
+            mainImage.src = `${API_URL}/uploads/${state.images[0]}`;
+            mainImage.alt = product.title;
+        }
+
+        // Küçük görseller
+        thumbnailGrid.innerHTML = state.images.map((image, index) => `
+            <div class="thumbnail ${index === 0 ? 'active' : ''}" 
+                 onclick="changeMainImage(${index})">
+                <img src="${API_URL}/uploads/${image}" 
+                     alt="${product.title} - Görsel ${index + 1}"
+                     loading="lazy">
+            </div>
+        `).join('');
+
+        // Zoom özelliği
+        initializeImageZoom();
+    }
+
+    function initializeVariants() {
+        const product = state.product;
+        
+        // Renk seçenekleri
+        if (product.colors && product.colors.length > 0) {
+            const colorOptions = document.getElementById('colorOptions');
+            colorOptions.innerHTML = product.colors.map(color => `
+                <div class="color-option" 
+                     style="background-color: ${color}"
+                     onclick="selectColor('${color}')"
+                     data-color="${color}">
+                </div>
+            `).join('');
+            
+            // İlk rengi seç
+            selectColor(product.colors[0]);
+        }
+
+        // Boyut seçenekleri
+        if (product.sizes && product.sizes.length > 0) {
+            const sizeOptions = document.getElementById('sizeOptions');
+            sizeOptions.innerHTML = product.sizes.map(size => `
+                <div class="size-option" 
+                     onclick="selectSize('${size}')"
+                     data-size="${size}">
+                    ${size}
+                </div>
+            `).join('');
+            
+            // İlk boyutu seç
+            selectSize(product.sizes[0]);
+        }
+    }
+
+        function updateSpecifications() {
+        const specs = state.product.specifications;
+        const specsGrid = document.getElementById('specsGrid');
+
+        if (!specs || Object.keys(specs).length === 0) {
+            specsGrid.innerHTML = '<p class="no-specs">Teknik özellik bilgisi bulunmamaktadır.</p>';
+            return;
+        }
+
+        specsGrid.innerHTML = Object.entries(specs).map(([key, value]) => `
+            <div class="spec-item">
+                <span class="spec-label">${key}</span>
+                <span class="spec-value">${value}</span>
+            </div>
+        `).join('');
+    }
+
+    function initializeModelViewer() {
+        const modelViewer = document.getElementById('modelViewer');
+        const modelViewerElement = document.getElementById('modelViewerElement');
+
+        if (state.product.modelUrl) {
+            modelViewer.style.display = 'block';
+            modelViewerElement.src = `${API_URL}/models/${state.product.modelUrl}`;
+            modelViewerElement.alt = state.product.title;
+            
+            // Poster image for model viewer
+            if (state.images.length > 0) {
+                modelViewerElement.poster = `${API_URL}/uploads/${state.images[0]}`;
             }
-        }).mount('#app')
-    </script>
+        } else {
+            modelViewer.style.display = 'none';
+        }
+    }
+
+    async function loadSimilarProducts() {
+        try {
+            const response = await fetchAPI(`/products/similar/${state.product._id}`);
+            if (response.success) {
+                state.similarProducts = response.products;
+                initializeSimilarProductsSlider();
+            }
+        } catch (error) {
+            console.error('Similar products loading error:', error);
+        }
+    }
+
+    function initializeSimilarProductsSlider() {
+        const swiperWrapper = document.querySelector('.swiper-wrapper');
+        
+        swiperWrapper.innerHTML = state.similarProducts.map(product => `
+            <div class="swiper-slide">
+                <div class="product-card" onclick="navigateToProduct('${product._id}')">
+                    <div class="product-image">
+                        <img src="${API_URL}/uploads/${product.images[0]}" 
+                             alt="${product.title}"
+                             loading="lazy">
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">${product.title}</h3>
+                        <div class="product-price">${CURRENCY_FORMAT.format(product.price)}</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        new Swiper('#similarProductsSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
+                },
+                968: {
+                    slidesPerView: 3,
+                },
+                1200: {
+                    slidesPerView: 4,
+                }
+            }
+        });
+    }
+
+    async function loadReviews() {
+        try {
+            const response = await fetchAPI(`/products/${state.product._id}/reviews`);
+            if (response.success) {
+                state.reviews = response.reviews;
+                updateReviewsUI();
+            }
+        } catch (error) {
+            console.error('Reviews loading error:', error);
+        }
+    }
+
+    function updateReviewsUI() {
+        updateReviewStats();
+        renderReviewList();
+    }
+
+    function updateReviewStats() {
+        const reviews = state.reviews;
+        const totalReviews = reviews.length;
+        
+        if (totalReviews === 0) {
+            document.getElementById('averageRating').textContent = '0.0';
+            document.getElementById('totalReviews').textContent = 'Henüz değerlendirme yok';
+            return;
+        }
+
+        // Ortalama puanı hesapla
+        const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / totalReviews;
+        
+        // UI'ı güncelle
+        document.getElementById('averageRating').textContent = averageRating.toFixed(1);
+        document.getElementById('totalReviews').textContent = `${totalReviews} değerlendirme`;
+        
+        // Yıldız dağılımını hesapla
+        const ratingCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+        reviews.forEach(review => ratingCounts[review.rating]++);
+
+        // Rating breakdown'ı güncelle
+        const breakdown = document.getElementById('ratingBreakdown');
+        breakdown.innerHTML = Object.entries(ratingCounts).reverse().map(([rating, count]) => `
+            <div class="rating-bar">
+                <span class="stars-label">${rating} yıldız</span>
+                <div class="progress-bar">
+                    <div class="progress" style="width: ${(count / totalReviews) * 100}%"></div>
+                </div>
+                <span class="bar-count">${count}</span>
+            </div>
+        `).join('');
+    }
+
+    function renderReviewList() {
+        const reviewList = document.getElementById('reviewList');
+        
+        if (state.reviews.length === 0) {
+            reviewList.innerHTML = '<p class="no-reviews">Bu ürün için henüz değerlendirme yapılmamış.</p>';
+            return;
+        }
+
+        reviewList.innerHTML = state.reviews.map(review => `
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="reviewer-info">
+                        <div class="reviewer-avatar">
+                            <img src="${review.user.avatar || 'default-avatar.png'}" 
+                                 alt="${review.user.name}">
+                        </div>
+                        <div class="reviewer-meta">
+                            <span class="reviewer-name">${review.user.name}</span>
+                            <span class="review-date">${formatDate(review.createdAt)}</span>
+                        </div>
+                    </div>
+                    <div class="review-rating">
+                        ${generateStars(review.rating)}
+                    </div>
+                </div>
+                <div class="review-content">${review.comment}</div>
+                ${review.images ? `
+                    <div class="review-images">
+                        ${review.images.map(image => `
+                            <div class="review-image" onclick="showImageInModal('${image}')">
+                                <img src="${API_URL}/uploads/${image}" alt="Review image">
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `).join('');
+    }
+
+    // Yardımcı Fonksiyonlar
+    function generateStars(rating) {
+        return Array(5).fill(0).map((_, index) => 
+            `<i class="fas fa-star ${index < rating ? 'filled' : ''}"></i>`
+        ).join('');
+    }
+
+    function formatDate(dateString) {
+        return new Date(dateString).toLocaleDateString('tr-TR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+
+    // Kullanıcı Etkileşimleri
+    function changeMainImage(index) {
+        const mainImage = document.getElementById('currentImage');
+        mainImage.src = `${API_URL}/uploads/${state.images[index]}`;
+        
+        // Thumbnail aktif durumunu güncelle
+        document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
+            thumb.classList.toggle('active', i === index);
+        });
+    }
+
+    function selectColor(color) {
+        state.selectedVariants.color = color;
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.classList.toggle('active', option.dataset.color === color);
+        });
+        updateAvailableSizes();
+    }
+
+    function selectSize(size) {
+        state.selectedVariants.size = size;
+        document.querySelectorAll('.size-option').forEach(option => {
+            option.classList.toggle('active', option.dataset.size === size);
+        });
+    }
+
+    function updateAvailableSizes() {
+        // Seçili renge göre mevcut bedenleri güncelle
+        const availableSizes = state.product.variants?.[state.selectedVariants.color] || [];
+        document.querySelectorAll('.size-option').forEach(option => {
+            const isAvailable = availableSizes.includes(option.dataset.size);
+            option.classList.toggle('disabled', !isAvailable);
+            option.onclick = isAvailable ? () => selectSize(option.dataset.size) : null;
+        });
+    }
+
+    async function addToCart() {
+        if (!state.selectedVariants.color || !state.selectedVariants.size) {
+            showNotification('Lütfen renk ve beden seçimi yapın', 'error');
+            return;
+        }
+
+        try {
+            showLoading(true);
+            const response = await fetchAPI('/cart/add', {
+                method: 'POST',
+                body: JSON.stringify({
+                    productId: state.product._id,
+                    quantity: state.quantity,
+                    variants: state.selectedVariants
+                })
+            });
+
+            if (response.success) {
+                showNotification('Ürün sepete eklendi', 'success');
+                updateCartCount(response.cartCount);
+            }
+        } catch (error) {
+            console.error('Add to cart error:', error);
+            showNotification('Ürün sepete eklenirken bir hata oluştu', 'error');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // Yardımcı UI Fonksiyonları
+    function showLoading(show) {
+        document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+    }
+
+    function showNotification(message, type = 'success') {
+        // Mevcut bildirimleri kaldır
+        const existingNotifications = document.querySelectorAll('.notification');
+        existingNotifications.forEach(notification => notification.remove());
+
+        // Yeni bildirim oluştur
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Bildirimi otomatik kaldır
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // API İstekleri
+    async function fetchAPI(endpoint, options = {}) {
+        try {
+            const defaultHeaders = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            };
+
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    ...defaultHeaders,
+                    ...options.headers
+                }
+            });
+                        if (!response.ok) {
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/login';
+                    return null;
+                }
+                throw new Error(response.statusText);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('API Error:', error);
+            throw error;
+        }
+    }
+
+    // Miktar Kontrolleri
+    function increaseQuantity() {
+        const input = document.getElementById('quantityInput');
+        const newValue = Math.min(parseInt(input.value) + 1, state.product.stock);
+        input.value = newValue;
+        state.quantity = newValue;
+    }
+
+    function decreaseQuantity() {
+        const input = document.getElementById('quantityInput');
+        const newValue = Math.max(parseInt(input.value) - 1, 1);
+        input.value = newValue;
+        state.quantity = newValue;
+    }
+
+    // Görsel Zoom Özelliği
+    function initializeImageZoom() {
+        const mainImage = document.getElementById('mainImage');
+        let isZoomed = false;
+        let zoomLevel = 2;
+
+        mainImage.addEventListener('click', function(e) {
+            if (!isZoomed) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const xPercent = (x / rect.width) * 100;
+                const yPercent = (y / rect.height) * 100;
+
+                this.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+                this.style.transform = `scale(${zoomLevel})`;
+                this.style.cursor = 'zoom-out';
+            } else {
+                this.style.transform = 'scale(1)';
+                this.style.cursor = 'zoom-in';
+            }
+            isZoomed = !isZoomed;
+        });
+
+        mainImage.addEventListener('mousemove', function(e) {
+            if (isZoomed) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const xPercent = (x / rect.width) * 100;
+                const yPercent = (y / rect.height) * 100;
+
+                this.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+            }
+        });
+    }
+
+    // Yorum Formu
+    function showReviewForm() {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Ürün Değerlendirmesi Yap</h3>
+                    <button onclick="closeModal(this)" class="close-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="reviewForm" onsubmit="submitReview(event)">
+                    <div class="rating-input">
+                        <label>Puanınız</label>
+                        <div class="star-rating">
+                            ${Array(5).fill(0).map((_, i) => `
+                                <i class="far fa-star" data-rating="${i + 1}" onclick="setRating(${i + 1})"></i>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Yorumunuz</label>
+                        <textarea required minlength="10" maxlength="500" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Fotoğraf Ekle (Opsiyonel)</label>
+                        <input type="file" accept="image/*" multiple max="5">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Değerlendirmeyi Gönder
+                    </button>
+                </form>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    async function submitReview(event) {
+        event.preventDefault();
+        const form = event.target;
+        const rating = parseInt(form.querySelector('.star-rating').dataset.currentRating);
+        const comment = form.querySelector('textarea').value;
+        const files = form.querySelector('input[type="file"]').files;
+
+        if (!rating) {
+            showNotification('Lütfen bir puan verin', 'error');
+            return;
+        }
+
+        try {
+            showLoading(true);
+            
+            // Önce resimleri yükle
+            let imageUrls = [];
+            if (files.length > 0) {
+                const formData = new FormData();
+                Array.from(files).forEach(file => formData.append('images', file));
+                
+                const uploadResponse = await fetchAPI('/upload/images', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: formData
+                });
+                
+                if (uploadResponse.success) {
+                    imageUrls = uploadResponse.urls;
+                }
+            }
+
+            // Yorumu gönder
+            const response = await fetchAPI(`/products/${state.product._id}/reviews`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    rating,
+                    comment,
+                    images: imageUrls
+                })
+            });
+
+            if (response.success) {
+                showNotification('Değerlendirmeniz başarıyla eklendi', 'success');
+                closeModal(form.closest('.modal'));
+                await loadReviews(); // Yorumları yeniden yükle
+            }
+        } catch (error) {
+            console.error('Review submission error:', error);
+            showNotification('Değerlendirme gönderilirken bir hata oluştu', 'error');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // Modal İşlemleri
+    function closeModal(element) {
+        const modal = element.closest('.modal');
+        modal.classList.add('fade-out');
+        setTimeout(() => modal.remove(), 300);
+    }
+
+    // Sayfa Yönlendirmeleri
+    function navigateToProduct(productId) {
+        window.location.href = `/product-detail?id=${productId}`;
+    }
+
+    // Favorilere Ekleme
+    async function addToFavorites() {
+        try {
+            showLoading(true);
+            const response = await fetchAPI('/favorites/add', {
+                method: 'POST',
+                body: JSON.stringify({
+                    productId: state.product._id
+                })
+            });
+
+            if (response.success) {
+                showNotification('Ürün favorilere eklendi', 'success');
+            }
+        } catch (error) {
+            console.error('Add to favorites error:', error);
+            showNotification('Ürün favorilere eklenirken bir hata oluştu', 'error');
+        } finally {
+            showLoading(false);
+        }
+    }
+</script>
 </body>
 </html>
