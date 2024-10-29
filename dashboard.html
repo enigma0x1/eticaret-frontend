@@ -1,11 +1,40 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <script src="auth.js"></script>
+   
     <meta charset="UTF-8">
+    <head>
+    <!-- Önce meta tag'ler -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, private">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
+
+    <!-- Sonra auth.js -->
+    <script src="auth.js"></script>
+
+    <!-- Sonra sayfa kontrolü için script -->
+    <script>
+        // Sayfa yüklendiğinde token kontrolü
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('token')) {
+                window.location.replace('login');
+            }
+        });
+
+        // Geri tuşu kontrolü
+        window.onpopstate = function(event) {
+            if (!localStorage.getItem('token')) {
+                window.location.replace('login');
+            }
+        };
+
+        // Sayfayı yenileme kontrolü
+        window.onbeforeunload = function() {
+            if (!localStorage.getItem('token')) {
+                return false;
+            }
+        };
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="IndustryHub Pro - Endüstriyel Ürün Kataloğu">
     <title>IndustryHub Pro - Ürün Kataloğu</title>
