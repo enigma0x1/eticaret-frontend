@@ -103,21 +103,25 @@
             transform: translateY(-2px);
         }
 
-        /* Main Content */
+        /* Dashboard Grid düzenlemesi */
         .dashboard-container {
             margin-top: 80px;
             min-height: calc(100vh - 80px);
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 1rem;
-            padding: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
         }
-
+        
+        /* Kart boyutları ve padding düzenlemesi */
         .category-card {
             position: relative;
-            border-radius: 1.5rem;
-            padding: 2.5rem;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            height: 320px; /* Sabit yükseklik */
             overflow: hidden;
             cursor: pointer;
             display: flex;
@@ -128,98 +132,100 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        .category-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0.7;
-            z-index: -1;
-            transition: var(--transition);
-        }
-
-        .e-sanayi::before { background: var(--esanayi-gradient); }
-        .hazir-urunler::before { background: var(--hazir-gradient); }
-        .cad-dosyalari::before { background: var(--cad-gradient); }
-        .inovasyon-hub::before { background: var(--inovasyon-gradient); }
-        .kapasite-borsasi::before { background: var(--kapasite-gradient); }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-        }
-
-        .category-card:hover::before {
-            opacity: 0.9;
-        }
-
+        
+        /* İkon boyutu düzenlemesi */
         .category-icon {
-            font-size: 4rem;
-            margin-bottom: 2rem;
-            transition: var(--transition);
-        }
-
-        .category-content {
-            z-index: 1;
-        }
-
-        .category-title {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
         }
-
+        
+        /* Başlık boyutu düzenlemesi */
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Açıklama metni düzenlemesi */
         .category-description {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 1rem;
             opacity: 0.9;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-
+        
+        /* Buton düzenlemesi */
         .category-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-            border-radius: 2rem;
-            font-weight: 500;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            border-radius: 1.5rem;
         }
-
-        .category-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateX(5px);
-        }
-
+        
+        /* İstatistik bölümü düzenlemesi */
         .category-stats {
             display: flex;
-            gap: 2rem;
-            margin-top: auto;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
+        
         .stat-item {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.25rem;
         }
-
+        
         .stat-value {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
-
+        
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             opacity: 0.8;
+        }
+        
+        /* Responsive düzenlemeler */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                padding: 1rem;
+            }
+        
+            .category-card {
+                height: 280px;
+                padding: 1.25rem;
+            }
+        
+            .category-icon {
+                font-size: 2rem;
+            }
+        
+            .category-title {
+                font-size: 1.25rem;
+            }
+        
+            .category-description {
+                font-size: 0.85rem;
+            }
+        
+            .category-button {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+        
+            .stat-value {
+                font-size: 1rem;
+            }
+        
+            .stat-label {
+                font-size: 0.75rem;
+            }
         }
 
         /* Responsive Design */
