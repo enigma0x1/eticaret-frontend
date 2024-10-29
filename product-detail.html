@@ -93,7 +93,7 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-
+        
         body {
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--background-color);
@@ -179,6 +179,142 @@
         .nav-link.active {
             background: var(--primary-color);
             color: var(--white);
+        }
+        /* Similar Products Styles */
+        .similar-products {
+            margin-top: 3rem;
+            padding: 2rem 0;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .products-slider {
+            position: relative;
+            padding: 1rem;
+        }
+        
+        .swiper {
+            padding: 1rem;
+        }
+        
+        .swiper-slide {
+            height: auto;
+        }
+        
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-smooth);
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .product-card .product-image {
+            position: relative;
+            padding-top: 75%;
+            overflow: hidden;
+        }
+        
+        .product-card .product-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-base);
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+        
+        .product-card .product-content {
+            padding: 1rem;
+        }
+        
+        .product-card .product-category {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-card .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .product-card .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        
+        .product-card .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .product-card .rating-count {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        .product-card .product-price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .product-card .old-price {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-decoration: line-through;
+            margin-left: 0.5rem;
+        }
+        
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: var(--primary-color);
+            background: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 1.2rem;
+        }
+        
+        .swiper-pagination-bullet {
+            background: var(--primary-color);
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: var(--primary-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .swiper-button-next,
+            .swiper-button-prev {
+                display: none;
+            }
         }
 
         /* Main Content Styles */
@@ -985,8 +1121,9 @@
                     <div class="swiper-wrapper">
                         <!-- Similar products will be loaded dynamically -->
                     </div>
-                    <div class="swiper-button-next"></div>
+                    <div class="swiper-pagination"></div>
                     <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
             </div>
         </div>
@@ -1254,6 +1391,7 @@
         }
     }
 
+    // Similar Products bölümünü güncelle
     async function loadSimilarProducts() {
         try {
             const response = await fetchAPI(`/products/similar/${state.product._id}`);
@@ -1263,9 +1401,95 @@
             }
         } catch (error) {
             console.error('Similar products loading error:', error);
+            // Hata durumunda UI'ı güncelle
+            document.querySelector('.similar-products').style.display = 'none';
         }
     }
 
+    function initializeSimilarProductsSlider() {
+        const swiperContainer = document.getElementById('similarProductsSwiper');
+        const swiperWrapper = swiperContainer.querySelector('.swiper-wrapper');
+        
+        // Benzer ürün yoksa bölümü gizle
+        if (!state.similarProducts || state.similarProducts.length === 0) {
+            document.querySelector('.similar-products').style.display = 'none';
+            return;
+        }
+    
+        // Slider içeriğini oluştur
+        swiperWrapper.innerHTML = state.similarProducts.map(product => `
+            <div class="swiper-slide">
+                <div class="product-card" onclick="navigateToProduct('${product._id}')">
+                    <div class="product-image">
+                        <img src="${product.images && product.images.length > 0 
+                            ? `${API_URL}/uploads/${product.images[0]}` 
+                            : 'placeholder.jpg'}" 
+                             alt="${product.title}"
+                             loading="lazy">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-category">${product.category || ''}</div>
+                        <h3 class="product-title">${product.title}</h3>
+                        <div class="product-meta">
+                            <div class="product-rating">
+                                ${generateStars(product.rating || 0)}
+                                <span class="rating-count">(${product.ratingCount || 0})</span>
+                            </div>
+                            <div class="product-price">
+                                ${CURRENCY_FORMAT.format(product.price)}
+                                ${product.oldPrice ? `
+                                    <span class="old-price">
+                                        ${CURRENCY_FORMAT.format(product.oldPrice)}
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    
+        // Swiper'ı başlat
+        if (!swiperContainer.swiper) {
+            new Swiper(swiperContainer, {
+                slidesPerView: 'auto',
+                spaceBetween: 20,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true
+                },
+                breakpoints: {
+                    320: {
+                        slidesPerView: 1,
+                        spaceBetween: 10
+                    },
+                    480: {
+                        slidesPerView: 2,
+                        spaceBetween: 15
+                    },
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 20
+                    },
+                    1024: {
+                        slidesPerView: 4,
+                        spaceBetween: 20
+                    }
+                },
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false
+                },
+                loop: true
+            });
+        } else {
+            swiperContainer.swiper.update();
+        }
+    }
     function initializeSimilarProductsSlider() {
         const swiperWrapper = document.querySelector('.swiper-wrapper');
         
