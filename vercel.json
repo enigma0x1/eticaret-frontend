@@ -47,6 +47,10 @@
     {
       "source": "/manufacturer-dashboard",
       "destination": "/manufacturer-dashboard"
+    },
+    {
+      "source": "/product-detail",
+      "destination": "/product-detail"
     }
   ]
 }
