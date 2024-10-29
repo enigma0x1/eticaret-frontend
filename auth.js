@@ -2,7 +2,6 @@
 const AuthManager = {
     async logout() {
         try {
-            showLoading(true);
             const userType = localStorage.getItem('userType');
             const response = await fetch('https://eticaret-glif.onrender.com/api/auth/logout', {
                 method: 'POST',
@@ -13,6 +12,19 @@ const AuthManager = {
 
             if (response.ok) {
                 localStorage.clear();
+                sessionStorage.clear(); // Session storage'ı da temizle
+                
+                // Cache'i temizle
+                if (window.caches) {
+                    caches.keys().then(names => {
+                        names.forEach(name => {
+                            caches.delete(name);
+                        });
+                    });
+                }
+
+                // History'yi temizle
+                window.history.replaceState(null, '', '/');
                 
                 switch(userType) {
                     case 'manufacturer':
