@@ -3,22 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SANAYİKAPISI - Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Raleway:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
         :root {
-            --primary-color: #7B2CBF;
-            --primary-dark: #5A189A;
-            --danger-color: #FF006E;
-            --success-color: #00F5D4;
-            --warning-color: #FFB800;
-            --background-color: #10002B;
-            --text-color: #E0AAFF;
-            --border-color: #3C096C;
-            --white: #240046;
-            --card-bg: #1a0040;
+            --primary: #2563eb;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --dark: #1f2937;
+            --gray: #9ca3af;
+            --light: #f3f4f6;
+            --white: #ffffff;
         }
 
         * {
@@ -28,122 +24,67 @@
         }
 
         body {
-            font-family: 'Raleway', sans-serif;
-            background: linear-gradient(135deg, var(--background-color), #1a0040, #2d0059);
-            color: var(--text-color);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.5;
         }
 
-        .mystical-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.1;
-            background: 
-                radial-gradient(circle at 10% 10%, var(--primary-color), transparent),
-                radial-gradient(circle at 90% 90%, var(--danger-color), transparent);
-            animation: mistFlow 15s ease-in-out infinite alternate;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        @keyframes mistFlow {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
-
-        .admin-header {
+        /* Header */
+        .header {
             background: var(--white);
-            padding: 1rem 2rem;
-            box-shadow: 0 0 20px rgba(123, 44, 191, 0.3);
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .admin-title {
-            font-family: 'Cinzel', serif;
-            color: var(--text-color);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            position: relative;
-        }
-
-        .admin-title::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to right,
-                transparent,
-                rgba(255, 255, 255, 0.1),
-                transparent
-            );
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
-        }
-
-        .admin-container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
+        /* Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: var(--card-bg);
+            background: var(--white);
             padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid var(--primary-color);
-            box-shadow: 0 0 15px rgba(123, 44, 191, 0.2);
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .stat-card:hover {
-            box-shadow: 0 0 25px rgba(123, 44, 191, 0.4);
-            transform: translateY(-5px);
-        }
-
-        .stat-title {
-            color: var(--text-color);
-            font-size: 0.9rem;
+        .stat-card h3 {
+            color: var(--gray);
+            font-size: 0.875rem;
             margin-bottom: 0.5rem;
-            opacity: 0.8;
         }
 
-        .stat-value {
-            font-family: 'Cinzel', serif;
-            background: linear-gradient(45deg, var(--primary-color), var(--success-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 2rem;
-            font-weight: 700;
+        .stat-card p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
         }
 
-        .products-table-container {
-            background: var(--card-bg);
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(123, 44, 191, 0.2);
+        /* Table */
+        .table-container {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
@@ -152,84 +93,61 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--light);
         }
 
-        .table-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.25rem;
-            color: var(--text-color);
-        }
-
-        .products-table {
+        table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .products-table th {
-            background: var(--white);
-            color: var(--text-color);
+        th, td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 2px solid var(--primary-color);
+            border-bottom: 1px solid var(--light);
         }
 
-        .products-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-color);
+        th {
+            font-weight: 500;
+            color: var(--gray);
+            background: var(--light);
         }
 
-        .products-table tr:hover {
-            background: rgba(123, 44, 191, 0.1);
-            box-shadow: 0 0 10px rgba(123, 44, 191, 0.2);
-        }
-
+        /* Buttons */
         .btn {
             padding: 0.5rem 1rem;
-            background: transparent;
-            border: 1px solid var(--primary-color);
-            color: var(--text-color);
-            border-radius: 5px;
+            border-radius: 6px;
+            border: none;
+            font-weight: 500;
             cursor: pointer;
-            font-family: 'Raleway', sans-serif;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.2s;
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--primary-color);
-            transition: all 0.3s ease;
-            z-index: -1;
+        .btn:hover {
+            opacity: 0.9;
         }
 
-        .btn:hover::before {
-            left: 0;
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
         }
 
         .btn-danger {
-            border-color: var(--danger-color);
+            background: var(--danger);
+            color: var(--white);
         }
 
-        .btn-danger::before {
-            background: var(--danger-color);
-        }
-
-        .loading-overlay {
+        /* Loading */
+        .loading {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(16, 0, 43, 0.8);
+            background: rgba(255,255,255,0.8);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -239,11 +157,10 @@
         .spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid rgba(123, 44, 191, 0.1);
-            border-top: 4px solid var(--primary-color);
+            border: 4px solid var(--light);
+            border-top: 4px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            box-shadow: 0 0 15px rgba(123, 44, 191, 0.3);
         }
 
         @keyframes spin {
@@ -251,15 +168,18 @@
             100% { transform: rotate(360deg); }
         }
 
-        .notification {
+        /* Toast */
+        .toast {
             position: fixed;
             bottom: 20px;
             right: 20px;
             padding: 1rem;
-            border-radius: 5px;
-            background: var(--card-bg);
-            color: var(--text-color);
-            box-shadow: 0 0 15px rgba(123, 44, 191, 0.3);
+            border-radius: 6px;
+            background: var(--white);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             z-index: 1000;
             animation: slideIn 0.3s ease-out;
         }
@@ -269,88 +189,103 @@
             to { transform: translateX(0); }
         }
 
-        .product-image {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 5px;
-            border: 2px solid var(--primary-color);
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
 
-        @media (max-width: 768px) {
-            .admin-header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
+        .modal-content {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
 
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray);
+            border-radius: 4px;
+            font-family: inherit;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: 1fr;
             }
 
-            .products-table {
-                display: block;
+            .table-container {
                 overflow-x: auto;
             }
         }
     </style>
 </head>
 <body>
-    <div class="mystical-bg"></div>
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div id="loading" class="loading" style="display: none;">
         <div class="spinner"></div>
     </div>
 
-    <header class="admin-header">
-        <h1 class="admin-title">
-            <i class="fas fa-tools"></i>
-            SANAYİKAPISI Admin
-        </h1>
-        <nav class="admin-nav">
-            <button class="btn" onclick="location.href='/'">
-                <i class="fas fa-home"></i>
-                Ana Sayfa
-            </button>
+    <header class="header">
+        <div class="header-content">
+            <h1>Admin Panel</h1>
             <button class="btn btn-danger" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i>
                 Çıkış
             </button>
-        </nav>
+        </div>
     </header>
 
-    <main class="admin-container">
+    <div class="container">
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-title">Toplam Ürün</div>
-                <div class="stat-value" id="totalProducts">-</div>
+                <h3>Toplam Ürün</h3>
+                <p id="totalProducts">-</p>
             </div>
             <div class="stat-card">
-                <div class="stat-title">Aktif Ürün</div>
-                <div class="stat-value" id="activeProducts">-</div>
+                <h3>Aktif Ürün</h3>
+                <p id="activeProducts">-</p>
             </div>
             <div class="stat-card">
-                <div class="stat-title">Toplam Kategori</div>
-                <div class="stat-value" id="totalCategories">-</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-title">Son Güncelleme</div>
-                <div class="stat-value" id="lastUpdate">-</div>
+                <h3>Toplam Kategori</h3>
+                <p id="totalCategories">-</p>
             </div>
         </div>
 
-        <div class="products-table-container">
+        <div class="table-container">
             <div class="table-header">
-                <h2 class="table-title">Ürün Listesi</h2>
-                <button class="btn" onclick="addNewProduct()">
+                <h2>Ürünler</h2>
+                <button class="btn btn-primary" onclick="showAddProductModal()">
                     <i class="fas fa-plus"></i>
                     Yeni Ürün
                 </button>
             </div>
-            <table class="products-table">
+            <table>
                 <thead>
                     <tr>
-                        <th>Görsel</th>
-                        <th>Ürün Adı</th>
+                        <th>Ürün</th>
                         <th>Kategori</th>
                         <th>Fiyat</th>
                         <th>Stok</th>
@@ -358,147 +293,271 @@
                         <th>İşlemler</th>
                     </tr>
                 </thead>
-                <tbody id="productsTableBody">
-                    <!-- Ürünler JavaScript ile yüklenecek -->
-                </tbody>
+                <tbody id="productsTable"></tbody>
             </table>
         </div>
-    </main>
+    </div>
+</body>
+</html>
+<script>
+    // Sabitler
+    const CONFIG = {
+        API_URL: 'https://eticaret-glif.onrender.com/api',
+        TOKEN_KEY: 'admin_token'
+    };
 
-    <script>
-        const API_URL = 'https://eticaret-glif.onrender.com/api';
-        const TOKEN_KEY = 'admin_token';
+    // Global state
+    let products = [];
+    let categories = [];
 
-        // Basit token kontrolü
-        function checkAuth() {
-            const token = localStorage.getItem(TOKEN_KEY);
-            if (!token) {
-                window.location.href = '/login';
-            }
-            return token;
+    // Sayfa yüklendiğinde
+    document.addEventListener('DOMContentLoaded', async () => {
+        if (!isAuthenticated()) {
+            window.location.href = '/login.html';
+            return;
         }
+        await loadData();
+    });
 
-        // API çağrıları için wrapper
-        async function fetchAPI(endpoint, options = {}) {
-            const token = checkAuth();
-            
-            try {
-                const response = await fetch(`${API_URL}${endpoint}`, {
-                    ...options,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                        ...options.headers
-                    }
-                });
+    // Temel fonksiyonlar
+    function isAuthenticated() {
+        return !!localStorage.getItem(CONFIG.TOKEN_KEY);
+    }
 
-                if (!response.ok) {
-                    throw new Error('API error');
+    function logout() {
+        localStorage.removeItem(CONFIG.TOKEN_KEY);
+        window.location.href = '/login.html';
+    }
+
+    async function fetchAPI(endpoint, options = {}) {
+        const token = localStorage.getItem(CONFIG.TOKEN_KEY);
+        
+        try {
+            const response = await fetch(`${CONFIG.API_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    ...options.headers
                 }
+            });
 
-                return await response.json();
-            } catch (error) {
-                console.error(error);
-                showNotification('İşlem başarısız', 'error');
+            const data = await response.json();
+            
+            if (!response.ok) {
+                if (response.status === 401 || response.status === 403) {
+                    logout();
+                    return null;
+                }
+                throw new Error(data.message || 'API isteği başarısız oldu');
             }
+
+            return data;
+        } catch (error) {
+            showToast(error.message || 'Bir hata oluştu', 'error');
+            throw error;
         }
+    }
 
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            setTimeout(() => notification.remove(), 3000);
+    // Veri yükleme fonksiyonları
+    async function loadData() {
+        showLoading(true);
+        try {
+            await Promise.all([
+                loadProducts(),
+                loadCategories()
+            ]);
+            updateStats();
+        } catch (error) {
+            console.error('Veri yükleme hatası:', error);
+        } finally {
+            showLoading(false);
         }
+    }
 
-        function showLoading(show) {
-            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+    async function loadProducts() {
+        const response = await fetchAPI('/products');
+        if (response.success) {
+            products = response.data;
+            renderProducts();
         }
+    }
 
-        async function loadData() {
-            showLoading(true);
-            try {
-                const [products, categories] = await Promise.all([
-                    fetchAPI('/products'),
-                    fetchAPI('/categories')
-                ]);
-
-                updateStats(products, categories);
-                renderProducts(products);
-            } catch (error) {
-                showNotification('Veri yüklenirken hata oluştu', 'error');
-            } finally {
-                showLoading(false);
-            }
+    async function loadCategories() {
+        const response = await fetchAPI('/categories');
+        if (response.success) {
+            categories = response.data;
         }
+    }
 
-        function updateStats(products, categories) {
-            document.getElementById('totalProducts').textContent = products?.length || 0;
-            document.getElementById('activeProducts').textContent = 
-                products?.filter(p => p.status === 'active').length || 0;
-            document.getElementById('totalCategories').textContent = categories?.length || 0;
-            document.getElementById('lastUpdate').textContent = 
-                new Date().toLocaleTimeString();
-        }
-
-        function renderProducts(products) {
-            const tbody = document.getElementById('productsTableBody');
-            tbody.innerHTML = products?.map(product => `
-                <tr>
-                    <td>
-                        <img src="${product.image ? `${API_URL}/uploads/${product.image}` : 'placeholder.jpg'}" 
-                             alt="${product.title}"
-                             class="product-image">
-                    </td>
-                    <td>${product.title}</td>
-                    <td>${product.category || 'Kategorisiz'}</td>
-                    <td>${formatPrice(product.price)}</td>
-                    <td>${product.stock}</td>
-                    <td>${product.status === 'active' ? 'Aktif' : 'Pasif'}</td>
-                    <td>
-                        <button class="btn" onclick="editProduct('${product._id}')">
+    // Render fonksiyonları
+    function renderProducts() {
+        const tbody = document.getElementById('productsTable');
+        tbody.innerHTML = products.map(product => `
+            <tr>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="${product.image}" alt="${product.name}" 
+                             style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                        <span>${product.name}</span>
+                    </div>
+                </td>
+                <td>${product.category || '-'}</td>
+                <td>${formatPrice(product.price)}</td>
+                <td>${product.stock}</td>
+                <td>
+                    <span class="status" style="color: ${product.status === 'active' ? 'var(--success)' : 'var(--danger)'}">
+                        ${product.status === 'active' ? 'Aktif' : 'Pasif'}
+                    </span>
+                </td>
+                <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-primary" onclick="editProduct('${product._id}')">
                             <i class="fas fa-edit"></i>
                         </button>
                         <button class="btn btn-danger" onclick="deleteProduct('${product._id}')">
                             <i class="fas fa-trash"></i>
                         </button>
-                    </td>
-                </tr>
-            `).join('') || '';
-        }
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
 
-        async function deleteProduct(id) {
-            if (!confirm('Bu ürünü silmek istediğinizden emin misiniz?')) return;
+    function updateStats() {
+        document.getElementById('totalProducts').textContent = products.length;
+        document.getElementById('activeProducts').textContent = 
+            products.filter(p => p.status === 'active').length;
+        document.getElementById('totalCategories').textContent = categories.length;
+    }
 
-            showLoading(true);
-            try {
-                await fetchAPI(`/products/${id}`, { method: 'DELETE' });
-                showNotification('Ürün başarıyla silindi');
-                loadData();
-            } catch (error) {
-                showNotification('Ürün silinirken hata oluştu', 'error');
-            } finally {
-                showLoading(false);
+    // Ürün işlemleri
+    async function deleteProduct(id) {
+        if (!confirm('Bu ürünü silmek istediğinizden emin misiniz?')) return;
+
+        showLoading(true);
+        try {
+            const response = await fetchAPI(`/products/${id}`, { method: 'DELETE' });
+            if (response.success) {
+                showToast('Ürün başarıyla silindi');
+                await loadProducts();
+                updateStats();
             }
+        } catch (error) {
+            console.error('Ürün silme hatası:', error);
+        } finally {
+            showLoading(false);
         }
+    }
 
-        function formatPrice(price) {
-            return new Intl.NumberFormat('tr-TR', {
-                style: 'currency',
-                currency: 'TRY'
-            }).format(price);
-        }
+    async function editProduct(id) {
+        const product = products.find(p => p._id === id);
+        if (!product) return;
 
-        function logout() {
-            localStorage.removeItem(TOKEN_KEY);
-            window.location.href = '/login';
-        }
+        showProductModal(product);
+    }
 
-        // Sayfa yüklendiğinde
-        document.addEventListener('DOMContentLoaded', () => {
-            checkAuth();
-            loadData();
+    // UI Helper fonksiyonları
+    function showLoading(show) {
+        document.getElementById('loading').style.display = show ? 'flex' : 'none';
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+
+    function formatPrice(price) {
+        return new Intl.NumberFormat('tr-TR', {
+            style: 'currency',
+            currency: 'TRY'
+        }).format(price);
+    }
+
+    function showProductModal(product = null) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h2>${product ? 'Ürün Düzenle' : 'Yeni Ürün'}</h2>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label>Ürün Adı</label>
+                        <input type="text" name="name" value="${product?.name || ''}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select name="category">
+                            <option value="">Seçiniz</option>
+                            ${categories.map(cat => `
+                                <option value="${cat._id}" ${product?.category === cat._id ? 'selected' : ''}>
+                                    ${cat.name}
+                                </option>
+                            `).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fiyat</label>
+                        <input type="number" name="price" value="${product?.price || ''}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stok</label>
+                        <input type="number" name="stock" value="${product?.stock || ''}" required>
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button type="button" class="btn btn-danger" onclick="closeModal(this)">İptal</button>
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        modal.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await saveProduct(new FormData(e.target), product?._id);
+            closeModal(modal);
         });
-    </script>
-</body>
-</html>
+    }
+
+    function closeModal(element) {
+        const modal = element.closest('.modal');
+        if (modal) modal.remove();
+    }
+
+    async function saveProduct(formData, id = null) {
+        const data = Object.fromEntries(formData.entries());
+        
+        showLoading(true);
+        try {
+            const response = await fetchAPI(
+                id ? `/products/${id}` : '/products',
+                {
+                    method: id ? 'PUT' : 'POST',
+                    body: JSON.stringify(data)
+                }
+            );
+
+            if (response.success) {
+                showToast(`Ürün başarıyla ${id ? 'güncellendi' : 'eklendi'}`);
+                await loadProducts();
+                updateStats();
+            }
+        } catch (error) {
+            console.error('Ürün kaydetme hatası:', error);
+        } finally {
+            showLoading(false);
+        }
+    }
+</script>
