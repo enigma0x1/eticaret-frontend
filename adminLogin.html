@@ -251,7 +251,7 @@
                     localStorage.setItem(TOKEN_KEY, data.token);
                     
                     // Redirect to admin panel
-                    window.location.href = '/admin-panel.html';
+                    window.location.href = '/admin-panel"';
                 } else {
                     // Show error message
                     showNotification(data.message || 'Giriş başarısız', 'error');
@@ -318,7 +318,7 @@
         // Check if already logged in
         document.addEventListener('DOMContentLoaded', () => {
             if (localStorage.getItem(TOKEN_KEY)) {
-                window.location.href = '/admin-panel.html';
+                window.location.href = '/admin-panel"';
             }
         });
     </script>
