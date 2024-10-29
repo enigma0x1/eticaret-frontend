@@ -3,18 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IndustryHub Pro - Ürün Detayı</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Ürün Detay Sayfası</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: #f8fafc;
+            font-family: Arial, sans-serif;
         }
 
         .container {
@@ -23,178 +19,324 @@
             padding: 20px;
         }
 
-        /* Header */
-        .header {
-            background: white;
-            padding: 15px 0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .header-content {
+        .product-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
-        .logo {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.25rem;
+        .product-images {
+            flex: 1;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        /* Product Detail */
-        .product-detail {
-            margin-top: 30px;
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .product-image {
+        .main-image {
             width: 100%;
-            max-height: 400px;
-            object-fit: contain;
+            height: 400px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            font-size: 28px;
+            color: #e44d26;
             margin-bottom: 20px;
         }
 
-        .stock-status {
-            color: #22c55e;
+        .product-description {
             margin-bottom: 20px;
+            line-height: 1.6;
         }
 
-        .quantity-input {
-            width: 100px;
-            padding: 8px;
-            margin-right: 10px;
-            border: 1px solid #e2e8f0;
-            border-radius: 4px;
-        }
-
-        .add-to-cart-btn {
-            background: #2563eb;
+        .add-to-cart {
+            background-color: #e44d26;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 16px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .add-to-cart-btn:hover {
-            background: #1e40af;
+        .add-to-cart:hover {
+            background-color: #c73e1d;
         }
 
-        /* Tabs */
+        .product-details {
+            margin-top: 40px;
+        }
+
         .tabs {
-            margin-top: 30px;
-        }
-
-        .tab-buttons {
             display: flex;
-            gap: 20px;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid #ddd;
             margin-bottom: 20px;
         }
 
-        .tab-button {
+        .tab {
             padding: 10px 20px;
+            cursor: pointer;
             border: none;
             background: none;
-            cursor: pointer;
-            color: #64748b;
         }
 
-        .tab-button.active {
-            color: #2563eb;
-            border-bottom: 2px solid #2563eb;
+        .tab.active {
+            border-bottom: 2px solid #e44d26;
+            color: #e44d26;
         }
 
         .tab-content {
-            padding: 20px 0;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .reviews {
+            margin-top: 20px;
+        }
+
+        .review {
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .stars {
+            color: #ffd700;
+        }
+
+        .similar-products {
+            margin-top: 40px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .quantity-btn {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+            background: none;
+            cursor: pointer;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            margin: 0 10px;
+            padding: 5px;
+        }
+
+        .color-options {
+            margin-bottom: 20px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .color-option.selected {
+            border-color: #e44d26;
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container header-content">
-            <a href="/" class="logo">IndustryHub Pro</a>
-            <nav class="nav-links">
-                <a href="/products">Ürünler</a>
-                <a href="/cart">Sepet (0)</a>
-            </nav>
+    <div class="container">
+        <div class="product-container">
+            <div class="product-images">
+                <img src="main-product-image.jpg" alt="Ürün" class="main-image" id="mainImage">
+                <div class="thumbnail-container">
+                    <img src="thumbnail1.jpg" alt="Thumbnail 1" class="thumbnail">
+                    <img src="thumbnail2.jpg" alt="Thumbnail 2" class="thumbnail">
+                    <img src="thumbnail3.jpg" alt="Thumbnail 3" class="thumbnail">
+                </div>
+            </div>
+
+            <div class="product-info">
+                <h1 class="product-title">Ürün Adı</h1>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <span>(125 değerlendirme)</span>
+                </div>
+                <p class="product-price">₺999,99</p>
+                
+                <div class="color-options">
+                    <h3>Renk Seçenekleri:</h3>
+                    <div class="color-option selected" style="background-color: red;"></div>
+                    <div class="color-option" style="background-color: blue;"></div>
+                    <div class="color-option" style="background-color: green;"></div>
+                </div>
+
+                <div class="quantity-selector">
+                    <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                    <input type="number" value="1" min="1" class="quantity-input" id="quantity">
+                    <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                </div>
+
+                <p class="product-description">
+                    Ürün açıklaması buraya gelecek. Detaylı ürün özellikleri ve açıklamaları...
+                </p>
+
+                <button class="add-to-cart">Sepete Ekle</button>
+            </div>
         </div>
-    </header>
 
-    <main class="container">
-        <div class="product-detail">
-            <img src="" alt="" class="product-image" id="productImage">
-            
-            <div class="stock-status">
-                <span>✓ Stokta</span>
-            </div>
-
-            <div class="add-to-cart">
-                <input type="number" min="1" value="1" class="quantity-input">
-                <button class="add-to-cart-btn">Sepete Ekle</button>
-            </div>
-
+        <div class="product-details">
             <div class="tabs">
-                <div class="tab-buttons">
-                    <button class="tab-button active">Açıklama</button>
-                    <button class="tab-button">Teknik Özellikler</button>
-                    <button class="tab-button">Değerlendirmeler</button>
-                </div>
-                <div class="tab-content" id="tabContent">
-                    <!-- Tab içeriği dinamik olarak yüklenecek -->
+                <button class="tab active" onclick="openTab('description')">Açıklama</button>
+                <button class="tab" onclick="openTab('specifications')">Özellikler</button>
+                <button class="tab" onclick="openTab('reviews')">Yorumlar</button>
+            </div>
+
+            <div id="description" class="tab-content active">
+                <h2>Ürün Açıklaması</h2>
+                <p>Detaylı ürün açıklaması...</p>
+            </div>
+
+            <div id="specifications" class="tab-content">
+                <h2>Teknik Özellikler</h2>
+                <ul>
+                    <li>Özellik 1</li>
+                    <li>Özellik 2</li>
+                    <li>Özellik 3</li>
+                </ul>
+            </div>
+
+            <div id="reviews" class="tab-content">
+                <h2>Müşteri Yorumları</h2>
+                <div class="reviews">
+                    <div class="review">
+                        <div class="review-header">
+                            <strong>Ahmet Y.</strong>
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                        <p>Harika bir ürün! Çok memnun kaldım.</p>
+                    </div>
+                    <!-- Diğer yorumlar -->
                 </div>
             </div>
         </div>
-    </main>
+
+        <div class="similar-products">
+            <h2>Benzer Ürünler</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="similar1.jpg" alt="Benzer Ürün 1">
+                    <h3>Benzer Ürün 1</h3>
+                    <p>₺799,99</p>
+                </div>
+                <!-- Diğer benzer ürünler -->
+            </div>
+        </div>
+    </div>
 
     <script>
-        const API_URL = 'https://eticaret-glif.onrender.com/api';
+        // Tab değiştirme fonksiyonu
+        function openTab(tabName) {
+            const tabs = document.getElementsByClassName('tab');
+            const tabContents = document.getElementsByClassName('tab-content');
 
-        async function loadProduct() {
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                const productId = urlParams.get('id');
-
-                if (!productId) return;
-
-                const response = await fetch(`${API_URL}/products/${productId}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    updateProductUI(data.product);
-                }
-            } catch (error) {
-                console.error('Ürün yükleme hatası:', error);
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+                tabContents[i].classList.remove('active');
             }
+
+            document.getElementById(tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        function updateProductUI(product) {
-            document.getElementById('productImage').src = product.image;
-            document.getElementById('productImage').alt = product.name;
-            // Diğer UI güncellemeleri
-        }
-
-        // Tab işlevselliği
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.addEventListener('click', () => {
-                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                // Tab içeriğini güncelle
+        // Thumbnail tıklama işlevi
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                document.getElementById('mainImage').src = this.src;
             });
         });
 
-        // Sayfa yüklendiğinde ürünü getir
-        document.addEventListener('DOMContentLoaded', loadProduct);
+        // Miktar artırma/azaltma işlevleri
+        function increaseQuantity() {
+            const input = document.getElementById('quantity');
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decreaseQuantity() {
+            const input = document.getElementById('quantity');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        // Renk seçimi işlevi
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
     </script>
 </body>
 </html>
