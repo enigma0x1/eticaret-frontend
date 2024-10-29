@@ -1490,45 +1490,6 @@
             swiperContainer.swiper.update();
         }
     }
-    function initializeSimilarProductsSlider() {
-        const swiperWrapper = document.querySelector('.swiper-wrapper');
-        
-        swiperWrapper.innerHTML = state.similarProducts.map(product => `
-            <div class="swiper-slide">
-                <div class="product-card" onclick="navigateToProduct('${product._id}')">
-                    <div class="product-image">
-                        <img src="${API_URL}/uploads/${product.images[0]}" 
-                             alt="${product.title}"
-                             loading="lazy">
-                    </div>
-                    <div class="product-content">
-                        <h3 class="product-title">${product.title}</h3>
-                        <div class="product-price">${CURRENCY_FORMAT.format(product.price)}</div>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-
-        new Swiper('#similarProductsSwiper', {
-            slidesPerView: 1,
-            spaceBetween: 20,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            breakpoints: {
-                640: {
-                    slidesPerView: 2,
-                },
-                968: {
-                    slidesPerView: 3,
-                },
-                1200: {
-                    slidesPerView: 4,
-                }
-            }
-        });
-    }
 
     async function loadReviews() {
         try {
