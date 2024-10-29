@@ -620,6 +620,127 @@
                 showLoading(false);
             }
         }
+        function showProductDetails(productId) {
+            const product = adminData.products.find(p => p._id === productId);
+            if (!product) return;
+        
+            const manufacturer = adminData.users.manufacturers.find(m => m._id === product.manufacturer._id);
+            const activities = adminData.activities.filter(a => a.productId === productId);
+        
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content modal-lg">
+                    <div class="modal-header">
+                        <h2>Ürün Detayları</h2>
+                        <button class="btn-close" onclick="closeModal(this)">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="tabs">
+                            <button class="tab-btn active" onclick="switchTab(this, 'productInfo')">Ürün Bilgileri</button>
+                            <button class="tab-btn" onclick="switchTab(this, 'manufacturerInfo')">Satıcı Bilgileri</button>
+                            <button class="tab-btn" onclick="switchTab(this, 'activities')">Aktiviteler</button>
+                        </div>
+        
+                        <div class="tab-content active" id="productInfo">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Ürün ID</label>
+                                    <div>${product._id}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Başlık</label>
+                                    <div>${product.title}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Fiyat</label>
+                                    <div>${formatPrice(product.price)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Stok</label>
+                                    <div>${product.stock}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Durum</label>
+                                    <div>
+                                        <span class="status-badge ${product.status}">
+                                            ${product.status === 'active' ? 'Aktif' : 
+                                              product.status === 'inactive' ? 'Pasif' : 
+                                              'Stok Dışı'}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Oluşturulma Tarihi</label>
+                                    <div>${formatDate(product.createdAt)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Son Güncelleme</label>
+                                    <div>${formatDate(product.updatedAt)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Görüntülenme</label>
+                                    <div>${product.views || 0}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Değerlendirme</label>
+                                    <div>${product.rating || 0} (${product.ratingCount || 0} oy)</div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="tab-content" id="manufacturerInfo">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Firma Adı</label>
+                                    <div>${manufacturer?.companyName || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>E-posta</label>
+                                    <div>${manufacturer?.email || 'N/A'}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Kayıt Tarihi</label>
+                                    <div>${formatDate(manufacturer?.createdAt)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Son Giriş</label>
+                                    <div>${formatDate(manufacturer?.lastLogin)}</div>
+                                </div>
+                                <div class="info-item">
+                                    <label>Durum</label>
+                                    <div>
+                                        <span class="status-badge ${manufacturer?.status || 'inactive'}">
+                                            ${manufacturer?.status === 'active' ? 'Aktif' : 'Pasif'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="tab-content" id="activities">
+                            <div class="activity-list">
+                                ${activities.length ? activities.map(activity => `
+                                    <div class="activity-item">
+                                        <div class="activity-icon">
+                                            <i class="fas fa-${getActivityIcon(activity.type)}"></i>
+                                        </div>
+                                        <div class="activity-content">
+                                            <div class="activity-title">${getActivityTitle(activity)}</div>
+                                            <div class="activity-meta">
+                                                <span>${formatDate(activity.createdAt)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('') : '<div class="no-data">Aktivite bulunamadı</div>'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        
+            document.body.appendChild(modal);
+        }
                 // Ürün detay modalı
         function showProductModal() {
             const modal = document.createElement('div');
