@@ -2,22 +2,13 @@
 const AuthManager = {
     async logout() {
         try {
-            // 1. Önce sayfayı tamamen gizle ve loading göster
-            document.body.innerHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                            background: white; display: flex; justify-content: center; 
-                            align-items: center; z-index: 9999;">
-                    <div style="text-align: center;">
-                        <div class="loading-spinner"></div>
-                        <p>Çıkış yapılıyor...</p>
-                    </div>
-                </div>
-            `;
-
+            // Önce sayfayı gizle
+            document.body.style.display = 'none';
+            
             const userType = localStorage.getItem('userType');
             const token = localStorage.getItem('token');
 
-            // 2. Backend'e logout isteği gönder
+            // Backend'e logout isteği gönder
             await fetch('https://eticaret-glif.onrender.com/api/auth/logout', {
                 method: 'POST',
                 headers: {
@@ -25,44 +16,27 @@ const AuthManager = {
                 }
             });
 
-            // 3. Tüm storage'ları temizle
+            // Storage'ı temizle
             localStorage.clear();
             sessionStorage.clear();
+
+            // Geri tuşunu devre dışı bırak
+            window.history.forward();
             
-            // 4. History'yi temizle
-            window.history.pushState(null, document.title, window.location.href);
-            window.history.replaceState(null, document.title, window.location.href);
-            
-            // 5. Sayfayı yönlendir
-            let loginPage;
+            // Login sayfasına yönlendir
             switch(userType) {
                 case 'manufacturer':
-                    loginPage = 'ureticiLogin';
+                    window.location.replace('ureticiLogin');
                     break;
                 case 'professional':
-                    loginPage = 'loginForPro';
+                    window.location.replace('loginForPro');
                     break;
                 case 'admin':
-                    loginPage = 'adminLogin';
+                    window.location.replace('adminLogin');
                     break;
                 default:
-                    loginPage = 'login';
+                    window.location.replace('login');
             }
-
-            // 6. Yönlendirme öncesi son kontroller
-            window.onbeforeunload = null;
-            window.onpopstate = null;
-            
-            // 7. Sayfayı değiştir
-            window.location.replace(loginPage);
-            
-            // 8. Ek güvenlik için
-            setTimeout(() => {
-                if (document.location.href !== loginPage) {
-                    window.location.replace(loginPage);
-                }
-            }, 100);
-
         } catch (error) {
             console.error('Logout error:', error);
             window.location.replace('login');
