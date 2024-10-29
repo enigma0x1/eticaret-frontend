@@ -51,6 +51,26 @@
     {
       "source": "/product-detail",
       "destination": "/product-detail"
+    },
+    {
+      "source": "/products",
+      "destination": "/products"
+    },
+    {
+      "source": "/cart",
+      "destination": "/cart"
+    },
+    {
+      "source": "/profile",
+      "destination": "/profile"
+    },
+    {
+      "source": "/orders",
+      "destination": "/orders"
+    },
+    {
+      "source": "/settings",
+      "destination": "/settings"
     }
   ]
 }
