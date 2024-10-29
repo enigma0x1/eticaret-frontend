@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Girişi - IndustryHub Pro</title>
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://eticaret-glif.onrender.com;">
+    <meta name="description" content="SANAYİKAPISI Admin Paneli - Güvenli Yönetim Sistemi">
+    <meta name="author" content="SANAYİKAPISI">
+    <title>Admin Girişi - SANAYİKAPISI</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,6 +21,8 @@
             --primary-color: #2563eb;
             --primary-dark: #1e40af;
             --danger-color: #dc2626;
+            --warning-color: #f59e0b;
+            --success-color: #10b981;
             --background-color: #f3f4f6;
             --text-color: #1f2937;
             --border-color: #e5e7eb;
@@ -27,81 +34,107 @@
             
             --radius-md: 0.375rem;
             --radius-lg: 0.5rem;
+
+            --transition-normal: all 0.3s ease;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--background-color);
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
             color: var(--text-color);
             line-height: 1.5;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+            padding: 1rem;
         }
 
         .login-container {
             background: var(--white);
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-lg);
             width: 100%;
-            max-width: 400px;
-            margin: 1rem;
+            max-width: 420px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
         }
 
         .login-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .login-title {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             color: var(--primary-color);
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.5px;
         }
 
         .login-subtitle {
             color: var(--text-color);
-            font-size: 0.875rem;
+            font-size: 0.925rem;
             opacity: 0.8;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
+            position: relative;
         }
 
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            font-size: 0.875rem;
+            font-size: 0.925rem;
+            color: var(--text-color);
         }
 
         .form-input {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
             border-radius: var(--radius-md);
             font-size: 1rem;
-            transition: all 0.2s;
+            transition: var(--transition-normal);
+            background-color: var(--white);
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--danger-color);
         }
 
         .form-error {
@@ -109,29 +142,38 @@
             font-size: 0.875rem;
             margin-top: 0.5rem;
             display: none;
+            animation: fadeIn 0.3s ease-in;
         }
 
         .btn {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.875rem 1.5rem;
             border: none;
             border-radius: var(--radius-md);
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
+            gap: 0.75rem;
+            transition: var(--transition-normal);
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-primary {
-            background: var(--primary-color);
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
             color: var(--white);
         }
 
         .btn-primary:hover {
-            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .loading {
@@ -149,31 +191,42 @@
             display: none;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            padding: 1rem;
+            padding: 1rem 1.5rem;
             border-radius: var(--radius-md);
             background: var(--white);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
             animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+            max-width: 400px;
         }
 
         .notification.error {
             border-left: 4px solid var(--danger-color);
         }
 
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -181,13 +234,13 @@
     <div class="login-container">
         <div class="login-header">
             <h1 class="login-title">
-                <i class="fas fa-tools"></i>
-                IndustryHub Pro
+                <i class="fas fa-industry"></i>
+                SANAYİKAPISI
             </h1>
             <p class="login-subtitle">Admin Paneli Girişi</p>
         </div>
 
-        <form id="loginForm" onsubmit="handleLogin(event)">
+        <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
             <div class="form-group">
                 <label class="form-label" for="email">E-posta</label>
                 <input type="email" 
@@ -195,7 +248,8 @@
                        name="email" 
                        class="form-input" 
                        required 
-                       autocomplete="email">
+                       autocomplete="off"
+                       spellcheck="false">
                 <div class="form-error" id="emailError"></div>
             </div>
 
@@ -206,7 +260,7 @@
                        name="password" 
                        class="form-input" 
                        required 
-                       autocomplete="current-password">
+                       autocomplete="new-password">
                 <div class="form-error" id="passwordError"></div>
             </div>
 
@@ -216,57 +270,93 @@
             </button>
         </form>
     </div>
-
     <script>
-        const API_URL = 'https://eticaret-glif.onrender.com/api';
-        const TOKEN_KEY = 'admin_token';
+    // Güvenlik sabitleri ve yapılandırma
+    const CONFIG = {
+        API_URL: 'https://eticaret-glif.onrender.com/api',
+        TOKEN_KEY: 'sk_admin_token',
+        MAX_LOGIN_ATTEMPTS: 5,
+        LOCKOUT_DURATION: 15 * 60 * 1000, // 15 dakika
+        REQUEST_TIMEOUT: 15000, // 15 saniye
+        PASSWORD_MIN_LENGTH: 8
+    };
 
+    // Güvenlik yardımcı fonksiyonları
+    const SecurityUtils = {
+        attempts: 0,
+        lastAttempt: 0,
+        isLocked: false,
+        lockoutEnd: 0,
 
-        // Fetch isteğini try-catch bloğu içinde daha detaylı hale getirelim
-        async function handleLogin(event) {
-            event.preventDefault();
+        // Brute force koruması
+        checkRateLimit() {
+            const now = Date.now();
             
-            const form = event.target;
-            const email = form.email.value;
-            const password = form.password.value;
-            
-            setLoading(true);
-            
-            try {
-                const response = await fetch(`${API_URL}/admin/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    mode: 'cors',
-                    body: JSON.stringify({ email, password })
-                });
-        
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
-        
-                const data = await response.json();
-                console.log('Response data:', data);
-        
-                if (response.ok && data.success) {
-                    localStorage.setItem(TOKEN_KEY, data.token);
-                    window.location.href = '/admin-panel';
+            // Kilitlenme kontrolü
+            if (this.isLocked) {
+                if (now < this.lockoutEnd) {
+                    const remainingMinutes = Math.ceil((this.lockoutEnd - now) / 60000);
+                    throw new Error(`Çok fazla başarısız deneme. ${remainingMinutes} dakika sonra tekrar deneyin.`);
                 } else {
-                    showNotification(data.message || 'Giriş başarısız', 'error');
+                    this.resetLockout();
                 }
-            } catch (error) {
-                console.error('Login error:', error);
-                showNotification('Sunucu bağlantısında hata oluştu. Detay: ' + error.message, 'error');
-            } finally {
-                setLoading(false);
             }
-        }
 
-        function setLoading(isLoading) {
+            // Deneme sayısı kontrolü
+            if (now - this.lastAttempt < 1000) {
+                this.attempts++;
+                if (this.attempts >= CONFIG.MAX_LOGIN_ATTEMPTS) {
+                    this.lockAccount();
+                    throw new Error(`Çok fazla deneme yaptınız. ${CONFIG.LOCKOUT_DURATION/60000} dakika sonra tekrar deneyin.`);
+                }
+            } else {
+                this.attempts = 1;
+            }
+            this.lastAttempt = now;
+        },
+
+        lockAccount() {
+            this.isLocked = true;
+            this.lockoutEnd = Date.now() + CONFIG.LOCKOUT_DURATION;
+            localStorage.setItem('loginLockout', this.lockoutEnd);
+        },
+
+        resetLockout() {
+            this.isLocked = false;
+            this.attempts = 0;
+            this.lockoutEnd = 0;
+            localStorage.removeItem('loginLockout');
+        },
+
+        // XSS koruması
+        sanitizeInput(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        },
+
+        // Input validasyonu
+        validateEmail(email) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            return emailRegex.test(email);
+        },
+
+        validatePassword(password) {
+            return password.length >= CONFIG.PASSWORD_MIN_LENGTH &&
+                   /[A-Z]/.test(password) && // Büyük harf
+                   /[a-z]/.test(password) && // Küçük harf
+                   /[0-9]/.test(password) && // Rakam
+                   /[^A-Za-z0-9]/.test(password); // Özel karakter
+        }
+    };
+
+    // UI işlemleri
+    const UIManager = {
+        setLoading(isLoading) {
             const button = document.getElementById('loginButton');
             const spinner = document.getElementById('loginSpinner');
             
+            button.disabled = isLoading;
             if (isLoading) {
                 button.classList.add('loading');
                 spinner.style.display = 'block';
@@ -276,44 +366,157 @@
                 spinner.style.display = 'none';
                 button.querySelector('span').textContent = 'Giriş Yap';
             }
-        }
+        },
 
-        function showError(elementId, message) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.textContent = message;
-                element.style.display = 'block';
+        showError(elementId, message) {
+            const input = document.getElementById(elementId.replace('Error', ''));
+            const error = document.getElementById(elementId);
+            
+            input.classList.add('error');
+            error.textContent = message;
+            error.style.display = 'block';
+        },
+
+        hideError(elementId) {
+            const input = document.getElementById(elementId.replace('Error', ''));
+            const error = document.getElementById(elementId);
+            
+            input.classList.remove('error');
+            error.style.display = 'none';
+        },
+
+        showNotification(message, type = 'error') {
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
             }
-        }
 
-        function hideError(elementId) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                element.style.display = 'none';
-            }
-        }
-
-        function showNotification(message, type = 'error') {
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `
-                <i class="fas fa-exclamation-circle"></i>
-                <span>${message}</span>
+                <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                <span>${SecurityUtils.sanitizeInput(message)}</span>
             `;
             
             document.body.appendChild(notification);
             
             setTimeout(() => {
                 notification.remove();
-            }, 3000);
+            }, 5000);
+        }
+    };
+
+    // API işlemleri
+    const ApiService = {
+        async login(email, password) {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
+
+            try {
+                const response = await fetch(`${CONFIG.API_URL}/admin/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ 
+                        email: email.trim(),
+                        password: password,
+                        timestamp: Date.now()
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || 'Giriş başarısız');
+                }
+
+                return await response.json();
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    throw new Error('İstek zaman aşımına uğradı');
+                }
+                throw error;
+            }
+        }
+    };
+
+    // Ana login işlemi
+    async function handleLogin(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const email = form.email.value.trim();
+        const password = form.password.value;
+
+        // Form validasyonları
+        UIManager.hideError('emailError');
+        UIManager.hideError('passwordError');
+
+        try {
+            // Rate limiting kontrolü
+            SecurityUtils.checkRateLimit();
+
+            // Input validasyonları
+            if (!SecurityUtils.validateEmail(email)) {
+                UIManager.showError('emailError', 'Geçerli bir e-posta adresi giriniz');
+                return;
+            }
+
+            if (!SecurityUtils.validatePassword(password)) {
+                UIManager.showError('passwordError', 
+                    'Şifre en az 8 karakter uzunluğunda olmalı ve büyük harf, küçük harf, rakam ve özel karakter içermelidir');
+                return;
+            }
+
+            UIManager.setLoading(true);
+
+            const response = await ApiService.login(email, password);
+
+            if (response.success) {
+                // Token'ı güvenli bir şekilde sakla
+                sessionStorage.setItem(CONFIG.TOKEN_KEY, response.token);
+                
+                // Başarılı giriş sonrası
+                SecurityUtils.resetLockout();
+                UIManager.showNotification('Giriş başarılı, yönlendiriliyorsunuz...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = '/admin-panel';
+                }, 1000);
+            } else {
+                throw new Error(response.message || 'Giriş başarısız');
+            }
+
+        } catch (error) {
+            console.error('Login error:', error);
+            UIManager.showNotification(error.message);
+            SecurityUtils.attempts++;
+        } finally {
+            UIManager.setLoading(false);
+        }
+    }
+
+    // Sayfa yüklendiğinde
+    document.addEventListener('DOMContentLoaded', () => {
+        // Önceki kilitlenme kontrolü
+        const lockoutEnd = localStorage.getItem('loginLockout');
+        if (lockoutEnd && Date.now() < parseInt(lockoutEnd)) {
+            SecurityUtils.isLocked = true;
+            SecurityUtils.lockoutEnd = parseInt(lockoutEnd);
         }
 
-        // Check if already logged in
-        document.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem(TOKEN_KEY)) {
-                window.location.href = '/admin-panel';
-            }
-        });
-    </script>
+        // Token kontrolü
+        const token = sessionStorage.getItem(CONFIG.TOKEN_KEY);
+        if (token) {
+            window.location.href = '/admin-panel';
+        }
+    });
+</script>
 </body>
 </html>
