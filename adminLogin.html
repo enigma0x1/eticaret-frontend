@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://eticaret-glif.onrender.com;">
     <title>SANAYİKAPISI - Admin Girişi</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -22,6 +24,7 @@
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
+            overflow: hidden;
         }
 
         .login-container {
@@ -31,6 +34,7 @@
             width: 100%;
             max-width: 400px;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+            position: relative;
         }
 
         .login-header {
@@ -50,7 +54,9 @@
         .login-subtitle {
             color: #00ff00;
             font-size: 18px;
-            opacity: 0.8;
+            height: 24px;
+            position: relative;
+            overflow: hidden;
         }
 
         .form-group {
@@ -80,6 +86,10 @@
             box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
         }
 
+        .form-input.error {
+            border-color: #ff0000;
+        }
+
         .form-error {
             color: #ff0000;
             font-size: 16px;
@@ -97,6 +107,7 @@
             font-family: 'VT323', monospace;
             font-size: 20px;
             text-transform: uppercase;
+            transition: all 0.3s ease;
         }
 
         .btn:hover {
@@ -104,29 +115,9 @@
             color: #000;
         }
 
-        .notification-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #000;
-            color: #00ff00;
-            padding: 10px;
-            text-align: center;
-            font-size: 18px;
-            border-bottom: 1px solid #00ff00;
-            display: none;
-            z-index: 1000;
-        }
-
-        .notification-bar.error {
-            color: #ff0000;
-            border-bottom-color: #ff0000;
-        }
-
-        .notification-bar.success {
-            color: #00ff00;
-            border-bottom-color: #00ff00;
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .version {
@@ -146,9 +137,32 @@
             animation: blink 1s step-end infinite;
         }
 
-        .loading .btn {
-            pointer-events: none;
-            opacity: 0.7;
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes deleteText {
+            from { width: 100%; }
+            to { width: 0; }
+        }
+
+        .typing {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #00ff00;
+            animation: 
+                typewriter 2s steps(40, end),
+                blink 1s step-end infinite;
+        }
+
+        .deleting {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid #00ff00;
+            animation: deleteText 1s steps(40, end);
         }
 
         /* Retro monitor effect */
@@ -168,20 +182,40 @@
             background-size: 100% 4px;
             pointer-events: none;
             z-index: 999;
+            opacity: 0.1;
+        }
+
+        .screen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at center,
+                transparent 0%,
+                rgba(0, 0, 0, 0.2) 100%
+            );
+            pointer-events: none;
+            z-index: 998;
+        }
+
+        .loading .btn {
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
     <div class="scanline"></div>
-    <div class="notification-bar" id="notificationBar"></div>
+    <div class="screen-overlay"></div>
     
     <div class="login-container">
         <div class="login-header">
             <h1 class="login-title">SANAYİKAPISI</h1>
-            <p class="login-subtitle">SİSTEM GİRİŞİ_<span class="cursor">█</span></p>
+            <p class="login-subtitle" id="loginSubtitle">SİSTEM GİRİŞİ_<span class="cursor">█</span></p>
         </div>
 
-        <form id="loginForm" onsubmit="handleLogin(event)">
+        <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
             <div class="form-group">
                 <label class="form-label" for="email">E-POSTA:</label>
                 <input type="email" 
@@ -211,55 +245,125 @@
     </div>
 
     <div class="version">v1.0.0</div>
-        <script>
+    <script>
         const CONFIG = {
             API_URL: 'https://eticaret-glif.onrender.com/api',
-            TOKEN_KEY: 'sk_admin_token'
+            TOKEN_KEY: 'sk_admin_token',
+            MAX_LOGIN_ATTEMPTS: 3,
+            LOCKOUT_DURATION: 5 * 60 * 1000, // 5 dakika
+            REQUEST_TIMEOUT: 10000 // 10 saniye
         };
 
-        const UIManager = {
+        const SecurityUtils = {
+            attempts: parseInt(localStorage.getItem('loginAttempts') || '0'),
+            lastAttempt: parseInt(localStorage.getItem('lastAttempt') || '0'),
+            lockoutEnd: parseInt(localStorage.getItem('lockoutEnd') || '0'),
+
+            checkSecurity() {
+                const now = Date.now();
+
+                // Kilit kontrolü
+                if (this.lockoutEnd > now) {
+                    const remainingMinutes = Math.ceil((this.lockoutEnd - now) / 60000);
+                    throw new Error(`SİSTEM ${remainingMinutes} DAKİKA KİLİTLİ`);
+                }
+
+                // Deneme sayısı kontrolü
+                if (this.attempts >= CONFIG.MAX_LOGIN_ATTEMPTS) {
+                    this.lockSystem();
+                    throw new Error(`ÇOK FAZLA BAŞARISIZ GİRİŞ`);
+                }
+
+                // Hızlı deneme kontrolü
+                if (now - this.lastAttempt < 2000) {
+                    throw new Error('ÇOK HIZLI DENEME');
+                }
+
+                this.lastAttempt = now;
+                localStorage.setItem('lastAttempt', now.toString());
+            },
+
+            incrementAttempts() {
+                this.attempts++;
+                localStorage.setItem('loginAttempts', this.attempts.toString());
+            },
+
+            lockSystem() {
+                this.lockoutEnd = Date.now() + CONFIG.LOCKOUT_DURATION;
+                localStorage.setItem('lockoutEnd', this.lockoutEnd.toString());
+            },
+
+            resetSecurity() {
+                this.attempts = 0;
+                this.lastAttempt = 0;
+                this.lockoutEnd = 0;
+                localStorage.removeItem('loginAttempts');
+                localStorage.removeItem('lastAttempt');
+                localStorage.removeItem('lockoutEnd');
+            },
+
+            validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            },
+
+            validatePassword(password) {
+                return password.length >= 6;
+            }
+        };
+
+        const TerminalUI = {
+            async typeMessage(message, type = 'info') {
+                const subtitle = document.getElementById('loginSubtitle');
+                const originalText = 'SİSTEM GİRİŞİ_█';
+                
+                // Mevcut metni sil
+                subtitle.innerHTML = `<span class="deleting">${subtitle.textContent}</span>`;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Yeni mesajı yaz
+                subtitle.innerHTML = `<span class="typing" style="color: ${type === 'error' ? '#ff0000' : '#00ff00'}">${message}_█</span>`;
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                // Mesajı sil
+                subtitle.innerHTML = `<span class="deleting" style="color: ${type === 'error' ? '#ff0000' : '#00ff00'}">${message}_█</span>`;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Orijinal metni geri yaz
+                subtitle.innerHTML = `<span class="typing">${originalText}</span>`;
+            },
+
             setLoading(isLoading) {
                 const button = document.getElementById('loginButton');
                 if (isLoading) {
-                    button.classList.add('loading');
-                    button.textContent = 'GİRİŞ YAPILIYOR...';
+                    button.disabled = true;
+                    button.textContent = 'İŞLEM YAPILIYOR...';
                 } else {
-                    button.classList.remove('loading');
+                    button.disabled = false;
                     button.textContent = 'GİRİŞ YAP';
                 }
             },
 
             showError(elementId, message) {
+                const input = document.getElementById(elementId.replace('Error', ''));
                 const error = document.getElementById(elementId);
+                input.classList.add('error');
                 error.textContent = message;
                 error.style.display = 'block';
             },
 
             hideError(elementId) {
+                const input = document.getElementById(elementId.replace('Error', ''));
                 const error = document.getElementById(elementId);
+                input.classList.remove('error');
                 error.style.display = 'none';
-            },
-
-            showNotification(message, type = 'error') {
-                const notificationBar = document.getElementById('notificationBar');
-                
-                // Önceki bildirimi temizle
-                clearTimeout(notificationBar.timeout);
-                
-                // Yeni bildirimi göster
-                notificationBar.textContent = message;
-                notificationBar.className = `notification-bar ${type}`;
-                notificationBar.style.display = 'block';
-                
-                // 3 saniye sonra bildirimi kaldır
-                notificationBar.timeout = setTimeout(() => {
-                    notificationBar.style.display = 'none';
-                }, 3000);
             }
         };
 
         const ApiService = {
             async login(email, password) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
+
                 try {
                     const response = await fetch(`${CONFIG.API_URL}/admin/login`, {
                         method: 'POST',
@@ -267,18 +371,22 @@
                             'Content-Type': 'application/json',
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ email, password })
+                        body: JSON.stringify({ email, password }),
+                        signal: controller.signal
                     });
 
-                    const data = await response.json();
+                    clearTimeout(timeoutId);
 
                     if (!response.ok) {
-                        throw new Error(data.message || 'Giriş başarısız');
+                        throw new Error('GİRİŞ BAŞARISIZ');
                     }
 
-                    return data;
+                    return await response.json();
                 } catch (error) {
-                    throw new Error('Sunucu bağlantısı başarısız');
+                    if (error.name === 'AbortError') {
+                        throw new Error('SUNUCU YANITLAMADI');
+                    }
+                    throw error;
                 }
             }
         };
@@ -290,31 +398,36 @@
             const email = form.email.value.trim();
             const password = form.password.value;
 
-            // Hata mesajlarını temizle
-            UIManager.hideError('emailError');
-            UIManager.hideError('passwordError');
-
-            // Basit validasyon
-            if (!email.includes('@')) {
-                UIManager.showError('emailError', 'GEÇERSİZ E-POSTA');
-                return;
-            }
-
-            if (password.length < 6) {
-                UIManager.showError('passwordError', 'ŞİFRE ÇOK KISA');
-                return;
-            }
+            TerminalUI.hideError('emailError');
+            TerminalUI.hideError('passwordError');
 
             try {
-                UIManager.setLoading(true);
+                // Güvenlik kontrolleri
+                SecurityUtils.checkSecurity();
+
+                // Validasyonlar
+                if (!SecurityUtils.validateEmail(email)) {
+                    TerminalUI.showError('emailError', 'GEÇERSİZ E-POSTA');
+                    await TerminalUI.typeMessage('GEÇERSİZ E-POSTA', 'error');
+                    return;
+                }
+
+                if (!SecurityUtils.validatePassword(password)) {
+                    TerminalUI.showError('passwordError', 'ŞİFRE ÇOK KISA');
+                    await TerminalUI.typeMessage('ŞİFRE ÇOK KISA', 'error');
+                    return;
+                }
+
+                TerminalUI.setLoading(true);
+                await TerminalUI.typeMessage('GİRİŞ KONTROL EDİLİYOR...');
 
                 const response = await ApiService.login(email, password);
 
                 if (response.success) {
                     sessionStorage.setItem(CONFIG.TOKEN_KEY, response.token);
-                    UIManager.showNotification('GİRİŞ BAŞARILI', 'success');
+                    SecurityUtils.resetSecurity();
+                    await TerminalUI.typeMessage('GİRİŞ BAŞARILI', 'success');
                     
-                    // Kısa bir gecikme ile yönlendir
                     setTimeout(() => {
                         window.location.href = '/admin-panel';
                     }, 1000);
@@ -324,17 +437,26 @@
 
             } catch (error) {
                 console.error('Login error:', error);
-                UIManager.showNotification(error.message);
+                SecurityUtils.incrementAttempts();
+                await TerminalUI.typeMessage(error.message, 'error');
             } finally {
-                UIManager.setLoading(false);
+                TerminalUI.setLoading(false);
             }
         }
 
-        // Sayfa yüklendiğinde token kontrolü
+        // Sayfa yüklendiğinde
         document.addEventListener('DOMContentLoaded', () => {
+            // Token kontrolü
             const token = sessionStorage.getItem(CONFIG.TOKEN_KEY);
             if (token) {
                 window.location.href = '/admin-panel';
+            }
+
+            // Kilit kontrolü
+            const lockoutEnd = parseInt(localStorage.getItem('lockoutEnd') || '0');
+            if (lockoutEnd > Date.now()) {
+                const remainingMinutes = Math.ceil((lockoutEnd - Date.now()) / 60000);
+                TerminalUI.typeMessage(`SİSTEM ${remainingMinutes} DAKİKA KİLİTLİ`, 'error');
             }
         });
     </script>
