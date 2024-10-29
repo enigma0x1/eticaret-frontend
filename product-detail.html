@@ -2,80 +2,42 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <!-- Önce meta tag'ler -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, private">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="-1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="IndustryHub Pro - Endüstriyel Ürün Kataloğu">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- SEO Meta Etiketleri -->
+    <meta name="description" content="IndustryHub Pro - Endüstriyel Ürün Detayları">
+    <meta name="keywords" content="endüstriyel, ürünler, sanayi">
+    <meta name="author" content="IndustryHub Pro">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Etiketleri -->
+    <meta property="og:title" content="IndustryHub Pro - Ürün Detayı">
+    <meta property="og:description" content="Endüstriyel ürün detayları ve teknik özellikleri">
+    <meta property="og:image" content="/path/to/image.jpg">
+    <meta property="og:url" content="https://yourwebsite.com/product">
+    
+    <!-- Twitter Card Meta Etiketleri -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="IndustryHub Pro - Ürün Detayı">
+    <meta name="twitter:description" content="Endüstriyel ürün detayları ve teknik özellikleri">
+    <meta name="twitter:image" content="/path/to/image.jpg">
+    
     <title>IndustryHub Pro - Ürün Detayı</title>
 
-    <!-- Sonra auth.js -->
-    <script src="auth.js"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Icons -->
+    <!-- CSS Kütüphaneleri -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Slider CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
-    
-    <!-- Select2 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-
-    <!-- Sayfa kontrolü için script -->
-    <script>
-        (function() {
-            function checkAuth() {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    document.body.style.display = 'none';
-                    window.location.replace('login');
-                    return false;
-                }
-                return true;
-            }
-    
-            if (!checkAuth()) return;
-    
-            window.history.pushState(null, document.title, window.location.href);
-            window.addEventListener('popstate', function() {
-                window.history.pushState(null, document.title, window.location.href);
-                checkAuth();
-            });
-    
-            document.addEventListener('visibilitychange', function() {
-                if (document.visibilityState === 'visible') {
-                    checkAuth();
-                }
-            });
-    
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'token' && !e.newValue) {
-                    document.body.style.display = 'none';
-                    window.location.replace('login');
-                }
-            });
-    
-            document.addEventListener('contextmenu', function(e) {
-                if (!localStorage.getItem('token')) {
-                    e.preventDefault();
-                }
-            });
-    
-            document.addEventListener('keydown', function(e) {
-                if (!localStorage.getItem('token') && e.key === 'F12') {
-                    e.preventDefault();
-                }
-            });
-        })();
-    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
     <style>
-        /* Root Variables */
+        /* CSS Variables */
         :root {
             --primary-color: #2563eb;
             --primary-dark: #1e40af;
@@ -97,13 +59,9 @@
             --radius-sm: 0.375rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
-            --radius-full: 9999px;
             
             --transition-base: all 0.3s ease;
             --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            
-            --container-width: 1400px;
-            --header-height: 4rem;
         }
 
         /* Reset & Base Styles */
@@ -120,7 +78,14 @@
             line-height: 1.5;
         }
 
-        /* Header Styles */
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Header */
         .header {
             background: var(--white);
             box-shadow: var(--shadow-sm);
@@ -130,24 +95,316 @@
         }
 
         .header-container {
-            max-width: var(--container-width);
-            margin: 0 auto;
-            padding: 1rem;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            height: 4rem;
         }
 
         .logo {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            text-decoration: none;
-            color: var(--primary-color);
+            font-size: 1.25rem;
             font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
         }
 
-        /* Loading Overlay */
+        /* Navigation */
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition-base);
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        /* Product Gallery */
+        .product-gallery {
+            position: relative;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .gallery-main {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .gallery-main img {
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
+            border-radius: var(--radius-md);
+        }
+
+        .gallery-thumbs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .gallery-thumb {
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            transition: var(--transition-base);
+        }
+
+        .gallery-thumb.active {
+            border-color: var(--primary-color);
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: calc(var(--radius-sm) - 2px);
+        }
+
+        /* Product Info */
+        .product-info {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .current-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .old-price {
+            font-size: 1.25rem;
+            text-decoration: line-through;
+            color: var(--text-light);
+        }
+
+        .discount-badge {
+            background: var(--danger-color);
+            color: var(--white);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+        }
+
+        /* Variants */
+        .product-variants {
+            margin-bottom: 1.5rem;
+        }
+
+        .variant-group {
+            margin-bottom: 1rem;
+        }
+
+        .variant-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .variant-options {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+                .variant-option {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+
+        .variant-option.active {
+            border-color: var(--primary-color);
+            background: var(--primary-light);
+            color: var(--white);
+        }
+
+        /* Add to Cart Section */
+        .add-to-cart-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-input {
+            width: 120px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .add-to-cart-btn {
+            flex: 1;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+
+        .add-to-cart-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Product Tabs */
+        .product-tabs {
+            margin-top: 2rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .tab-button {
+            padding: 1rem 2rem;
+            border: none;
+            background: none;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: var(--transition-base);
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            padding: 1rem 0;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            margin-top: 2rem;
+        }
+
+        .review-item {
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .review-rating {
+            color: var(--warning-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Similar Products */
+        .similar-products {
+            margin-top: 3rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: var(--transition-base);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery-main img {
+                height: 300px;
+            }
+
+            .tab-buttons {
+                flex-wrap: wrap;
+            }
+
+            .tab-button {
+                flex: 1;
+                padding: 0.75rem;
+                text-align: center;
+            }
+
+            .add-to-cart-section {
+                flex-direction: column;
+            }
+
+            .quantity-input {
+                width: 100%;
+            }
+        }
+
+        /* Loading & Notifications */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -162,9 +419,9 @@
         }
 
         .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
             border-top-color: var(--primary-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -174,178 +431,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Product Detail Styles */
-        .product-detail {
-            max-width: var(--container-width);
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .product-detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            padding: 2rem;
-        }
-
-        /* Image Gallery */
-        .product-gallery {
-            position: relative;
-        }
-
-        .main-image {
-            width: 100%;
-            height: 400px;
-            object-fit: contain;
-            border-radius: var(--radius-md);
-            margin-bottom: 1rem;
-        }
-
-        .thumbnail-container {
-            display: flex;
-            gap: 0.5rem;
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-        }
-
-        .thumbnail {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: var(--transition-base);
-        }
-
-        .thumbnail.active {
-            border-color: var(--primary-color);
-        }
-
-        /* Product Info */
-        .product-info {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .product-header {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
-
-        .product-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-meta {
-            display: flex;
-            gap: 1rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        .product-price-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .current-price {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .old-price {
-            font-size: 1.2rem;
-            text-decoration: line-through;
-            color: var(--text-light);
-        }
-
-        .discount-badge {
-            background: var(--danger-color);
-            color: var(--white);
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.9rem;
-        }
-
-        /* Add to Cart Section */
-        .add-to-cart-section {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .quantity-input {
-            width: 100px;
-            padding: 0.5rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            text-align: center;
-        }
-
-        .add-to-cart-btn {
-            flex: 1;
-            padding: 1rem;
-            font-size: 1.1rem;
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: var(--transition-base);
-        }
-
-        .add-to-cart-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Product Details Tabs */
-        .product-tabs {
-            margin-top: 2rem;
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .tab-button {
-            padding: 1rem 2rem;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--text-light);
-            border-bottom: 2px solid transparent;
-        }
-
-        .tab-button.active {
-            color: var(--primary-color);
-            border-bottom-color: var(--primary-color);
-        }
-
-        .tab-content {
-            padding: 2rem 0;
-        }
-
-        .tab-pane {
-            display: none;
-        }
-
-        .tab-pane.active {
-            display: block;
-        }
-
-        /* Notification */
         .notification {
             position: fixed;
             bottom: 20px;
@@ -361,38 +446,9 @@
             animation: slideIn 0.3s ease;
         }
 
-        .notification.success {
-            border-left: 4px solid var(--success-color);
-        }
-
-        .notification.error {
-            border-left: 4px solid var(--danger-color);
-        }
-
         @keyframes slideIn {
             from { transform: translateX(100%); }
             to { transform: translateX(0); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .product-detail-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .main-image {
-                height: 300px;
-            }
-
-            .tab-buttons {
-                flex-wrap: wrap;
-            }
-
-            .tab-button {
-                flex: 1;
-                padding: 0.75rem;
-                text-align: center;
-            }
         }
     </style>
 </head>
@@ -404,35 +460,37 @@
 
     <!-- Header -->
     <header class="header">
-        <div class="header-container">
+        <div class="container header-container">
             <a href="/" class="logo">
                 <i class="fas fa-industry"></i>
                 IndustryHub Pro
             </a>
             <nav class="nav-menu">
                 <a href="/products" class="nav-link">Ürünler</a>
-                <a href="/cart" class="cart-link">
+                <a href="/cart" class="nav-link">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
+                    <span id="cartCount">0</span>
                 </a>
             </nav>
         </div>
     </header>
 
-    <!-- Product Detail -->
-    <main class="product-detail">
-        <div class="product-detail-grid">
-            <!-- Product Gallery -->
-            <div class="product-gallery">
-                <img src="" alt="" class="main-image" id="mainImage">
-                <div class="thumbnail-container" id="thumbnailContainer">
-                    <!-- Thumbnails will be added dynamically -->
+    <!-- Main Content -->
+    <main class="container">
+        <div class="product-detail">
+            <div class="product-detail-grid">
+                <!-- Product Gallery -->
+                <div class="product-gallery">
+                    <div class="gallery-main">
+                        <img src="" alt="" id="mainImage">
+                    </div>
+                    <div class="gallery-thumbs" id="thumbnailContainer">
+                        <!-- Thumbnails will be added dynamically -->
+                    </div>
                 </div>
-            </div>
 
-            <!-- Product Info -->
-            <div class="product-info">
-                <div class="product-header">
+                <!-- Product Info -->
+                <div class="product-info">
                     <h1 class="product-title" id="productTitle"></h1>
                     <div class="product-meta">
                         <span class="manufacturer">
@@ -441,58 +499,77 @@
                         </span>
                         <span class="category">
                             <i class="fas fa-folder"></i>
-                            <span id="category"></span>
+                                                        <span id="category"></span>
                         </span>
                     </div>
-                </div>
 
-                <div class="product-price-section">
-                    <span class="current-price" id="currentPrice"></span>
-                    <span class="old-price" id="oldPrice"></span>
-                    <span class="discount-badge" id="discountBadge"></span>
-                </div>
-
-                <div class="add-to-cart-section">
-                    <input type="number" min="1" value="1" class="quantity-input" id="quantity">
-                    <button class="btn btn-primary add-to-cart-btn" id="addToCartBtn">
-                        <i class="fas fa-shopping-cart"></i>
-                        Sepete Ekle
-                    </button>
-                </div>
-
-                <!-- Product Tabs -->
-                <div class="product-tabs">
-                    <div class="tab-buttons">
-                        <button class="tab-button active" data-tab="description">Açıklama</button>
-                        <button class="tab-button" data-tab="specifications">Teknik Özellikler</button>
-                        <button class="tab-button" data-tab="reviews">Değerlendirmeler</button>
+                    <div class="product-price">
+                        <span class="current-price" id="currentPrice"></span>
+                        <span class="old-price" id="oldPrice"></span>
+                        <span class="discount-badge" id="discountBadge"></span>
                     </div>
 
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="description">
-                            <!-- Description content -->
+                    <!-- Product Variants -->
+                    <div class="product-variants" id="productVariants">
+                        <!-- Variants will be added dynamically -->
+                    </div>
+
+                    <!-- Stock Status -->
+                    <div class="stock-status" id="stockStatus">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Stokta</span>
+                    </div>
+
+                    <!-- Add to Cart Section -->
+                    <div class="add-to-cart-section">
+                        <input type="number" min="1" value="1" class="quantity-input" id="quantity">
+                        <button class="add-to-cart-btn" id="addToCartBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sepete Ekle
+                        </button>
+                    </div>
+
+                    <!-- Product Tabs -->
+                    <div class="product-tabs">
+                        <div class="tab-buttons">
+                            <button class="tab-button active" data-tab="description">Açıklama</button>
+                            <button class="tab-button" data-tab="specifications">Teknik Özellikler</button>
+                            <button class="tab-button" data-tab="reviews">Değerlendirmeler</button>
                         </div>
-                        <div class="tab-pane" id="specifications">
-                            <!-- Specifications content -->
-                        </div>
-                        <div class="tab-pane" id="reviews">
-                            <!-- Reviews content -->
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="description"></div>
+                            <div class="tab-pane" id="specifications"></div>
+                            <div class="tab-pane" id="reviews"></div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Similar Products -->
+            <section class="similar-products">
+                <h2>Benzer Ürünler</h2>
+                <div class="products-grid" id="similarProducts">
+                    <!-- Similar products will be added dynamically -->
+                </div>
+            </section>
         </div>
     </main>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
     <script>
-        // API URL
-        const API_URL = 'https://eticaret-glif.onrender.com/api';
+        // Constants
+        const API_URL = 'https://api.example.com';
+        const TOKEN = localStorage.getItem('token');
 
-        // State Management
+        // State
         let currentProduct = null;
+        let selectedVariants = new Map();
 
-        // Helper Functions
-        function showLoading(show) {
+        // Utility Functions
+        function showLoading(show = true) {
             document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
         }
 
@@ -503,12 +580,8 @@
                 <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
                 <span>${message}</span>
             `;
-            
             document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            setTimeout(() => notification.remove(), 3000);
         }
 
         function formatPrice(price) {
@@ -524,137 +597,147 @@
 
         // Product Management
         async function loadProduct() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
-
-            if (!productId) {
-                window.location.href = '/products';
-                return;
-            }
-
             try {
-                showLoading(true);
+                showLoading();
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('id');
+
+                if (!productId) {
+                    window.location.href = '/products';
+                    return;
+                }
+
                 const response = await fetch(`${API_URL}/products/${productId}`, {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        'Authorization': `Bearer ${TOKEN}`
                     }
                 });
-                
+
                 const data = await response.json();
 
                 if (data.success) {
                     currentProduct = data.product;
                     updateProductDetails(data.product);
+                    loadSimilarProducts(data.product.category);
                 } else {
-                    throw new Error('Ürün bulunamadı');
+                    throw new Error(data.message || 'Ürün yüklenemedi');
                 }
             } catch (error) {
                 console.error('Ürün yükleme hatası:', error);
-                showNotification('Ürün yüklenirken bir hata oluştu', 'error');
+                showNotification(error.message, 'error');
             } finally {
                 showLoading(false);
             }
         }
 
         function updateProductDetails(product) {
-            // Ana resmi güncelle
+            // Update main image and thumbnails
             const mainImage = document.getElementById('mainImage');
-            mainImage.src = product.image ? `${API_URL}/uploads/${product.image}` : 'placeholder.jpg';
+            mainImage.src = product.image;
             mainImage.alt = product.title;
 
-            // Thumbnail'ları güncelle
-            if (product.images && product.images.length > 0) {
-                const thumbnailContainer = document.getElementById('thumbnailContainer');
-                thumbnailContainer.innerHTML = product.images.map((image, index) => `
-                    <img src="${API_URL}/uploads/${image}"
-                         alt="${product.title} - ${index + 1}"
-                         class="thumbnail ${index === 0 ? 'active' : ''}"
-                         onclick="updateMainImage(this.src, this)">
-                `).join('');
-            }
+            const thumbnailContainer = document.getElementById('thumbnailContainer');
+            thumbnailContainer.innerHTML = product.images.map((image, index) => `
+                <div class="gallery-thumb ${index === 0 ? 'active' : ''}" onclick="updateMainImage('${image}', this)">
+                    <img src="${image}" alt="${product.title} - ${index + 1}">
+                </div>
+            `).join('');
 
-            // Başlık ve meta bilgilerini güncelle
+            // Update product info
             document.getElementById('productTitle').textContent = product.title;
-            document.getElementById('manufacturer').textContent = product.manufacturer || 'Belirtilmemiş';
-            document.getElementById('category').textContent = product.category || 'Kategorisiz';
+            document.getElementById('manufacturer').textContent = product.manufacturer;
+            document.getElementById('category').textContent = product.category;
 
-            // Fiyat bilgilerini güncelle
+            // Update price
             document.getElementById('currentPrice').textContent = formatPrice(product.price);
-            
-            if (product.oldPrice && product.oldPrice > product.price) {
+            if (product.oldPrice) {
                 document.getElementById('oldPrice').textContent = formatPrice(product.oldPrice);
                 document.getElementById('discountBadge').textContent = 
                     `%${calculateDiscount(product.price, product.oldPrice)} İndirim`;
-            } else {
-                document.getElementById('oldPrice').style.display = 'none';
-                document.getElementById('discountBadge').style.display = 'none';
             }
 
-            // Tab içeriklerini güncelle
-            document.getElementById('description').innerHTML = product.description || 'Ürün açıklaması bulunmuyor.';
+            // Update variants
+            if (product.variants) {
+                updateVariants(product.variants);
+            }
+
+            // Update tabs
+            document.getElementById('description').innerHTML = product.description;
             document.getElementById('specifications').innerHTML = formatSpecifications(product.specifications);
-            updateReviewsTab(product.reviews);
+            updateReviews(product.reviews);
         }
 
-        function formatSpecifications(specs) {
-            if (!specs || Object.keys(specs).length === 0) {
-                return 'Teknik özellikler bulunmuyor.';
-            }
-
-            return `
-                <table class="specs-table">
-                    ${Object.entries(specs).map(([key, value]) => `
-                        <tr>
-                            <th>${key}</th>
-                            <td>${value}</td>
-                        </tr>
-                    `).join('')}
-                </table>
-            `;
+        function updateMainImage(src, thumbnail) {
+            document.getElementById('mainImage').src = src;
+            document.querySelectorAll('.gallery-thumb').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            thumbnail.classList.add('active');
         }
 
-        function updateReviewsTab(reviews) {
-            const reviewsContainer = document.getElementById('reviews');
-            if (!reviews || reviews.length === 0) {
-                reviewsContainer.innerHTML = 'Henüz değerlendirme yapılmamış.';
-                return;
-            }
-
-            reviewsContainer.innerHTML = reviews.map(review => `
-                <div class="review-item">
-                    <div class="review-header">
-                        <span class="review-author">${review.user.name}</span>
-                        <span class="review-date">${new Date(review.createdAt).toLocaleDateString()}</span>
+        function updateVariants(variants) {
+            const variantsContainer = document.getElementById('productVariants');
+            variantsContainer.innerHTML = Object.entries(variants).map(([type, options]) => `
+                <div class="variant-group">
+                    <label>${type}</label>
+                    <div class="variant-options">
+                        ${options.map(option => `
+                            <button class="variant-option" 
+                                    data-type="${type}" 
+                                    data-value="${option}"
+                                    onclick="selectVariant('${type}', '${option}', this)">
+                                ${option}
+                            </button>
+                        `).join('')}
                     </div>
-                    <div class="review-rating">
-                        ${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}
-                    </div>
-                    <div class="review-content">${review.comment}</div>
                 </div>
             `).join('');
         }
 
-        // Cart Management
-        async function addToCart() {
+        function selectVariant(type, value, button) {
+            // Remove active class from other options of same type
+            button.closest('.variant-options').querySelectorAll('.variant-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            
+            button.classList.add('active');
+            selectedVariants.set(type, value);
+            updatePrice();
+        }
+
+        function updatePrice() {
             if (!currentProduct) return;
 
-            const quantity = parseInt(document.getElementById('quantity').value);
-            if (quantity < 1) {
-                showNotification('Lütfen geçerli bir miktar girin', 'error');
-                return;
-            }
+            let finalPrice = currentProduct.price;
+            
+            // Apply variant price modifications if any
+            selectedVariants.forEach((value, type) => {
+                const variantPrice = currentProduct.variantPrices?.[type]?.[value] || 0;
+                finalPrice += variantPrice;
+            });
 
+            document.getElementById('currentPrice').textContent = formatPrice(finalPrice);
+        }
+
+        async function addToCart() {
             try {
-                showLoading(true);
+                showLoading();
+                const quantity = parseInt(document.getElementById('quantity').value);
+
+                if (quantity < 1) {
+                    throw new Error('Geçerli bir miktar giriniz');
+                }
+
                 const response = await fetch(`${API_URL}/cart/add`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        'Authorization': `Bearer ${TOKEN}`
                     },
                     body: JSON.stringify({
                         productId: currentProduct._id,
-                        quantity: quantity
+                        quantity,
+                        variants: Object.fromEntries(selectedVariants)
                     })
                 });
 
@@ -662,9 +745,9 @@
 
                 if (data.success) {
                     showNotification('Ürün sepete eklendi');
-                    updateCartCount(data.cart.itemCount);
+                    updateCartCount(data.cartCount);
                 } else {
-                    throw new Error(data.message || 'Bir hata oluştu');
+                    throw new Error(data.message || 'Sepete eklenemedi');
                 }
             } catch (error) {
                 console.error('Sepete ekleme hatası:', error);
@@ -674,42 +757,28 @@
             }
         }
 
-        function updateCartCount(count) {
-            document.getElementById('cartCount').textContent = count;
-        }
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProduct();
 
-        // Tab Management
-        function setupTabs() {
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabPanes = document.querySelectorAll('.tab-pane');
-
-            tabButtons.forEach(button => {
+            // Tab switching
+            document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', () => {
                     const tabName = button.dataset.tab;
-
-                    tabButtons.forEach(btn => btn.classList.remove('active'));
-                    tabPanes.forEach(pane => pane.classList.remove('active'));
+                    
+                    document.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelectorAll('.tab-pane').forEach(pane => {
+                        pane.classList.remove('active');
+                    });
 
                     button.classList.add('active');
                     document.getElementById(tabName).classList.add('active');
                 });
             });
-        }
 
-        // Image Gallery Management
-        function updateMainImage(src, thumbnail) {
-            document.getElementById('mainImage').src = src;
-            document.querySelectorAll('.thumbnail').forEach(thumb => {
-                thumb.classList.remove('active');
-            });
-            thumbnail.classList.add('active');
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            loadProduct();
-            setupTabs();
-
+            // Add to cart button
             document.getElementById('addToCartBtn').addEventListener('click', addToCart);
         });
     </script>
