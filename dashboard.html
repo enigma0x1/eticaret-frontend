@@ -1252,7 +1252,7 @@
             async addToCart(productId, quantity = 1) {
                 try {
                     if (!auth.isAuthenticated()) {
-                        window.location.href = '/login.html';
+                        window.location.href = '/login"';
                         return;
                     }
         
@@ -1362,7 +1362,7 @@
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', () => {
                     auth.clearAuth();
-                    window.location.href = '/login.html';
+                    window.location.href = '/login"';
                 });
             }
         
@@ -1659,7 +1659,7 @@
                 if (!response.ok) {
                     if (response.status === 401) {
                         auth.clearAuth();
-                        window.location.href = '/login.html';
+                        window.location.href = '/login"';
                         return null;
                     }
                     throw new Error(response.statusText);
