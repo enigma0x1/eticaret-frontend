@@ -128,39 +128,12 @@
         }
 
         @keyframes blink {
+            0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
 
-        .cursor {
+        #loginSubtitle {
             animation: blink 1s step-end infinite;
-        }
-
-        @keyframes typewriter {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes deleteText {
-            from { width: 100%; }
-            to { width: 0; }
-        }
-
-        .typing {
-            display: inline-block;
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 2px solid #00ff00;
-            animation: 
-                typewriter 2s steps(40, end),
-                blink 1s step-end infinite;
-        }
-
-        .deleting {
-            display: inline-block;
-            overflow: hidden;
-            white-space: nowrap;
-            border-right: 2px solid #00ff00;
-            animation: deleteText 1s steps(40, end);
         }
 
         .scanline {
@@ -205,7 +178,7 @@
     <div class="login-container">
         <div class="login-header">
             <h1 class="login-title">SANAYİKAPISI</h1>
-            <p class="login-subtitle" id="loginSubtitle">SİSTEM GİRİŞİ_<span class="cursor">█</span></p>
+            <p class="login-subtitle" id="loginSubtitle">SİSTEM GİRİŞİ█</p>
         </div>
 
         <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
@@ -248,18 +221,35 @@
         const TerminalUI = {
             async typeMessage(message, type = 'info') {
                 const subtitle = document.getElementById('loginSubtitle');
-                const originalText = 'SİSTEM GİRİŞİ_█';
+                const originalText = 'SİSTEM GİRİŞİ';
+                const cursor = '█';
+                const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
                 
-                subtitle.innerHTML = `<span class="deleting">${subtitle.textContent}</span>`;
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                subtitle.innerHTML = `<span class="typing" style="color: ${type === 'error' ? '#ff0000' : '#00ff00'}">${message}_█</span>`;
-                await new Promise(resolve => setTimeout(resolve, 2000));
-
-                subtitle.innerHTML = `<span class="deleting" style="color: ${type === 'error' ? '#ff0000' : '#00ff00'}">${message}_█</span>`;
-                await new Promise(resolve => setTimeout(resolve, 1000));
-
-                subtitle.innerHTML = `<span class="typing">${originalText}</span>`;
+                // Mevcut metni sil
+                subtitle.innerHTML = '';
+                subtitle.style.color = type === 'error' ? '#ff0000' : '#00ff00';
+                
+                // Yeni mesajı yaz
+                for (let i = 0; i < message.length; i++) {
+                    subtitle.textContent = message.slice(0, i + 1) + cursor;
+                    await delay(50);
+                }
+                
+                // 2 saniye bekle
+                await delay(2000);
+                
+                // Mesajı karakterler halinde sil
+                for (let i = message.length; i >= 0; i--) {
+                    subtitle.textContent = message.slice(0, i) + cursor;
+                    await delay(50);
+                }
+                
+                // Orijinal mesajı yaz
+                subtitle.style.color = '#00ff00';
+                for (let i = 0; i < originalText.length; i++) {
+                    subtitle.textContent = originalText.slice(0, i + 1) + cursor;
+                    await delay(50);
+                }
             },
 
             setLoading(isLoading) {
@@ -295,7 +285,7 @@
             TerminalUI.hideError('passwordError');
 
             try {
-                 if (!email || !password) {
+                if (!email || !password) {
                     throw new Error('TÜM ALANLARI DOLDURUN');
                 }
 
