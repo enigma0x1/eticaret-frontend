@@ -182,20 +182,16 @@
         }
         /* Similar Products Styles */
         .similar-products {
-            margin-top: 3rem;
-            padding: 2rem 0;
+            margin: 3rem 0;
+            padding: 2rem;
             background: var(--white);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
         }
         
-        .products-slider {
-            position: relative;
+        .similarProductsSwiper {
             padding: 1rem;
-        }
-        
-        .swiper {
-            padding: 1rem;
+            margin: 0 -1rem;
         }
         
         .swiper-slide {
@@ -217,84 +213,77 @@
             box-shadow: var(--shadow-lg);
         }
         
-        .product-card .product-image {
+        .product-image {
             position: relative;
             padding-top: 75%;
             overflow: hidden;
         }
         
-        .product-card .product-image img {
+        .product-image img {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: var(--transition-base);
         }
         
-        .product-card:hover .product-image img {
-            transform: scale(1.1);
-        }
-        
-        .product-card .product-content {
+        .product-content {
             padding: 1rem;
         }
         
-        .product-card .product-category {
+        .product-category {
             font-size: 0.8rem;
             color: var(--text-light);
             margin-bottom: 0.5rem;
         }
         
-        .product-card .product-title {
+        .product-title {
             font-size: 1rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            color: var(--text-color);
         }
         
-        .product-card .product-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0.5rem;
-        }
-        
-        .product-card .product-rating {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-        
-        .product-card .rating-count {
-            font-size: 0.8rem;
-            color: var(--text-light);
-        }
-        
-        .product-card .product-price {
+        .product-price {
             font-weight: 600;
             color: var(--primary-color);
         }
         
-        .product-card .old-price {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            text-decoration: line-through;
-            margin-left: 0.5rem;
-        }
-        
+        /* Swiper Navigation Buttons */
         .swiper-button-next,
         .swiper-button-prev {
-            color: var(--primary-color);
-            background: var(--white);
             width: 40px;
             height: 40px;
+            background: var(--white);
             border-radius: 50%;
             box-shadow: var(--shadow-md);
+        }
+        
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        /* Swiper Pagination */
+        .swiper-pagination-bullet {
+            background: var(--primary-color);
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: var(--primary-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .similar-products {
+                padding: 1rem;
+            }
+            
+            .swiper-button-next,
+            .swiper-button-prev {
+                display: none;
+            }
         }
         
         .swiper-button-next:after,
@@ -1116,15 +1105,15 @@
         <!-- Similar Products -->
         <div class="similar-products">
             <h2 class="section-title">Benzer Ürünler</h2>
-            <div class="products-slider">
-                <div class="swiper" id="similarProductsSwiper">
-                    <div class="swiper-wrapper">
-                        <!-- Similar products will be loaded dynamically -->
-                    </div>
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+            <div class="swiper similarProductsSwiper">
+                <div class="swiper-wrapper">
+                    <!-- Similar products will be loaded dynamically -->
                 </div>
+                <!-- Navigation buttons -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <!-- Pagination -->
+                <div class="swiper-pagination"></div>
             </div>
         </div>
 
@@ -1391,26 +1380,47 @@
         }
     }
 
-    // Similar Products bölümünü güncelle
     async function loadSimilarProducts() {
         try {
-            const response = await fetchAPI(`/products/similar/${state.product._id}`);
-            if (response.success) {
-                state.similarProducts = response.products;
-                initializeSimilarProductsSlider();
-            }
+            // Örnek veri (API bağlantısı yokken test için)
+            const dummyProducts = [
+                {
+                    _id: '1',
+                    title: 'Benzer Ürün 1',
+                    price: 1999.99,
+                    images: ['product1.jpg'],
+                    category: 'Kategori 1',
+                    rating: 4.5,
+                    ratingCount: 12
+                },
+                {
+                    _id: '2',
+                    title: 'Benzer Ürün 2',
+                    price: 2999.99,
+                    images: ['product2.jpg'],
+                    category: 'Kategori 2',
+                    rating: 4.0,
+                    ratingCount: 8
+                },
+                // Daha fazla örnek ürün ekleyebilirsiniz
+            ];
+    
+            // API çağrısı yerine örnek veriyi kullan
+            // const response = await fetchAPI(`/products/similar/${state.product._id}`);
+            // if (response.success) {
+            //     state.similarProducts = response.products;
+            // }
+            
+            state.similarProducts = dummyProducts;
+            initializeSimilarProductsSlider();
         } catch (error) {
             console.error('Similar products loading error:', error);
-            // Hata durumunda UI'ı güncelle
-            document.querySelector('.similar-products').style.display = 'none';
         }
     }
-
+    
     function initializeSimilarProductsSlider() {
-        const swiperContainer = document.getElementById('similarProductsSwiper');
-        const swiperWrapper = swiperContainer.querySelector('.swiper-wrapper');
+        const swiperWrapper = document.querySelector('.similarProductsSwiper .swiper-wrapper');
         
-        // Benzer ürün yoksa bölümü gizle
         if (!state.similarProducts || state.similarProducts.length === 0) {
             document.querySelector('.similar-products').style.display = 'none';
             return;
@@ -1421,74 +1431,48 @@
             <div class="swiper-slide">
                 <div class="product-card" onclick="navigateToProduct('${product._id}')">
                     <div class="product-image">
-                        <img src="${product.images && product.images.length > 0 
-                            ? `${API_URL}/uploads/${product.images[0]}` 
-                            : 'placeholder.jpg'}" 
+                        <img src="https://picsum.photos/300/300?random=${product._id}" 
                              alt="${product.title}"
                              loading="lazy">
                     </div>
                     <div class="product-content">
                         <div class="product-category">${product.category || ''}</div>
                         <h3 class="product-title">${product.title}</h3>
-                        <div class="product-meta">
-                            <div class="product-rating">
-                                ${generateStars(product.rating || 0)}
-                                <span class="rating-count">(${product.ratingCount || 0})</span>
-                            </div>
-                            <div class="product-price">
-                                ${CURRENCY_FORMAT.format(product.price)}
-                                ${product.oldPrice ? `
-                                    <span class="old-price">
-                                        ${CURRENCY_FORMAT.format(product.oldPrice)}
-                                    </span>
-                                ` : ''}
-                            </div>
-                        </div>
+                        <div class="product-price">${CURRENCY_FORMAT.format(product.price)}</div>
                     </div>
                 </div>
             </div>
         `).join('');
     
         // Swiper'ı başlat
-        if (!swiperContainer.swiper) {
-            new Swiper(swiperContainer, {
-                slidesPerView: 'auto',
-                spaceBetween: 20,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+        new Swiper('.similarProductsSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 20,
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+                640: {
+                    slidesPerView: 2,
                 },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true
+                768: {
+                    slidesPerView: 3,
                 },
-                breakpoints: {
-                    320: {
-                        slidesPerView: 1,
-                        spaceBetween: 10
-                    },
-                    480: {
-                        slidesPerView: 2,
-                        spaceBetween: 15
-                    },
-                    768: {
-                        slidesPerView: 3,
-                        spaceBetween: 20
-                    },
-                    1024: {
-                        slidesPerView: 4,
-                        spaceBetween: 20
-                    }
+                1024: {
+                    slidesPerView: 4,
                 },
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false
-                },
-                loop: true
-            });
-        } else {
-            swiperContainer.swiper.update();
-        }
+            }
+        });
     }
 
     async function loadReviews() {
