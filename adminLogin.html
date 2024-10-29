@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SANAYİKAPISI - Admin Girişi</title>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,50 +13,44 @@
         }
 
         body {
-            font-family: 'IBM Plex Mono', monospace;
-            background: #2c3e50;
-            color: #ecf0f1;
+            font-family: 'VT323', monospace;
+            background: #000;
+            color: #00ff00;
             line-height: 1.6;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
-            background-image: 
-                linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAAZSURBVHjaYmBgYPgPxAwgwMSABAYGBgAAAAD//wMADIwDaT99w8QAAAAASUVORK5CYII=');
         }
 
         .login-container {
-            background: #34495e;
+            background: #000;
             padding: 30px;
-            border-radius: 5px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ff00;
             width: 100%;
             max-width: 400px;
-            border: 1px solid #465c71;
-            position: relative;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
         }
 
         .login-header {
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 2px solid #465c71;
+            border-bottom: 1px solid #00ff00;
             padding-bottom: 20px;
         }
 
         .login-title {
-            font-size: 24px;
-            color: #3498db;
+            font-size: 32px;
+            color: #00ff00;
             margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
         }
 
         .login-subtitle {
-            color: #95a5a6;
-            font-size: 14px;
+            color: #00ff00;
+            font-size: 18px;
+            opacity: 0.8;
         }
 
         .form-group {
@@ -66,58 +60,90 @@
         .form-label {
             display: block;
             margin-bottom: 8px;
-            color: #3498db;
-            font-size: 14px;
-            font-weight: 500;
+            color: #00ff00;
+            font-size: 18px;
         }
 
         .form-input {
             width: 100%;
-            padding: 10px;
-            background: #2c3e50;
-            border: 1px solid #465c71;
-            color: #ecf0f1;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            padding: 8px;
+            background: #000;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+            border-color: #00ff00;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.5);
         }
 
         .form-error {
-            color: #e74c3c;
-            font-size: 12px;
+            color: #ff0000;
+            font-size: 16px;
             margin-top: 5px;
             display: none;
         }
 
         .btn {
             width: 100%;
-            padding: 12px;
-            background: #3498db;
-            color: #fff;
-            border: none;
+            padding: 10px;
+            background: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
             cursor: pointer;
-            font-family: 'IBM Plex Mono', monospace;
-            font-size: 14px;
-            font-weight: 500;
+            font-family: 'VT323', monospace;
+            font-size: 20px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .btn:hover {
-            background: #2980b9;
+            background: #00ff00;
+            color: #000;
         }
 
-        .btn:active {
-            transform: translateY(1px);
+        .notification-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            color: #00ff00;
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+            border-bottom: 1px solid #00ff00;
+            display: none;
+            z-index: 1000;
+        }
+
+        .notification-bar.error {
+            color: #ff0000;
+            border-bottom-color: #ff0000;
+        }
+
+        .notification-bar.success {
+            color: #00ff00;
+            border-bottom-color: #00ff00;
+        }
+
+        .version {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #00ff00;
+            font-size: 16px;
+            opacity: 0.5;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .cursor {
+            animation: blink 1s step-end infinite;
         }
 
         .loading .btn {
@@ -125,107 +151,39 @@
             opacity: 0.7;
         }
 
-        .spinner {
-            display: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s linear infinite;
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .notification {
+        /* Retro monitor effect */
+        .scanline {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            background: #34495e;
-            border-left: 4px solid;
-            color: #fff;
-            font-size: 14px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            animation: slideIn 0.3s ease-out;
-            z-index: 1000;
-        }
-
-        .notification.error {
-            border-left-color: #e74c3c;
-        }
-
-        .notification.success {
-            border-left-color: #2ecc71;
-        }
-
-        .version {
-            position: absolute;
-            bottom: -30px;
-            right: 0;
-            color: #95a5a6;
-            font-size: 12px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Retro Terminal Effect */
-        .terminal-effect {
-            position: relative;
-        }
-
-        .terminal-effect::before {
-            content: '';
-            position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.15),
-                rgba(0, 0, 0, 0.15) 1px,
-                transparent 1px,
-                transparent 2px
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 0) 50%,
+                rgba(0, 0, 0, 0.2) 50%,
+                rgba(0, 0, 0, 0.2)
             );
+            background-size: 100% 4px;
             pointer-events: none;
-        }
-
-        .terminal-effect::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(
-                circle at center,
-                transparent 0%,
-                rgba(0, 0, 0, 0.2) 100%
-            );
-            pointer-events: none;
+            z-index: 999;
         }
     </style>
 </head>
 <body>
-    <div class="login-container terminal-effect">
+    <div class="scanline"></div>
+    <div class="notification-bar" id="notificationBar"></div>
+    
+    <div class="login-container">
         <div class="login-header">
             <h1 class="login-title">SANAYİKAPISI</h1>
-            <p class="login-subtitle">Admin Kontrol Paneli</p>
+            <p class="login-subtitle">SİSTEM GİRİŞİ_<span class="cursor">█</span></p>
         </div>
 
         <form id="loginForm" onsubmit="handleLogin(event)">
             <div class="form-group">
-                <label class="form-label" for="email">E-POSTA</label>
+                <label class="form-label" for="email">E-POSTA:</label>
                 <input type="email" 
                        id="email" 
                        name="email" 
@@ -237,7 +195,7 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="password">ŞİFRE</label>
+                <label class="form-label" for="password">ŞİFRE:</label>
                 <input type="password" 
                        id="password" 
                        name="password" 
@@ -247,188 +205,80 @@
             </div>
 
             <button type="submit" class="btn" id="loginButton">
-                <span>GİRİŞ YAP</span>
-                <div class="spinner" id="loginSpinner"></div>
+                GİRİŞ YAP
             </button>
         </form>
-
-        <div class="version">v1.0.0</div>
     </div>
-    <script>
+
+    <div class="version">v1.0.0</div>
+        <script>
         const CONFIG = {
             API_URL: 'https://eticaret-glif.onrender.com/api',
-            TOKEN_KEY: 'sk_admin_token',
-            MAX_LOGIN_ATTEMPTS: 3,
-            LOCKOUT_DURATION: 5 * 60 * 1000, // 5 dakika
-            REQUEST_TIMEOUT: 10000, // 10 saniye
-            VERSION: '1.0.0'
-        };
-
-        // Terminal efekti için typing animasyonu
-        class TerminalEffect {
-            static async typeText(element, text, speed = 50) {
-                element.textContent = '';
-                for (let char of text) {
-                    element.textContent += char;
-                    await new Promise(resolve => setTimeout(resolve, speed));
-                }
-            }
-
-            static async simulateLoading(message, duration) {
-                const loadingStates = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
-                let i = 0;
-                const interval = setInterval(() => {
-                    UIManager.showNotification(`${loadingStates[i]} ${message}`, 'info');
-                    i = (i + 1) % loadingStates.length;
-                }, 100);
-
-                await new Promise(resolve => setTimeout(resolve, duration));
-                clearInterval(interval);
-            }
-        }
-
-        const SecurityUtils = {
-            attempts: 0,
-            lastAttempt: 0,
-            isLocked: false,
-            lockoutEnd: 0,
-
-            checkRateLimit() {
-                const now = Date.now();
-                
-                if (this.isLocked) {
-                    if (now < this.lockoutEnd) {
-                        const remainingMinutes = Math.ceil((this.lockoutEnd - now) / 60000);
-                        throw new Error(`SİSTEM KİLİTLİ. ${remainingMinutes} DAKİKA SONRA TEKRAR DENEYİN.`);
-                    } else {
-                        this.resetLockout();
-                    }
-                }
-
-                if (now - this.lastAttempt < 2000) { // 2 saniye bekleme
-                    throw new Error('ÇOK HIZLI DENEME YAPIYORSUNUZ. LÜTFEN BEKLEYİN.');
-                }
-
-                if (this.attempts >= CONFIG.MAX_LOGIN_ATTEMPTS) {
-                    this.lockAccount();
-                    throw new Error(`MAKSİMUM DENEME SAYISI AŞILDI. ${CONFIG.LOCKOUT_DURATION/60000} DAKİKA BEKLEYİN.`);
-                }
-
-                this.lastAttempt = now;
-            },
-
-            lockAccount() {
-                this.isLocked = true;
-                this.lockoutEnd = Date.now() + CONFIG.LOCKOUT_DURATION;
-                localStorage.setItem('loginLockout', this.lockoutEnd);
-                
-                // Terminal efekti ile kilitleme animasyonu
-                TerminalEffect.typeText(
-                    document.querySelector('.login-subtitle'),
-                    'SİSTEM KİLİTLENDİ',
-                    100
-                );
-            },
-
-            resetLockout() {
-                this.isLocked = false;
-                this.attempts = 0;
-                this.lockoutEnd = 0;
-                localStorage.removeItem('loginLockout');
-                
-                // Normal subtitle'a dön
-                document.querySelector('.login-subtitle').textContent = 'Admin Kontrol Paneli';
-            },
-
-            validateEmail(email) {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            },
-
-            validatePassword(password) {
-                return password.length >= 6;
-            }
+            TOKEN_KEY: 'sk_admin_token'
         };
 
         const UIManager = {
-            async setLoading(isLoading) {
+            setLoading(isLoading) {
                 const button = document.getElementById('loginButton');
-                const spinner = document.getElementById('loginSpinner');
-                const span = button.querySelector('span');
-                
                 if (isLoading) {
                     button.classList.add('loading');
-                    spinner.style.display = 'block';
-                    await TerminalEffect.typeText(span, 'KONTROL EDİLİYOR...', 50);
+                    button.textContent = 'GİRİŞ YAPILIYOR...';
                 } else {
                     button.classList.remove('loading');
-                    spinner.style.display = 'none';
-                    span.textContent = 'GİRİŞ YAP';
+                    button.textContent = 'GİRİŞ YAP';
                 }
             },
 
             showError(elementId, message) {
                 const error = document.getElementById(elementId);
+                error.textContent = message;
                 error.style.display = 'block';
-                TerminalEffect.typeText(error, message, 30);
             },
 
             hideError(elementId) {
                 const error = document.getElementById(elementId);
                 error.style.display = 'none';
-                error.textContent = '';
             },
 
-            async showNotification(message, type = 'error') {
-                const existingNotification = document.querySelector('.notification');
-                if (existingNotification) {
-                    existingNotification.remove();
-                }
-
-                const notification = document.createElement('div');
-                notification.className = `notification ${type}`;
-                document.body.appendChild(notification);
+            showNotification(message, type = 'error') {
+                const notificationBar = document.getElementById('notificationBar');
                 
-                await TerminalEffect.typeText(notification, message, 30);
-
-                setTimeout(() => {
-                    notification.style.animation = 'slideOut 0.3s ease-in forwards';
-                    setTimeout(() => notification.remove(), 300);
+                // Önceki bildirimi temizle
+                clearTimeout(notificationBar.timeout);
+                
+                // Yeni bildirimi göster
+                notificationBar.textContent = message;
+                notificationBar.className = `notification-bar ${type}`;
+                notificationBar.style.display = 'block';
+                
+                // 3 saniye sonra bildirimi kaldır
+                notificationBar.timeout = setTimeout(() => {
+                    notificationBar.style.display = 'none';
                 }, 3000);
             }
         };
 
         const ApiService = {
             async login(email, password) {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
-
                 try {
-                    await TerminalEffect.simulateLoading('Bağlantı kuruluyor...', 1000);
-
                     const response = await fetch(`${CONFIG.API_URL}/admin/login`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ email, password }),
-                        signal: controller.signal
+                        body: JSON.stringify({ email, password })
                     });
-
-                    clearTimeout(timeoutId);
 
                     const data = await response.json();
 
                     if (!response.ok) {
-                        throw new Error(data.message || 'GİRİŞ BAŞARISIZ');
+                        throw new Error(data.message || 'Giriş başarısız');
                     }
 
                     return data;
                 } catch (error) {
-                    if (error.name === 'AbortError') {
-                        throw new Error('SUNUCU YANIT VERMİYOR');
-                    }
-                    throw error;
+                    throw new Error('Sunucu bağlantısı başarısız');
                 }
             }
         };
@@ -440,34 +290,34 @@
             const email = form.email.value.trim();
             const password = form.password.value;
 
+            // Hata mesajlarını temizle
             UIManager.hideError('emailError');
             UIManager.hideError('passwordError');
 
+            // Basit validasyon
+            if (!email.includes('@')) {
+                UIManager.showError('emailError', 'GEÇERSİZ E-POSTA');
+                return;
+            }
+
+            if (password.length < 6) {
+                UIManager.showError('passwordError', 'ŞİFRE ÇOK KISA');
+                return;
+            }
+
             try {
-                SecurityUtils.checkRateLimit();
-
-                if (!SecurityUtils.validateEmail(email)) {
-                    UIManager.showError('emailError', 'GEÇERSİZ E-POSTA ADRESİ');
-                    return;
-                }
-
-                if (!SecurityUtils.validatePassword(password)) {
-                    UIManager.showError('passwordError', 'ŞİFRE EN AZ 6 KARAKTER OLMALIDIR');
-                    return;
-                }
-
-                await UIManager.setLoading(true);
+                UIManager.setLoading(true);
 
                 const response = await ApiService.login(email, password);
 
                 if (response.success) {
                     sessionStorage.setItem(CONFIG.TOKEN_KEY, response.token);
-                    SecurityUtils.resetLockout();
+                    UIManager.showNotification('GİRİŞ BAŞARILI', 'success');
                     
-                    await UIManager.showNotification('GİRİŞ BAŞARILI. YÖNLENDİRİLİYOR...', 'success');
-                    await TerminalEffect.simulateLoading('Sistem hazırlanıyor...', 2000);
-                    
-                    window.location.href = '/admin-panel';
+                    // Kısa bir gecikme ile yönlendir
+                    setTimeout(() => {
+                        window.location.href = '/admin-panel';
+                    }, 1000);
                 } else {
                     throw new Error('GİRİŞ BAŞARISIZ');
                 }
@@ -475,37 +325,17 @@
             } catch (error) {
                 console.error('Login error:', error);
                 UIManager.showNotification(error.message);
-                SecurityUtils.attempts++;
             } finally {
                 UIManager.setLoading(false);
             }
         }
 
-        // Sayfa yüklendiğinde
+        // Sayfa yüklendiğinde token kontrolü
         document.addEventListener('DOMContentLoaded', () => {
-            // Versiyon numarasını göster
-            document.querySelector('.version').textContent = `v${CONFIG.VERSION}`;
-
-            // Kilitleme kontrolü
-            const lockoutEnd = localStorage.getItem('loginLockout');
-            if (lockoutEnd && Date.now() < parseInt(lockoutEnd)) {
-                SecurityUtils.isLocked = true;
-                SecurityUtils.lockoutEnd = parseInt(lockoutEnd);
-                SecurityUtils.checkRateLimit();
-            }
-
-            // Token kontrolü
             const token = sessionStorage.getItem(CONFIG.TOKEN_KEY);
             if (token) {
                 window.location.href = '/admin-panel';
             }
-
-            // Hoş geldin mesajı
-            TerminalEffect.typeText(
-                document.querySelector('.login-subtitle'),
-                'Admin Kontrol Paneli',
-                50
-            );
         });
     </script>
 </body>
