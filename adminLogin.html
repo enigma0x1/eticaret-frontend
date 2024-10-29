@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://eticaret-glif.onrender.com;">
     <title>SANAYİKAPISI - Admin Girişi</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
@@ -165,7 +163,6 @@
             animation: deleteText 1s steps(40, end);
         }
 
-        /* Retro monitor effect */
         .scanline {
             position: fixed;
             top: 0;
@@ -198,10 +195,6 @@
             );
             pointer-events: none;
             z-index: 998;
-        }
-
-        .loading .btn {
-            pointer-events: none;
         }
     </style>
 </head>
@@ -242,73 +235,14 @@
                 GİRİŞ YAP
             </button>
         </form>
+
+        <div class="version">v1.0.0</div>
     </div>
 
-    <div class="version">v1.0.0</div>
     <script>
         const CONFIG = {
             API_URL: 'https://eticaret-glif.onrender.com/api',
-            TOKEN_KEY: 'sk_admin_token',
-            MAX_LOGIN_ATTEMPTS: 3,
-            LOCKOUT_DURATION: 5 * 60 * 1000, // 5 dakika
-            REQUEST_TIMEOUT: 10000 // 10 saniye
-        };
-
-        const SecurityUtils = {
-            attempts: parseInt(localStorage.getItem('loginAttempts') || '0'),
-            lastAttempt: parseInt(localStorage.getItem('lastAttempt') || '0'),
-            lockoutEnd: parseInt(localStorage.getItem('lockoutEnd') || '0'),
-
-            checkSecurity() {
-                const now = Date.now();
-
-                // Kilit kontrolü
-                if (this.lockoutEnd > now) {
-                    const remainingMinutes = Math.ceil((this.lockoutEnd - now) / 60000);
-                    throw new Error(`SİSTEM ${remainingMinutes} DAKİKA KİLİTLİ`);
-                }
-
-                // Deneme sayısı kontrolü
-                if (this.attempts >= CONFIG.MAX_LOGIN_ATTEMPTS) {
-                    this.lockSystem();
-                    throw new Error(`ÇOK FAZLA BAŞARISIZ GİRİŞ`);
-                }
-
-                // Hızlı deneme kontrolü
-                if (now - this.lastAttempt < 2000) {
-                    throw new Error('ÇOK HIZLI DENEME');
-                }
-
-                this.lastAttempt = now;
-                localStorage.setItem('lastAttempt', now.toString());
-            },
-
-            incrementAttempts() {
-                this.attempts++;
-                localStorage.setItem('loginAttempts', this.attempts.toString());
-            },
-
-            lockSystem() {
-                this.lockoutEnd = Date.now() + CONFIG.LOCKOUT_DURATION;
-                localStorage.setItem('lockoutEnd', this.lockoutEnd.toString());
-            },
-
-            resetSecurity() {
-                this.attempts = 0;
-                this.lastAttempt = 0;
-                this.lockoutEnd = 0;
-                localStorage.removeItem('loginAttempts');
-                localStorage.removeItem('lastAttempt');
-                localStorage.removeItem('lockoutEnd');
-            },
-
-            validateEmail(email) {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-            },
-
-            validatePassword(password) {
-                return password.length >= 6;
-            }
+            TOKEN_KEY: 'admin_token'
         };
 
         const TerminalUI = {
@@ -316,31 +250,22 @@
                 const subtitle = document.getElementById('loginSubtitle');
                 const originalText = 'SİSTEM GİRİŞİ_█';
                 
-                // Mevcut metni sil
                 subtitle.innerHTML = `<span class="deleting">${subtitle.textContent}</span>`;
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
-                // Yeni mesajı yaz
                 subtitle.innerHTML = `<span class="typing" style="color: ${type === 'error' ? '#ff0000' : '#00ff00'}">${message}_█</span>`;
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
-                // Mesajı sil
                 subtitle.innerHTML = `<span class="deleting" style="color: ${type === 'error' ? '#ff0000' : '#00ff00'}">${message}_█</span>`;
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
-                // Orijinal metni geri yaz
                 subtitle.innerHTML = `<span class="typing">${originalText}</span>`;
             },
 
             setLoading(isLoading) {
                 const button = document.getElementById('loginButton');
-                if (isLoading) {
-                    button.disabled = true;
-                    button.textContent = 'İŞLEM YAPILIYOR...';
-                } else {
-                    button.disabled = false;
-                    button.textContent = 'GİRİŞ YAP';
-                }
+                button.disabled = isLoading;
+                button.textContent = isLoading ? 'İŞLEM YAPILIYOR...' : 'GİRİŞ YAP';
             },
 
             showError(elementId, message) {
@@ -359,38 +284,6 @@
             }
         };
 
-        const ApiService = {
-            async login(email, password) {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
-
-                try {
-                    const response = await fetch(`${CONFIG.API_URL}/admin/login`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({ email, password }),
-                        signal: controller.signal
-                    });
-
-                    clearTimeout(timeoutId);
-
-                    if (!response.ok) {
-                        throw new Error('GİRİŞ BAŞARISIZ');
-                    }
-
-                    return await response.json();
-                } catch (error) {
-                    if (error.name === 'AbortError') {
-                        throw new Error('SUNUCU YANITLAMADI');
-                    }
-                    throw error;
-                }
-            }
-        };
-
         async function handleLogin(event) {
             event.preventDefault();
 
@@ -402,30 +295,25 @@
             TerminalUI.hideError('passwordError');
 
             try {
-                // Güvenlik kontrolleri
-                SecurityUtils.checkSecurity();
-
-                // Validasyonlar
-                if (!SecurityUtils.validateEmail(email)) {
-                    TerminalUI.showError('emailError', 'GEÇERSİZ E-POSTA');
-                    await TerminalUI.typeMessage('GEÇERSİZ E-POSTA', 'error');
-                    return;
-                }
-
-                if (!SecurityUtils.validatePassword(password)) {
-                    TerminalUI.showError('passwordError', 'ŞİFRE ÇOK KISA');
-                    await TerminalUI.typeMessage('ŞİFRE ÇOK KISA', 'error');
-                    return;
+                 if (!email || !password) {
+                    throw new Error('TÜM ALANLARI DOLDURUN');
                 }
 
                 TerminalUI.setLoading(true);
                 await TerminalUI.typeMessage('GİRİŞ KONTROL EDİLİYOR...');
 
-                const response = await ApiService.login(email, password);
+                const response = await fetch(`${CONFIG.API_URL}/admin/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-                if (response.success) {
-                    sessionStorage.setItem(CONFIG.TOKEN_KEY, response.token);
-                    SecurityUtils.resetSecurity();
+                const data = await response.json();
+
+                if (data.success) {
+                    localStorage.setItem(CONFIG.TOKEN_KEY, data.token);
                     await TerminalUI.typeMessage('GİRİŞ BAŞARILI', 'success');
                     
                     setTimeout(() => {
@@ -437,26 +325,17 @@
 
             } catch (error) {
                 console.error('Login error:', error);
-                SecurityUtils.incrementAttempts();
-                await TerminalUI.typeMessage(error.message, 'error');
+                await TerminalUI.typeMessage(error.message || 'SİSTEM HATASI', 'error');
             } finally {
                 TerminalUI.setLoading(false);
             }
         }
 
-        // Sayfa yüklendiğinde
+        // Sayfa yüklendiğinde token kontrolü
         document.addEventListener('DOMContentLoaded', () => {
-            // Token kontrolü
-            const token = sessionStorage.getItem(CONFIG.TOKEN_KEY);
+            const token = localStorage.getItem(CONFIG.TOKEN_KEY);
             if (token) {
                 window.location.href = '/admin-panel';
-            }
-
-            // Kilit kontrolü
-            const lockoutEnd = parseInt(localStorage.getItem('lockoutEnd') || '0');
-            if (lockoutEnd > Date.now()) {
-                const remainingMinutes = Math.ceil((lockoutEnd - Date.now()) / 60000);
-                TerminalUI.typeMessage(`SİSTEM ${remainingMinutes} DAKİKA KİLİTLİ`, 'error');
             }
         });
     </script>
