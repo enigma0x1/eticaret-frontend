@@ -1154,7 +1154,7 @@
                 // Resim URL'sini düzgün şekilde oluştur
                 const imageUrl = product.image 
                     ? `${API_URL}/uploads/${product.image}`
-                    : 'https://via.placeholder.com/300x300?text=No+Image'; // Varsayılan resim için placeholder kullan
+                    : 'https://via.placeholder.com/300x300?text=No+Image';
             
                 card.innerHTML = `
                     <div class="product-image-container">
@@ -1226,7 +1226,7 @@
                             </div>
                             <div class="product-actions">
                                 <button class="btn btn-secondary" 
-                                        onclick="productManager.showProductDetail('${product._id}')"
+                                        onclick="window.location.href='product-detail.html?id=${product._id}'"
                                         title="Ürün detaylarını görüntüle">
                                     <i class="fas fa-eye"></i>
                                     <span>İncele</span>
@@ -1248,9 +1248,9 @@
                         </div>
                     </div>
                 `;
-        
+            
                 return card;
-            },
+            }
         
             renderProducts() {
                 const grid = document.getElementById('productGrid');
@@ -1306,8 +1306,8 @@
             },
         
             showProductDetail(productId) {
-                window.location.href = `/product/${productId}`;
-            }
+               window.location.href = `product-detail.html?id=${productId}`;
+         }
         };
         
         // Sepet Yönetimi
