@@ -14,27 +14,57 @@
 
     <!-- Sonra sayfa kontrolü için script -->
     <script>
-        // Sayfa yüklendiğinde token kontrolü
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!localStorage.getItem('token')) {
-                window.location.replace('login');
-            }
-        });
-
-        // Geri tuşu kontrolü
-        window.onpopstate = function(event) {
-            if (!localStorage.getItem('token')) {
-                window.location.replace('login');
-            }
-        };
-
-        // Sayfayı yenileme kontrolü
-        window.onbeforeunload = function() {
-            if (!localStorage.getItem('token')) {
-                return false;
-            }
-        };
-    </script>
+       (function() {
+           // Sayfa yüklendiğinde token kontrolü
+           function checkAuth() {
+               const token = localStorage.getItem('token');
+               if (!token) {
+                   document.body.style.display = 'none';
+                   window.location.replace('login');
+                   return false;
+               }
+               return true;
+           }
+   
+           // İlk kontrol
+           if (!checkAuth()) return;
+   
+           // History kontrolü
+           window.history.pushState(null, document.title, window.location.href);
+           window.addEventListener('popstate', function() {
+               window.history.pushState(null, document.title, window.location.href);
+               checkAuth();
+           });
+   
+           // Visibility kontrolü
+           document.addEventListener('visibilitychange', function() {
+               if (document.visibilityState === 'visible') {
+                   checkAuth();
+               }
+           });
+   
+           // Storage kontrolü
+           window.addEventListener('storage', function(e) {
+               if (e.key === 'token' && !e.newValue) {
+                   document.body.style.display = 'none';
+                   window.location.replace('login');
+               }
+           });
+   
+           // Sağ tık ve F12 engelleme (opsiyonel)
+           document.addEventListener('contextmenu', function(e) {
+               if (!localStorage.getItem('token')) {
+                   e.preventDefault();
+               }
+           });
+   
+           document.addEventListener('keydown', function(e) {
+               if (!localStorage.getItem('token') && e.key === 'F12') {
+                   e.preventDefault();
+               }
+           });
+       })();
+   </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="IndustryHub Pro - Endüstriyel Ürün Kataloğu">
     <title>IndustryHub Pro - Ürün Kataloğu</title>
