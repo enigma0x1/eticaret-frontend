@@ -4,1387 +4,387 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1e40af;
-            --danger: #dc2626;
-            --success: #16a34a;
-            --warning: #ca8a04;
-            --dark: #1f2937;
-            --gray: #9ca3af;
-            --light: #f3f4f6;
-            --white: #ffffff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--light);
-            color: var(--dark);
-            line-height: 1.5;
-        }
-
-        /* Layout */
-        .layout {
-            display: flex;
-            min-height: 100vh;
+            --sidebar-width: 250px;
         }
 
         .sidebar {
-            width: 250px;
-            background: var(--white);
-            border-right: 1px solid var(--light);
-            padding: 1rem;
-            position: fixed;
+            width: var(--sidebar-width);
             height: 100vh;
-            overflow-y: auto;
-            z-index: 100;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background: #2c3e50;
+            color: white;
+            z-index: 1000;
+            transition: all 0.3s;
         }
 
         .main-content {
-            flex: 1;
-            margin-left: 250px;
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            transition: all 0.3s;
         }
 
-        /* Sidebar */
         .sidebar-header {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid var(--light);
+            padding: 20px;
+            background: #243342;
         }
 
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
+        .nav-link {
+            color: rgba(255,255,255,.8);
+            padding: 10px 20px;
+            transition: all 0.3s;
         }
 
-        .sidebar-menu li {
-            margin-bottom: 0.5rem;
+        .nav-link:hover {
+            color: white;
+            background: rgba(255,255,255,.1);
         }
 
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            color: var(--dark);
-            text-decoration: none;
-            border-radius: 6px;
-            transition: all 0.2s;
-            cursor: pointer;
+        .nav-link i {
+            width: 25px;
         }
 
-        .sidebar-link:hover,
-        .sidebar-link.active {
-            background: var(--light);
-            color: var(--primary);
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,.1);
+            margin-bottom: 20px;
         }
 
-        /* Header */
-        .header {
-            background: var(--white);
-            padding: 1rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 90;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 1rem;
-        }
-
-        /* Notifications */
-        .notifications {
-            position: relative;
-        }
-
-        .notifications-icon {
-            position: relative;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        .notifications-badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: var(--danger);
-            color: var(--white);
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .notifications-dropdown {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            width: 300px;
-            max-height: 400px;
-            overflow-y: auto;
-            display: none;
-            z-index: 100;
-        }
-
-        .notifications-dropdown.show {
-            display: block;
-        }
-
-        .notification-item {
-            padding: 1rem;
-            border-bottom: 1px solid var(--light);
-            cursor: pointer;
-        }
-
-        .notification-item:hover {
-            background: var(--light);
-        }
-
-        .notification-item.unread {
-            background: #f0f7ff;
-        }
-
-        /* Tabs */
-        .tabs-container {
-            background: var(--white);
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .tabs-header {
-            display: flex;
-            border-bottom: 1px solid var(--light);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .tab-button {
-            padding: 1rem 1.5rem;
-            border: none;
-            background: none;
-            color: var(--gray);
-            font-weight: 500;
-            cursor: pointer;
-            white-space: nowrap;
-            position: relative;
-        }
-
-        .tab-button.active {
-            color: var(--primary);
-        }
-
-        .tab-button.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-        }
-
-        .tab-content {
-            display: none;
-            padding: 1.5rem;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-            font-weight: 500;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid var(--gray);
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        
-        .stat-card {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .stat-card h3 {
-            color: var(--gray);
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-card p {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-        
-        /* Table */
-        .table-container {
-            background: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-        
-        .table-header {
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--light);
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--light);
-        }
-        
-        th {
-            font-weight: 500;
-            color: var(--gray);
-            background: var(--light);
-        }
-        
-        /* Status Badge */
-        .status-badge {
-            padding: 0.25rem 0.5rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .status-badge.active {
-            background: var(--success);
-            color: var(--white);
-        }
-        
-        .status-badge.inactive {
-            background: var(--gray);
-            color: var(--white);
-        }
-        
-        .status-badge.blocked {
-            background: var(--danger);
-            color: var(--white);
-        }
-        
-        .status-badge.pending {
-            background: var(--warning);
-            color: var(--white);
-        }
-        
-        /* Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .modal-content {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--light);
-        }
-        
-        .modal-lg {
-            max-width: 1000px;
-        }
-        
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--light);
-        }
-        
-        .tab-btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            background: none;
-            color: var(--gray);
-            cursor: pointer;
-            font-weight: 500;
-            position: relative;
-        }
-        
-        .tab-btn.active {
-            color: var(--primary);
-        }
-        
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        /* Info Grid */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .info-item label {
-            display: block;
-            color: var(--gray);
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        /* Activity List */
-        .activity-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .activity-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--light);
-            border-radius: 8px;
-        }
-        
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--white);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-        }
-        
-        .activity-content {
-            flex: 1;
-        }
-        
-        .activity-title {
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-        
-        .activity-meta {
-            font-size: 0.875rem;
-            color: var(--gray);
-        }
-        
-        /* Buttons */
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: opacity 0.2s;
-        }
-        
-        .btn:hover {
-            opacity: 0.9;
-        }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: var(--white);
-        }
-        
-        .btn-danger {
-            background: var(--danger);
-            color: var(--white);
-        }
-        
-        .btn-warning {
-            background: var(--warning);
-            color: var(--white);
-        }
-        
-        .btn-text {
-            background: none;
-            color: var(--primary);
-            padding: 0;
-        }
-        
-        .btn-text.text-danger {
-            color: var(--danger);
-        }
-        
-        .btn-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--gray);
-        }
-        
-        /* Loading */
         .loading {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
             background: rgba(255,255,255,0.8);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
-        }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--light);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 1rem;
-            border-radius: 6px;
-            background: var(--white);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-        
-        /* Search Box */
-        .search-box {
-            position: relative;
-        }
-        
-        .search-box input {
-            padding: 0.5rem 1rem;
-            padding-left: 2.5rem;
-            border: 1px solid var(--gray);
-            border-radius: 6px;
-            font-size: 0.875rem;
-            width: 250px;
-        }
-        
-        .search-box::before {
-            content: '\f002';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
-        }
-        
-        /* Pagination */
-        .pagination {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-top: 1px solid var(--light);
-        }
-        
-        .pagination-info {
-            color: var(--gray);
-            font-size: 0.875rem;
-        }
-        
-        .pagination-buttons {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        
-            .table-container {
-                overflow-x: auto;
-            }
-        
-            .modal-content {
-                width: 95%;
-                padding: 1rem;
-            }
-        
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-        
-            .search-box input {
-                width: 100%;
-            }
-        
-            .pagination {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
-            }
+            z-index: 9999;
         }
 
+        #notificationArea {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
-    <div id="loading" class="loading" style="display: none;">
-        <div class="spinner"></div>
+    <!-- Loading Indicator -->
+    <div class="loading" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
 
-    <div class="layout">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="sidebar-header">
-                <h2>Admin Panel</h2>
-            </div>
-            <ul class="sidebar-menu">
-                <li>
-                    <a class="sidebar-link active" onclick="showTab('dashboard')">
-                        <i class="fas fa-home"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a class="sidebar-link" onclick="showTab('products')">
-                        <i class="fas fa-box"></i>
-                        Ürünler
-                    </a>
-                </li>
-                <li>
-                    <a class="sidebar-link" onclick="showTab('users')">
-                        <i class="fas fa-users"></i>
-                        Kullanıcılar
-                    </a>
-                </li>
-                <li>
-                    <a class="sidebar-link" onclick="showTab('reports')">
-                        <i class="fas fa-chart-bar"></i>
-                        Raporlar
-                    </a>
-                </li>
-                <li>
-                    <a class="sidebar-link" onclick="showTab('logs')">
-                        <i class="fas fa-history"></i>
-                        Loglar
-                    </a>
-                </li>
-                <li>
-                    <a class="sidebar-link" onclick="showTab('settings')">
-                        <i class="fas fa-cog"></i>
-                        Ayarlar
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <!-- Notification Area -->
+    <div id="notificationArea"></div>
 
-        <!-- Main Content -->
-        <div class="main-content">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h4>Admin Panel</h4>
+        </div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="#" class="nav-link active" data-page="dashboard">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="products">
+                    <i class="fas fa-box"></i> Ürünler
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="users">
+                    <i class="fas fa-users"></i> Kullanıcılar
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="manufacturers">
+                    <i class="fas fa-industry"></i> Üreticiler
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="reports">
+                    <i class="fas fa-chart-bar"></i> Raporlar
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-page="settings">
+                    <i class="fas fa-cog"></i> Ayarlar
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
             <!-- Header -->
-            <header class="header">
-                <div class="header-content">
-                    <div class="page-title" id="pageTitle">Dashboard</div>
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                        <div class="notifications">
-                            <div class="notifications-icon" onclick="toggleNotifications()">
-                                <i class="fas fa-bell"></i>
-                                <span class="notifications-badge" id="notificationsBadge">0</span>
-                            </div>
-                            <div class="notifications-dropdown" id="notificationsDropdown">
-                                <!-- Notifications will be loaded here -->
-                            </div>
-                        </div>
-                        <button class="btn btn-danger" onclick="logout()">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Çıkış
-                        </button>
-                    </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="d-flex align-items-center">
+                    <span class="me-3" id="adminEmail"></span>
+                    <button class="btn btn-outline-danger" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Çıkış
+                    </button>
                 </div>
-            </header>
+            </div>
 
             <!-- Content Area -->
-            <div class="container">
-                <!-- Dashboard Tab -->
-                <div id="dashboard" class="tab-content active">
-                    <div id="statsGrid" class="stats-grid">
-                        <!-- Stats will be loaded here -->
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Son Aktiviteler</h3>
-                        </div>
-                        <div class="activity-list" id="recentActivities">
-                            <!-- Activities will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Products Tab -->
-                <div id="products" class="tab-content">
-                    <div class="table-container">
-                        <div class="table-header">
-                            <h2>Ürünler</h2>
-                            <div style="display: flex; gap: 1rem;">
-                                <div class="search-box">
-                                    <input type="text" 
-                                           placeholder="Ürün ara..." 
-                                           onkeyup="debounce(searchProducts, 500)(this.value)">
-                                </div>
-                                <button class="btn btn-primary" onclick="showProductModal()">
-                                    <i class="fas fa-plus"></i>
-                                    Yeni Ürün
-                                </button>
+            <div id="contentArea">
+                <!-- Dashboard Content -->
+                <div id="dashboardContent">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h5>Toplam Ürün</h5>
+                                <h3 id="totalProducts">-</h3>
                             </div>
                         </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Ürün</th>
-                                    <th>Satıcı</th>
-                                    <th>Fiyat</th>
-                                    <th>Stok</th>
-                                    <th>Durum</th>
-                                    <th>İşlemler</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productsTable">
-                                <!-- Products will be loaded here -->
-                            </tbody>
-                        </table>
-                        <div class="pagination" id="productsPagination">
-                            <!-- Pagination will be loaded here -->
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h5>Toplam Kullanıcı</h5>
+                                <h3 id="totalUsers">-</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h5>Aktif Üreticiler</h5>
+                                <h3 id="activeManufacturers">-</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card">
+                                <h5>Günlük Aktivite</h5>
+                                <h3 id="todayActivities">-</h3>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Users Tab -->
-                <div id="users" class="tab-content">
-                    <div class="tabs-container">
-                        <div class="tabs-header">
-                            <button class="tab-button active" onclick="switchUserTab('regular')">Normal Kullanıcılar</button>
-                            <button class="tab-button" onclick="switchUserTab('manufacturers')">Üreticiler</button>
-                        </div>
-                        <div id="regularUsers" class="tab-content active">
-                            <!-- Regular users table -->
-                        </div>
-                        <div id="manufacturerUsers" class="tab-content">
-                            <!-- Manufacturer users table -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Reports Tab -->
-                <div id="reports" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Rapor Oluştur</h3>
-                        </div>
-                        <div class="card-body">
-                            <form id="reportForm" onsubmit="generateReport(event)">
-                                <div class="form-group">
-                                    <label class="form-label">Rapor Tipi</label>
-                                    <select name="type" class="form-control" required>
-                                        <option value="user">Kullanıcı Raporu</option>
-                                        <option value="product">Ürün Raporu</option>
-                                        <option value="activity">Aktivite Raporu</option>
-                                        <option value="system">Sistem Raporu</option>
-                                    </select>
+                    <div class="row mt-4">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Son Aktiviteler</h5>
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-label">Tarih Aralığı</label>
-                                    <div style="display: flex; gap: 1rem;">
-                                        <input type="date" name="startDate" class="form-control" required>
-                                        <input type="date" name="endDate" class="form-control" required>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table" id="activitiesTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>İşlem</th>
+                                                    <th>Modül</th>
+                                                    <th>Admin</th>
+                                                    <th>Tarih</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-file-export"></i>
-                                    Rapor Oluştur
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Raporlarım</h3>
-                        </div>
-                        <div id="reportsList">
-                            <!-- Reports will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Logs Tab -->
-                <div id="logs" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Sistem Logları</h3>
-                            <div class="filters">
-                                <!-- Log filters will be here -->
                             </div>
                         </div>
-                        <div id="logsList">
-                            <!-- Logs will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Settings Tab -->
-                <div id="settings" class="tab-content">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>Sistem Ayarları</h3>
-                        </div>
-                        <div class="card-body">
-                            <form id="settingsForm" onsubmit="saveSettings(event)">
-                                <!-- Settings form fields will be here -->
-                            </form>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Bekleyen İşlemler</h5>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group" id="pendingActions">
+                                        <!-- Pending actions will be loaded here -->
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        // Ürün yönetimi fonksiyonları
-    async function loadProducts(page = 1, limit = 20) {
-        const { search, category, status } = adminData.filters.products;
-        const queryParams = new URLSearchParams({
-            page,
-            limit,
-            ...(search && { search }),
-            ...(category && { category }),
-            ...(status && { status })
-        });
 
-        const response = await fetchAPI(`/admin/products?${queryParams}`);
-        if (response.success) {
-            adminData.products = response.products;
-            adminData.pagination.products = response.pagination;
-            renderProductsTable();
-            renderProductsPagination();
-        }
-    }
+    <!-- Required Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    function renderProductsTable() {
-        const tbody = document.getElementById('productsTable');
-        tbody.innerHTML = adminData.products.map(product => `
-            <tr>
-                <td>
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <img src="${CONFIG.API_URL}${product.image}" 
-                             alt="${product.title}" 
-                             style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;"
-                             onerror="this.src='https://via.placeholder.com/40'"
-                        >
-                        <div>
-                            <div>${product.title}</div>
-                            <small style="color: var(--gray)">ID: ${product._id}</small>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div>${product.manufacturer?.companyName || 'N/A'}</div>
-                    <small style="color: var(--gray)">${product.manufacturer?.email || 'N/A'}</small>
-                </td>
-                <td>${formatPrice(product.price)}</td>
-                <td>${product.stock}</td>
-                <td>
-                    <select class="status-select" 
-                            onchange="updateProductStatus('${product._id}', this.value)">
-                        <option value="active" ${product.status === 'active' ? 'selected' : ''}>Aktif</option>
-                        <option value="inactive" ${product.status === 'inactive' ? 'selected' : ''}>Pasif</option>
-                        <option value="out_of_stock" ${product.status === 'out_of_stock' ? 'selected' : ''}>Stok Dışı</option>
-                    </select>
-                </td>
-                <td>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn btn-text" onclick="showProductDetails('${product._id}')">
-                            <i class="fas fa-info-circle"></i>
-                        </button>
-                        <button class="btn btn-text" onclick="showEditProductModal('${product._id}')">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-text text-danger" onclick="deleteProduct('${product._id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    function renderProductsPagination() {
-        const { page, pages, total } = adminData.pagination.products;
-        const pagination = document.getElementById('productsPagination');
-        
-        let paginationHTML = `
-            <div class="pagination-info">
-                Toplam ${total} ürün, Sayfa ${page}/${pages}
-            </div>
-            <div class="pagination-buttons">
-        `;
-
-        if (pages > 1) {
-            paginationHTML += `
-                <button class="btn btn-text" 
-                        ${page === 1 ? 'disabled' : ''}
-                        onclick="loadProducts(1)">
-                    <i class="fas fa-angle-double-left"></i>
-                </button>
-                <button class="btn btn-text"
-                        ${page === 1 ? 'disabled' : ''}
-                        onclick="loadProducts(${page - 1})">
-                    <i class="fas fa-angle-left"></i>
-                </button>
-            `;
-
-            for (let i = Math.max(1, page - 2); i <= Math.min(pages, page + 2); i++) {
-                paginationHTML += `
-                    <button class="btn ${i === page ? 'btn-primary' : 'btn-text'}"
-                            onclick="loadProducts(${i})">
-                        ${i}
-                    </button>
-                `;
+    <script>
+        // Token kontrolü
+        function checkAuth() {
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                window.location.href = 'adminLogin.html';
             }
-
-            paginationHTML += `
-                <button class="btn btn-text"
-                        ${page === pages ? 'disabled' : ''}
-                        onclick="loadProducts(${page + 1})">
-                    <i class="fas fa-angle-right"></i>
-                </button>
-                <button class="btn btn-text"
-                        ${page === pages ? 'disabled' : ''}
-                        onclick="loadProducts(${pages})">
-                    <i class="fas fa-angle-double-right"></i>
-                </button>
-            `;
+            return token;
         }
 
-        paginationHTML += '</div>';
-        pagination.innerHTML = paginationHTML;
-    }
+        // API çağrıları için temel fonksiyon
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const token = checkAuth();
+            try {
+                const response = await fetch(`/api/admin/${endpoint}`, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    ...(body && { body: JSON.stringify(body) })
+                });
 
-    async function updateProductStatus(productId, status) {
-        try {
-            const response = await fetchAPI(`/admin/products/${productId}/status`, {
-                method: 'PATCH',
-                body: JSON.stringify({ status })
-            });
-
-            if (response.success) {
-                const product = adminData.products.find(p => p._id === productId);
-                if (product) {
-                    product.status = status;
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'adminLogin.html';
+                    return;
                 }
-                showToast('Ürün durumu güncellendi', 'success');
+
+                return await response.json();
+            } catch (error) {
+                showNotification('Bir hata oluştu', 'error');
+                console.error('API Error:', error);
             }
-        } catch (error) {
-            showToast('Ürün durumu güncellenirken hata oluştu', 'error');
         }
-    }
 
-    // Kullanıcı yönetimi fonksiyonları
-    async function loadUsers() {
-        const response = await fetchAPI('/admin/users');
-        if (response.success) {
-            adminData.users = response.users;
-            renderUsers();
+        // Dashboard verilerini yükle
+        async function loadDashboard() {
+            showLoading();
+            try {
+                const data = await apiCall('dashboard');
+                if (data.success) {
+                    document.getElementById('totalProducts').textContent = data.stats.totalProducts;
+                    document.getElementById('totalUsers').textContent = data.stats.totalUsers;
+                    document.getElementById('activeManufacturers').textContent = data.stats.activeManufacturers;
+                    document.getElementById('todayActivities').textContent = data.stats.todayActivities;
+
+                    // Aktiviteleri tabloya yükle
+                    const activitiesTable = $('#activitiesTable').DataTable();
+                    activitiesTable.clear();
+                    data.recentActivities.forEach(activity => {
+                        activitiesTable.row.add([
+                            activity.action,
+                            activity.module,
+                            activity.admin,
+                            new Date(activity.createdAt).toLocaleString()
+                        ]);
+                    });
+                    activitiesTable.draw();
+
+                    // Bekleyen işlemleri listele
+                    const pendingList = document.getElementById('pendingActions');
+                    pendingList.innerHTML = '';
+                    if (data.stats.pendingProducts > 0) {
+                        pendingList.innerHTML += `
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Onay Bekleyen Ürünler
+                                <span class="badge bg-primary rounded-pill">${data.stats.pendingProducts}</span>
+                            </li>
+                        `;
+                    }
+                    if (data.stats.pendingManufacturers > 0) {
+                        pendingList.innerHTML += `
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Onay Bekleyen Üreticiler
+                                <span class="badge bg-primary rounded-pill">${data.stats.pendingManufacturers}</span>
+                            </li>
+                        `;
+                    }
+                }
+            } catch (error) {
+                showNotification('Dashboard verileri yüklenemedi', 'error');
+            } finally {
+                hideLoading();
+            }
         }
-    }
 
-    function renderUsers() {
-        renderRegularUsers();
-        renderManufacturers();
-    }
-
-    function renderRegularUsers() {
-        const container = document.getElementById('regularUsers');
-        container.innerHTML = `
-            <table>
-                <thead>
-                    <tr>
-                        <th>Kullanıcı</th>
-                        <th>Email</th>
-                        <th>Kayıt Tarihi</th>
-                        <th>Son Giriş</th>
-                        <th>Durum</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${adminData.users.regular.map(user => `
-                        <tr>
-                            <td>${user.name || 'N/A'}</td>
-                            <td>${user.email}</td>
-                            <td>${formatDate(user.createdAt)}</td>
-                            <td>${formatDate(user.lastLogin)}</td>
-                            <td>
-                                <select class="status-select" 
-                                        onchange="updateUserStatus('${user._id}', 'user', this.value)">
-                                    <option value="active" ${user.status === 'active' ? 'selected' : ''}>Aktif</option>
-                                    <option value="inactive" ${user.status === 'inactive' ? 'selected' : ''}>Pasif</option>
-                                    <option value="blocked" ${user.status === 'blocked' ? 'selected' : ''}>Engelli</option>
-                                </select>
-                            </td>
-                            <td>
-                                <button class="btn btn-text" onclick="showUserDetails('${user._id}', 'user')">
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
-    }
-
-    function renderManufacturers() {
-        const container = document.getElementById('manufacturerUsers');
-        container.innerHTML = `
-            <table>
-                <thead>
-                    <tr>
-                        <th>Firma</th>
-                        <th>Email</th>
-                        <th>Ürün Sayısı</th>
-                        <th>Kayıt Tarihi</th>
-                        <th>Son Giriş</th>
-                        <th>Durum</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${adminData.users.manufacturers.map(manufacturer => `
-                        <tr>
-                            <td>${manufacturer.companyName}</td>
-                            <td>${manufacturer.email}</td>
-                            <td>${manufacturer.productCount || 0}</td>
-                            <td>${formatDate(manufacturer.createdAt)}</td>
-                            <td>${formatDate(manufacturer.lastLogin)}</td>
-                            <td>
-                                <select class="status-select" 
-                                        onchange="updateUserStatus('${manufacturer._id}', 'manufacturer', this.value)">
-                                    <option value="active" ${manufacturer.status === 'active' ? 'selected' : ''}>Aktif</option>
-                                    <option value="inactive" ${manufacturer.status === 'inactive' ? 'selected' : ''}>Pasif</option>
-                                    <option value="blocked" ${manufacturer.status === 'blocked' ? 'selected' : ''}>Engelli</option>
-                                </select>
-                            </td>
-                            <td>
-                                <button class="btn btn-text" onclick="showUserDetails('${manufacturer._id}', 'manufacturer')">
-                                    <i class="fas fa-info-circle"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-        `;
-    }
-        // Rapor yönetimi fonksiyonları
-    async function loadReports() {
-        const response = await fetchAPI('/admin/reports');
-        if (response.success) {
-            adminData.reports = response.reports;
-            renderReports();
+        // Yardımcı fonksiyonlar
+        function showLoading() {
+            document.querySelector('.loading').style.display = 'flex';
         }
-    }
 
-    function renderReports() {
-        const container = document.getElementById('reportsList');
-        container.innerHTML = adminData.reports.length ? adminData.reports.map(report => `
-            <div class="report-item">
-                <div class="report-header">
-                    <h4>${report.title}</h4>
-                    <span class="status-badge ${report.status}">
-                        ${report.status === 'completed' ? 'Tamamlandı' : 
-                          report.status === 'pending' ? 'Hazırlanıyor' : 
-                          'Hata'}
-                    </span>
-                </div>
-                <div class="report-info">
-                    <div>Oluşturulma: ${formatDate(report.createdAt)}</div>
-                    <div>Tip: ${report.type}</div>
-                </div>
-                <div class="report-actions">
-                    ${report.status === 'completed' ? `
-                        <button class="btn btn-primary" onclick="downloadReport('${report._id}')">
-                            <i class="fas fa-download"></i> İndir
-                        </button>
-                    ` : ''}
-                    <button class="btn btn-text" onclick="deleteReport('${report._id}')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-        `).join('') : '<div class="no-data">Henüz rapor oluşturulmamış</div>';
-    }
+        function hideLoading() {
+            document.querySelector('.loading').style.display = 'none';
+        }
 
-    async function generateReport(event) {
-        event.preventDefault();
-        const form = event.target;
-        const formData = new FormData(form);
-        
-        showLoading(true);
-        try {
-            const response = await fetchAPI('/admin/reports/generate', {
-                method: 'POST',
-                body: JSON.stringify(Object.fromEntries(formData))
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show`;
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.getElementById('notificationArea').appendChild(notification);
+            setTimeout(() => notification.remove(), 5000);
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'adminLogin.html';
+        }
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadDashboard();
+
+            // DataTable initialization
+            $('#activitiesTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/tr.json'
+                }
             });
 
-            if (response.success) {
-                showToast('Rapor oluşturma işlemi başlatıldı', 'success');
-                form.reset();
-                await loadReports();
-            }
-        } catch (error) {
-            showToast('Rapor oluşturulurken hata oluştu', 'error');
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    async function downloadReport(reportId) {
-        try {
-            const response = await fetchAPI(`/admin/reports/${reportId}/download`);
-            if (response.success) {
-                // Raporu indir
-                const blob = new Blob([JSON.stringify(response.data)], { type: 'application/json' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `report-${reportId}.json`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-            }
-        } catch (error) {
-            showToast('Rapor indirilirken hata oluştu', 'error');
-        }
-    }
-
-    // Log yönetimi fonksiyonları
-    async function loadLogs() {
-        const { startDate, endDate, type, user } = adminData.filters.logs;
-        const queryParams = new URLSearchParams({
-            ...(startDate && { startDate }),
-            ...(endDate && { endDate }),
-            ...(type && { type }),
-            ...(user && { user })
-        });
-
-        const response = await fetchAPI(`/admin/logs/ip?${queryParams}`);
-        if (response.success) {
-            adminData.logs = response.logs;
-            renderLogs();
-        }
-    }
-
-    function renderLogs() {
-        const container = document.getElementById('logsList');
-        container.innerHTML = adminData.logs.length ? adminData.logs.map(log => `
-            <div class="log-item">
-                <div class="log-header">
-                    <div class="log-type">
-                        <i class="fas fa-${getActivityIcon(log.action)}"></i>
-                        ${getActivityTitle(log.action)}
-                    </div>
-                    <div class="log-time">${formatDate(log.createdAt)}</div>
-                </div>
-                <div class="log-details">
-                    <div>Kullanıcı: ${log.user?.email || 'N/A'}</div>
-                    <div>IP: ${log.ip}</div>
-                    <div>Tarayıcı: ${log.userAgent}</div>
-                    ${log.details ? `<div>Detaylar: ${JSON.stringify(log.details)}</div>` : ''}
-                </div>
-            </div>
-        `).join('') : '<div class="no-data">Log kaydı bulunamadı</div>';
-    }
-
-    // Ayarlar yönetimi fonksiyonları
-    async function loadSettings() {
-        const response = await fetchAPI('/admin/settings');
-        if (response.success) {
-            adminData.settings = response.settings;
-            renderSettings();
-        }
-    }
-
-    function renderSettings() {
-        const form = document.getElementById('settingsForm');
-        form.innerHTML = `
-            <div class="form-group">
-                <label class="form-label">Site Adı</label>
-                <input type="text" name="siteName" class="form-control" 
-                       value="${adminData.settings.siteName || ''}" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Site Açıklaması</label>
-                <textarea name="siteDescription" class="form-control">${adminData.settings.siteDescription || ''}</textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Bakım Modu</label>
-                <div class="toggle-switch">
-                    <input type="checkbox" name="maintenanceMode" 
-                           ${adminData.settings.maintenanceMode ? 'checked' : ''}>
-                    <span class="toggle-slider"></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">SMTP Ayarları</label>
-                <div class="nested-form">
-                    <input type="text" name="emailSettings.smtpHost" class="form-control" 
-                           placeholder="SMTP Host" value="${adminData.settings.emailSettings?.smtpHost || ''}">
-                    <input type="number" name="emailSettings.smtpPort" class="form-control" 
-                           placeholder="SMTP Port" value="${adminData.settings.emailSettings?.smtpPort || ''}">
-                    <input type="text" name="emailSettings.smtpUser" class="form-control" 
-                           placeholder="SMTP Kullanıcı" value="${adminData.settings.emailSettings?.smtpUser || ''}">
-                    <input type="password" name="emailSettings.smtpPass" class="form-control" 
-                           placeholder="SMTP Şifre" value="${adminData.settings.emailSettings?.smtpPass || ''}">
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Kaydet
-            </button>
-        `;
-    }
-
-    async function saveSettings(event) {
-        event.preventDefault();
-        const form = event.target;
-        const formData = new FormData(form);
-        
-        showLoading(true);
-        try {
-            const response = await fetchAPI('/admin/settings', {
-                method: 'PUT',
-                body: JSON.stringify(Object.fromEntries(formData))
+            // Navigation event listeners
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = e.target.closest('.nav-link').dataset.page;
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    e.target.closest('.nav-link').classList.add('active');
+                    document.getElementById('pageTitle').textContent = 
+                        e.target.closest('.nav-link').textContent.trim();
+                    
+                    // Sayfa içeriğini yükle
+                    loadPageContent(page);
+                });
             });
-
-            if (response.success) {
-                adminData.settings = response.settings;
-                showToast('Ayarlar kaydedildi', 'success');
-            }
-        } catch (error) {
-            showToast('Ayarlar kaydedilirken hata oluştu', 'error');
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    // Yardımcı fonksiyonlar
-    function updatePageTitle(tabId) {
-        const titles = {
-            dashboard: 'Dashboard',
-            products: 'Ürünler',
-            users: 'Kullanıcılar',
-            reports: 'Raporlar',
-            logs: 'Loglar',
-            settings: 'Ayarlar'
-        };
-        document.getElementById('pageTitle').textContent = titles[tabId] || 'Admin Panel';
-    }
-
-    function debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    function showLoading(show) {
-        document.getElementById('loading').style.display = show ? 'flex' : 'none';
-    }
-
-    function showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-            <span>${message}</span>
-        `;
-        
-        document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
-    }
-
-    function formatDate(dateString) {
-        if (!dateString) return 'N/A';
-        return new Date(dateString).toLocaleString('tr-TR', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
         });
-    }
 
-    function formatPrice(price) {
-        return new Intl.NumberFormat('tr-TR', {
-            style: 'currency',
-            currency: 'TRY'
-        }).format(price);
-    }
-
-    function getActivityIcon(type) {
-        const icons = {
-            create: 'plus-circle',
-            update: 'edit',
-            delete: 'trash',
-            view: 'eye',
-            login: 'sign-in-alt',
-            logout: 'sign-out-alt',
-            settings: 'cog'
-        };
-        return icons[type] || 'circle';
-    }
-
-    function getActivityTitle(type) {
-        const titles = {
-            create: 'Oluşturma',
-            update: 'Güncelleme',
-            delete: 'Silme',
-            view: 'Görüntüleme',
-            login: 'Giriş',
-            logout: 'Çıkış',
-            settings: 'Ayar Değişikliği'
-        };
-        return titles[type] || type;
-    }
-</script>
+        // Sayfa içeriğini yükle
+        function loadPageContent(page) {
+            switch(page) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'products':
+                    loadProducts();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'manufacturers':
+                    loadManufacturers();
+                    break;
+                case 'reports':
+                    loadReports();
+                    break;
+                case 'settings':
+                    loadSettings();
+                    break;
+            }
+        }
+    </script>
 </body>
 </html>
