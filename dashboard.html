@@ -1226,7 +1226,7 @@
                             </div>
                             <div class="product-actions">
                                 <button class="btn btn-secondary" 
-                                        onclick="window.location.href='product-detail.html?id=${product._id}'"
+                                        onclick="window.location.href='product-detail?id=${product._id}'"
                                         title="Ürün detaylarını görüntüle">
                                     <i class="fas fa-eye"></i>
                                     <span>İncele</span>
@@ -1252,21 +1252,21 @@
                 return card;
             }
         
-            renderProducts() {
-                const grid = document.getElementById('productGrid');
-                const fragment = document.createDocumentFragment();
-        
-                state.filteredProducts.forEach((product, index) => {
-                    const card = this.createProductCard(product);
-                    card.style.animationDelay = `${index * 50}ms`;
-                    fragment.appendChild(card);
-                });
-        
-                if (state.pagination.page === 1) {
-                    grid.innerHTML = '';
-                }
-                grid.appendChild(fragment);
-            },
+            renderProducts() {  // Virgül eklendi
+              const grid = document.getElementById('productGrid');
+              const fragment = document.createDocumentFragment();
+      
+              state.filteredProducts.forEach((product, index) => {
+                  const card = this.createProductCard(product);
+                  card.style.animationDelay = `${index * 50}ms`;
+                  fragment.appendChild(card);
+              });
+      
+              if (state.pagination.page === 1) {
+                  grid.innerHTML = '';
+              }
+              grid.appendChild(fragment);
+          }, 
         
             isNewProduct(product) {
                 const oneWeekAgo = new Date();
@@ -1306,8 +1306,8 @@
             },
         
             showProductDetail(productId) {
-               window.location.href = `product-detail.html?id=${productId}`;
-         }
+               window.location.href = `/product-detail?id=${productId}`;
+          }
         };
         
         // Sepet Yönetimi
@@ -1315,7 +1315,7 @@
             async addToCart(productId, quantity = 1) {
                 try {
                     if (!auth.isAuthenticated()) {
-                        window.location.href = '/login"';
+                        window.location.href = '/login';
                         return;
                     }
         
