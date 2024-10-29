@@ -338,7 +338,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // Check authentication
             if (!isAuthenticated()) {
-                window.location.href = '/login.html';
+                window.location.href = '/login"';
                 return;
             }
 
@@ -352,7 +352,7 @@
 
         function logout() {
             localStorage.removeItem(TOKEN_KEY);
-            window.location.href = '/login.html';
+            window.location.href = '/login"';
         }
 
         // Data Loading
@@ -601,7 +601,7 @@
                     if (response.status === 401 || response.status === 403) {
                         // Token geçersizse login sayfasına yönlendir
                         localStorage.removeItem(TOKEN_KEY);
-                        window.location.href = '/adminLogin.html';
+                        window.location.href = '/adminLogin"';
                         return null;
                     }
                     throw new Error('API request failed');
