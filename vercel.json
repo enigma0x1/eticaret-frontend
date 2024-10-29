@@ -3,14 +3,50 @@
   "trailingSlash": false,
   "redirects": [
     {
-      "source": "/index.html",
+      "source": "/index",
       "destination": "/"
     }
   ],
   "rewrites": [
     {
-      "source": "/:path*",
-      "destination": "/:path*.html"
+      "source": "/login",
+      "destination": "/login"
+    },
+    {
+      "source": "/loginForPro",
+      "destination": "/loginForPro"
+    },
+    {
+      "source": "/ureticLogin",
+      "destination": "/ureticLogin"
+    },
+    {
+      "source": "/admin-panel",
+      "destination": "/admin-panel"
+    },
+    {
+      "source": "/adminLogin",
+      "destination": "/adminLogin"
+    },
+    {
+      "source": "/categorydashboard",
+      "destination": "/categorydashboard"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/dashboard"
+    },
+    {
+      "source": "/header",
+      "destination": "/header"
+    },
+    {
+      "source": "/kapasite-borsasi",
+      "destination": "/kapasite-borsasi"
+    },
+    {
+      "source": "/manufacturer-dashboard",
+      "destination": "/manufacturer-dashboard"
     }
   ]
 }
