@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, private">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IndustryHub - E-Sanayi</title>
+
+    <!-- Auth.js -->
+    <script src="auth.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Additional CSS Libraries -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            /* Ana Renkler */
+            --primary-color: #0066cc;
+            --secondary-color: #004d99;
+            --accent-color: #ff3d00;
+            
+            /* Nötr Renkler */
+            --background-primary: #f0f2f5;
+            --background-secondary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --border-color: #d1d5db;
+            
+            /* Endüstriyel Renkler */
+            --industrial-gray: #2c3e50;
+            --industrial-blue: #34495e;
+            --industrial-light: #ecf0f1;
+            
+            /* Durum Renkleri */
+            --success-color: #00c853;
+            --warning-color: #ffd600;
+            --error-color: #ff1744;
+            --info-color: #00b0ff;
+            
+            /* Ölçüler */
+            --header-height: 60px;
+            --sidebar-width: 280px;
+            --container-max-width: 1400px;
+            
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            
+            /* Gölgeler */
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            
+            /* Geçişler */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography */
+        .technical-text {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            height: var(--header-height);
+            background: var(--background-secondary);
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--industrial-gray);
+            color: var(--industrial-light);
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 1.5rem;
+        }
+
+        /* Technical Search Bar */
+        .technical-search {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--industrial-light);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+        }
+
+        .technical-search input {
+            font-family: 'Roboto Mono', monospace;
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--background-secondary);
+        }
+
+        /* Product Grid/List Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .view-toggle button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: var(--background-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .view-toggle button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Product Grid View */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Product List View */
+        .product-list {
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Technical Product Card */
+        .technical-card {
+            background: var(--background-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .technical-card .part-number {
+            font-family: 'Roboto Mono', monospace;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .technical-card .specifications {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .technical-card .technical-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .technical-card .actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: auto;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--industrial-light);
+            color: var(--industrial-gray);
+        }
+
+        /* Technical Badges */
+        .technical-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-stock {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .badge-certification {
+            background: var(--info-color);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            :root {
+                --sidebar-width: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .header {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-industry"></i> E-Sanayi</h2>
+        </div>
+        
+        <!-- Technical Categories -->
+        <nav class="technical-categories">
+            <h3>Teknik Kategoriler</h3>
+            <ul id="technicalCategoryList">
+                <!-- Categories will be loaded dynamically -->
+            </ul>
+        </nav>
+
+        <!-- Technical Filters -->
+        <div class="technical-filters">
+            <h3>Teknik Filtreler</h3>
+            
+            <!-- Material Filter -->
+            <div class="filter-section">
+                <h4>Malzeme</h4>
+                <select class="technical-select" id="materialFilter" multiple>
+                    <!-- Options will be loaded dynamically -->
+                </select>
+            </div>
+
+            <!-- Standard Filter -->
+            <div class="filter-section">
+                <h4>Standartlar</h4>
+                <select class="technical-select" id="standardFilter" multiple>
+                    <!-- Options will be loaded dynamically -->
+                </select>
+            </div>
+
+            <!-- Dimension Filter -->
+            <div class="filter-section">
+                <h4>Boyut Aralığı (mm)</h4>
+                <div class="dimension-inputs">
+                    <input type="number" id="minDimension" placeholder="Min">
+                    <input type="number" id="maxDimension" placeholder="Max">
+                </div>
+            </div>
+
+            <!-- Certification Filter -->
+            <div class="filter-section">
+                <h4>Sertifikalar</h4>
+                <div class="certification-checkboxes" id="certificationFilters">
+                    <!-- Checkboxes will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="technical-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="technicalSearch" 
+                   placeholder="Parça No, Standart veya Teknik Özellik Ara...">
+            <button class="btn btn-primary">
+                <i class="fas fa-filter"></i>
+                Gelişmiş Arama
+            </button>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn btn-secondary" id="downloadCatalog">
+                <i class="fas fa-download"></i>
+                Teknik Katalog
+            </button>
+            <button class="btn btn-secondary" id="compareProducts">
+                <i class="fas fa-balance-scale"></i>
+                Karşılaştır
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <button class="active" data-view="grid">
+                <i class="fas fa-th"></i>
+                Grid Görünüm
+            </button>
+            <button data-view="list">
+                <i class="fas fa-list"></i>
+                Liste Görünüm
+            </button>
+        </div>
+
+        <!-- Active Filters -->
+        <div class="active-filters" id="activeFilters">
+            <!-- Active filters will be shown here -->
+        </div>
+
+        <!-- Products Container -->
+        <div class="products-container">
+            <!-- Grid View -->
+            <div class="product-grid" id="productGrid">
+                <!-- Products will be loaded dynamically -->
+            </div>
+
+            <!-- List View -->
+            <div class="product-list" id="productList">
+                <!-- Products will be loaded in list format -->
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="spinner"></div>
+            <span>Yükleniyor...</span>
+        </div>
+    </main>
+
+    <!-- Technical Details Modal -->
+    <div class="technical-modal" id="technicalModal">
+        <!-- Technical details modal content -->
+    </div>
+
+    <!-- Required Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/nouislider@14.6.3/distribute/nouislider.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        // API Configuration
+        const API_URL = 'https://eticaret-glif.onrender.com/api';
+        const TOKEN_KEY = 'token';
+        const USER_KEY = 'user';
+
+        // State Management
+        const state = {
+            products: [],
+            filteredProducts: [],
+            filters: {
+                categories: [],
+                materials: [],
+                standards: [],
+                dimensions: {
+                    min: null,
+                    max: null
+                },
+                certifications: [],
+                search: ''
+            },
+            view: 'grid',
+            loading: false,
+            comparing: [],
+            pagination: {
+                page: 1,
+                limit: 20,
+                hasMore: true
+            }
+        };
+
+        // Technical Product Card Template
+        function createTechnicalCard(product) {
+            return `
+                <div class="technical-card">
+                    <div class="technical-header">
+                        <span class="part-number">${product.partNumber}</span>
+                        ${product.certification ? `
+                            <span class="technical-badge badge-certification">
+                                <i class="fas fa-certificate"></i>
+                                ${product.certification}
+                            </span>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="technical-image">
+                        <img src="${product.technicalDrawing || product.image}" 
+                             alt="${product.title}"
+                             class="technical-drawing">
+                    </div>
+
+                    <div class="technical-details">
+                        <div class="detail-item">
+                            <span class="label">Malzeme:</span>
+                            <span class="value">${product.material}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Standart:</span>
+                            <span class="value">${product.standard}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Boyut:</span>
+                            <span class="value">${product.dimensions}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Tolerans:</span>
+                            <span class="value">${product.tolerance}</span>
+                        </div>
+                    </div>
+
+                    <div class="technical-actions">
+                        <button class="btn btn-secondary" onclick="downloadTechnicalDocs('${product._id}')">
+                            <i class="fas fa-file-download"></i>
+                            Teknik Döküman
+                        </button>
+                        <button class="btn btn-primary" onclick="addToCart('${product._id}')">
+                            <i class="fas fa-shopping-cart"></i>
+                            Sepete Ekle
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeApp();
+            setupEventListeners();
+        });
+
+        // Initialize App
+        async function initializeApp() {
+            try {
+                showLoading(true);
+                await loadCategories();
+                await loadProducts();
+                setupFilters();
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showNotification('Bir hata oluştu', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // View Toggle
+            document.querySelectorAll('.view-toggle button').forEach(button => {
+                button.addEventListener('click', () => {
+                    const view = button.dataset.view;
+                    changeView(view);
+                });
+            });
+
+            // Search
+            const searchInput = document.getElementById('technicalSearch');
+            let searchTimeout;
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    state.filters.search = e.target.value;
+                    filterProducts();
+                }, 300);
+            });
+
+            // Infinite Scroll
+            setupInfiniteScroll();
+        }
+
+        // API Calls
+        async function fetchAPI(endpoint, options = {}) {
+            try {
+                const token = localStorage.getItem(TOKEN_KEY);
+                const defaultHeaders = {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : ''
+                };
+
+                const response = await fetch(`${API_URL}${endpoint}`, {
+                    ...options,
+                    headers: {
+                        ...defaultHeaders,
+                        ...options.headers
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Helper Functions
+        function showLoading(show) {
+            const loader = document.getElementById('loadingIndicator');
+            loader.style.display = show ? 'flex' : 'none';
+            state.loading = show;
+        }
+
+        function showNotification(message, type = 'success') {
+            // Implementation of notification system
+        }
+
+        // Initialize the app
+        initializeApp();
+    </script>
+</body>
+</html>
