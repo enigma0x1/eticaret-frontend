@@ -572,106 +572,129 @@
                             </div>
                         </div>
                     </td>
-                    // ...
+                    <td>
+                        <div>${product.manufacturer?.companyName || 'N/A'}</div>
+                        <small style="color: var(--gray)">${product.manufacturer?.email || 'N/A'}</small>
+                    </td>
+                    <td>${formatPrice(product.price)}</td>
+                    <td>${product.stock}</td>
+                    <td>
+                        <span class="status-badge ${product.status}">
+                            ${product.status === 'active' ? 'Aktif' : 
+                              product.status === 'inactive' ? 'Pasif' : 
+                              'Stok Dışı'}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-text" onclick="showProductDetails('${product._id}')">
+                                <i class="fas fa-info-circle"></i> Detaylar
+                            </button>
+                            <button class="btn btn-text" onclick="deleteProduct('${product._id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             `).join('');
         }
-
-        // Ürün detay modalı
-        function showProductDetails(productId) {
-            const product = adminData.products.find(p => p._id === productId);
-            if (!product) return;
-
-            const manufacturer = adminData.users.find(u => u._id === product.manufacturer._id);
-            const activities = adminData.activities.filter(a => a.productId === productId);
-
+        async function deleteProduct(productId) {
+            if (!confirm('Bu ürünü silmek istediğinizden emin misiniz?')) {
+                return;
+            }
+        
+            showLoading(true);
+            try {
+                const response = await fetchAPI(`/admin/products/${productId}`, {
+                    method: 'DELETE'
+                });
+        
+                if (response.success) {
+                    adminData.products = adminData.products.filter(p => p._id !== productId);
+                    renderProductsTable();
+                    showToast('Ürün başarıyla silindi', 'success');
+                }
+            } catch (error) {
+                showToast('Ürün silinirken hata oluştu', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+                // Ürün detay modalı
+        function showProductModal() {
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.innerHTML = `
-                <div class="modal-content modal-lg">
+                <div class="modal-content">
                     <div class="modal-header">
-                        <h2>Ürün Detayları</h2>
+                        <h2>Yeni Ürün Ekle</h2>
                         <button class="btn-close" onclick="closeModal(this)">&times;</button>
                     </div>
                     <div class="modal-body">
-                        <div class="tabs">
-                            <button class="tab-btn active" onclick="switchTab(this, 'productInfo')">Ürün Bilgileri</button>
-                            <button class="tab-btn" onclick="switchTab(this, 'manufacturerInfo')">Satıcı Bilgileri</button>
-                            <button class="tab-btn" onclick="switchTab(this, 'activities')">Aktiviteler</button>
-                        </div>
-
-                        <div class="tab-content active" id="productInfo">
+                        <form id="newProductForm" onsubmit="createProduct(event)">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <label>Ürün ID</label>
-                                    <div>${product._id}</div>
+                                    <label>Başlık</label>
+                                    <input type="text" name="title" required>
                                 </div>
                                 <div class="info-item">
-                                    <label>Oluşturulma Tarihi</label>
-                                    <div>${formatDate(product.createdAt)}</div>
+                                    <label>Açıklama</label>
+                                    <textarea name="description" required></textarea>
                                 </div>
                                 <div class="info-item">
-                                    <label>Son Güncelleme</label>
-                                    <div>${formatDate(product.updatedAt)}</div>
+                                    <label>Fiyat</label>
+                                    <input type="number" name="price" required min="0" step="0.01">
                                 </div>
                                 <div class="info-item">
-                                    <label>Görüntülenme</label>
-                                    <div>${product.views}</div>
+                                    <label>Stok</label>
+                                    <input type="number" name="stock" required min="0">
                                 </div>
                                 <div class="info-item">
-                                    <label>Değerlendirme</label>
-                                    <div>${product.rating} (${product.ratingCount} oy)</div>
-                                </div>
-                                <div class="info-item">
-                                    <label>Model Formatları</label>
-                                    <div>${product.modelFormats.join(', ')}</div>
+                                    <label>Üretici</label>
+                                    <select name="manufacturer" required>
+                                        <option value="">Seçiniz</option>
+                                        ${adminData.users.manufacturers.map(m => 
+                                            `<option value="${m._id}">${m.companyName}</option>`
+                                        ).join('')}
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="tab-content" id="manufacturerInfo">
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <label>Firma Adı</label>
-                                    <div>${manufacturer?.companyName || 'N/A'}</div>
-                                </div>
-                                <div class="info-item">
-                                    <label>E-posta</label>
-                                    <div>${manufacturer?.email || 'N/A'}</div>
-                                </div>
-                                <div class="info-item">
-                                    <label>Kayıt Tarihi</label>
-                                    <div>${formatDate(manufacturer?.createdAt)}</div>
-                                </div>
-                                <div class="info-item">
-                                    <label>Son Giriş</label>
-                                    <div>${formatDate(manufacturer?.lastLogin)}</div>
-                                </div>
+                            <div style="margin-top: 1rem; text-align: right;">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Kaydet
+                                </button>
                             </div>
-                        </div>
-
-                        <div class="tab-content" id="activities">
-                            <div class="activity-list">
-                                ${activities.length ? activities.map(activity => `
-                                    <div class="activity-item">
-                                        <div class="activity-icon">
-                                            <i class="fas fa-${getActivityIcon(activity.type)}"></i>
-                                        </div>
-                                        <div class="activity-content">
-                                            <div class="activity-title">${getActivityTitle(activity)}</div>
-                                            <div class="activity-meta">
-                                                <span>${formatDate(activity.createdAt)}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `).join('') : '<div class="no-data">Aktivite bulunamadı</div>'}
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             `;
-
+        
             document.body.appendChild(modal);
+        }
+        
+        async function createProduct(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+        
+            showLoading(true);
+            try {
+                const response = await fetchAPI('/admin/products', {
+                    method: 'POST',
+                    body: JSON.stringify(Object.fromEntries(formData)),
+                });
+        
+                if (response.success) {
+                    adminData.products.unshift(response.product);
+                    renderProductsTable();
+                    closeModal(form);
+                    showToast('Ürün başarıyla oluşturuldu', 'success');
+                }
+            } catch (error) {
+                showToast('Ürün oluşturulurken hata oluştu', 'error');
+            } finally {
+                showLoading(false);
+            }
         }
 
         // Yardımcı fonksiyonlar
