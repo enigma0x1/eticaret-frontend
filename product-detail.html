@@ -1382,63 +1382,65 @@
 
     async function loadSimilarProducts() {
         try {
-            // Örnek veri (API bağlantısı yokken test için)
-            const dummyProducts = [
-                {
-                    _id: '1',
-                    title: 'Benzer Ürün 1',
-                    price: 1999.99,
-                    images: ['product1.jpg'],
-                    category: 'Kategori 1',
-                    rating: 4.5,
-                    ratingCount: 12
-                },
-                {
-                    _id: '2',
-                    title: 'Benzer Ürün 2',
-                    price: 2999.99,
-                    images: ['product2.jpg'],
-                    category: 'Kategori 2',
-                    rating: 4.0,
-                    ratingCount: 8
-                },
-                // Daha fazla örnek ürün ekleyebilirsiniz
-            ];
+            // Mevcut ürünün kategorisini ve ID'sini al
+            const currentProductId = state.product._id;
+            const currentCategory = state.product.category;
     
-            // API çağrısı yerine örnek veriyi kullan
-            // const response = await fetchAPI(`/products/similar/${state.product._id}`);
-            // if (response.success) {
-            //     state.similarProducts = response.products;
-            // }
+            // Aynı kategorideki diğer ürünleri getir
+            const response = await fetchAPI(`/products?category=${currentCategory}&limit=10`);
             
-            state.similarProducts = dummyProducts;
-            initializeSimilarProductsSlider();
+            if (response.success && response.products) {
+                // Mevcut ürünü filtrele ve en fazla 8 ürün göster
+                state.similarProducts = response.products
+                    .filter(product => product._id !== currentProductId)
+                    .slice(0, 8);
+    
+                if (state.similarProducts.length > 0) {
+                    initializeSimilarProductsSlider();
+                } else {
+                    document.querySelector('.similar-products').style.display = 'none';
+                }
+            }
         } catch (error) {
             console.error('Similar products loading error:', error);
+            document.querySelector('.similar-products').style.display = 'none';
         }
     }
     
     function initializeSimilarProductsSlider() {
         const swiperWrapper = document.querySelector('.similarProductsSwiper .swiper-wrapper');
         
-        if (!state.similarProducts || state.similarProducts.length === 0) {
-            document.querySelector('.similar-products').style.display = 'none';
-            return;
-        }
-    
-        // Slider içeriğini oluştur
         swiperWrapper.innerHTML = state.similarProducts.map(product => `
             <div class="swiper-slide">
                 <div class="product-card" onclick="navigateToProduct('${product._id}')">
                     <div class="product-image">
-                        <img src="https://picsum.photos/300/300?random=${product._id}" 
+                        <img src="${product.images && product.images.length > 0 
+                            ? `${API_URL}/uploads/${product.images[0]}` 
+                            : 'https://via.placeholder.com/300x300?text=No+Image'}" 
                              alt="${product.title}"
+                             onerror="this.src='https://via.placeholder.com/300x300?text=No+Image'"
                              loading="lazy">
                     </div>
                     <div class="product-content">
-                        <div class="product-category">${product.category || ''}</div>
+                        <div class="product-category">${product.category || 'Genel'}</div>
                         <h3 class="product-title">${product.title}</h3>
-                        <div class="product-price">${CURRENCY_FORMAT.format(product.price)}</div>
+                        <div class="product-meta">
+                            ${product.rating ? `
+                                <div class="product-rating">
+                                    ${generateStars(product.rating)}
+                                    <span class="rating-count">(${product.ratingCount || 0})</span>
+                                </div>
+                            ` : ''}
+                            <div class="product-price">
+                                ${CURRENCY_FORMAT.format(product.price)}
+                                ${product.oldPrice && product.oldPrice > product.price ? `
+                                    <span class="old-price">${CURRENCY_FORMAT.format(product.oldPrice)}</span>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ${product.stock <= 0 ? `
+                            <div class="out-of-stock-badge">Stokta Yok</div>
+                        ` : ''}
                     </div>
                 </div>
             </div>
@@ -1448,7 +1450,7 @@
         new Swiper('.similarProductsSwiper', {
             slidesPerView: 1,
             spaceBetween: 20,
-            loop: true,
+            loop: state.similarProducts.length > 4,
             autoplay: {
                 delay: 3000,
                 disableOnInteraction: false,
@@ -1474,7 +1476,8 @@
             }
         });
     }
-
+        
+        
     async function loadReviews() {
         try {
             const response = await fetchAPI(`/products/${state.product._id}/reviews`);
