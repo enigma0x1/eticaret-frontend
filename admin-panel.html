@@ -555,7 +555,7 @@
             `;
         }
 
-        function renderProductsTable() {
+       function renderProductsTable() {
             const tbody = document.getElementById('productsTable');
             tbody.innerHTML = adminData.products.map(product => `
                 <tr>
@@ -564,29 +564,15 @@
                             <img src="${CONFIG.API_URL}${product.image}" 
                                  alt="${product.title}" 
                                  style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;"
-                                 onerror="this.src='placeholder.jpg'">
+                                 onerror="this.src='https://via.placeholder.com/40'"
+                            >
                             <div>
                                 <div>${product.title}</div>
                                 <small style="color: var(--gray)">ID: ${product._id}</small>
                             </div>
                         </div>
                     </td>
-                    <td>
-                        <div>${product.manufacturer.companyName}</div>
-                        <small style="color: var(--gray)">${product.manufacturer._id}</small>
-                    </td>
-                    <td>${formatPrice(product.price)}</td>
-                    <td>${product.stock}</td>
-                    <td>
-                        <span class="status-badge ${product.status}">
-                            ${product.status.toUpperCase()}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-text" onclick="showProductDetails('${product._id}')">
-                            <i class="fas fa-info-circle"></i> Detaylar
-                        </button>
-                    </td>
+                    // ...
                 </tr>
             `).join('');
         }
