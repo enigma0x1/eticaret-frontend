@@ -3,340 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ürün Detay Sayfası</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Ürün Detay</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+        .zoom-container:hover img {
+            transform: scale(1.5);
+            transition: transform 0.3s ease;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
         }
-
-        .product-container {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .product-images {
-            flex: 1;
-        }
-
-        .main-image {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-
-        .thumbnail-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .thumbnail {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            cursor: pointer;
-        }
-
-        .product-info {
-            flex: 1;
-        }
-
-        .product-title {
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .product-price {
-            font-size: 28px;
-            color: #e44d26;
-            margin-bottom: 20px;
-        }
-
-        .product-description {
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .add-to-cart {
-            background-color: #e44d26;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .add-to-cart:hover {
-            background-color: #c73e1d;
-        }
-
-        .product-details {
-            margin-top: 40px;
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            background: none;
-        }
-
-        .tab.active {
-            border-bottom: 2px solid #e44d26;
-            color: #e44d26;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .reviews {
-            margin-top: 20px;
-        }
-
-        .review {
-            border-bottom: 1px solid #ddd;
-            padding: 15px 0;
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .stars {
-            color: #ffd700;
-        }
-
-        .similar-products {
-            margin-top: 40px;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .product-card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-
-        .quantity-selector {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .quantity-btn {
-            padding: 5px 10px;
-            border: 1px solid #ddd;
-            background: none;
-            cursor: pointer;
-        }
-
-        .quantity-input {
-            width: 50px;
-            text-align: center;
-            margin: 0 10px;
-            padding: 5px;
-        }
-
-        .color-options {
-            margin-bottom: 20px;
-        }
-
-        .color-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 10px;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        .color-option.selected {
-            border-color: #e44d26;
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #718096;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="product-container">
-            <div class="product-images">
-                <img src="main-product-image.jpg" alt="Ürün" class="main-image" id="mainImage">
-                <div class="thumbnail-container">
-                    <img src="thumbnail1.jpg" alt="Thumbnail 1" class="thumbnail">
-                    <img src="thumbnail2.jpg" alt="Thumbnail 2" class="thumbnail">
-                    <img src="thumbnail3.jpg" alt="Thumbnail 3" class="thumbnail">
+    <div id="app" class="container mx-auto px-4 py-8">
+        <!-- Ürün Başlık -->
+        <h1 class="text-3xl font-bold mb-8">{{ product.name }}</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Sol Kolon: Ürün Görselleri -->
+            <div>
+                <div class="overflow-hidden rounded-lg mb-4 zoom-container">
+                    <img :src="selectedImage" class="w-full h-96 object-cover" />
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <template v-for="(img, index) in product.images">
+                        <div 
+                            :key="index"
+                            @click="selectedImage = img"
+                            class="cursor-pointer border-2 rounded-lg"
+                            :class="{'border-blue-500': selectedImage === img}"
+                        >
+                            <img :src="img" class="w-full h-24 object-cover rounded-lg" />
+                        </div>
+                    </template>
                 </div>
             </div>
 
-            <div class="product-info">
-                <h1 class="product-title">Ürün Adı</h1>
-                <div class="stars">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <span>(125 değerlendirme)</span>
-                </div>
-                <p class="product-price">₺999,99</p>
-                
-                <div class="color-options">
-                    <h3>Renk Seçenekleri:</h3>
-                    <div class="color-option selected" style="background-color: red;"></div>
-                    <div class="color-option" style="background-color: blue;"></div>
-                    <div class="color-option" style="background-color: green;"></div>
+            <!-- Sağ Kolon: Ürün Bilgileri -->
+            <div>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <div class="text-2xl font-bold">{{ formatPrice(product.price) }}</div>
+                        <div class="flex items-center">
+                            <span class="text-yellow-400">★★★★☆</span>
+                            <span class="ml-2 text-gray-600">(128 değerlendirme)</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="font-semibold">Renk Seçimi</h3>
+                        <div class="flex gap-2">
+                            <template v-for="color in product.colors">
+                                <button 
+                                    :key="color"
+                                    @click="selectedColor = color"
+                                    class="w-8 h-8 rounded-full border-2"
+                                    :class="{'ring-2 ring-blue-500': selectedColor === color}"
+                                    :style="`background-color: ${color}`"
+                                ></button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="font-semibold">Beden</h3>
+                        <div class="flex gap-2">
+                            <template v-for="size in product.sizes">
+                                <button 
+                                    :key="size"
+                                    @click="selectedSize = size"
+                                    class="px-4 py-2 border rounded-md"
+                                    :class="{'bg-blue-500 text-white': selectedSize === size}"
+                                >
+                                    {{ size }}
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="font-semibold">Adet</h3>
+                        <div class="flex items-center gap-2">
+                            <button 
+                                @click="quantity > 1 && quantity--"
+                                class="px-3 py-1 border rounded-md"
+                            >-</button>
+                            <span class="px-4 py-1">{{ quantity }}</span>
+                            <button 
+                                @click="quantity++"
+                                class="px-3 py-1 border rounded-md"
+                            >+</button>
+                        </div>
+                    </div>
+
+                    <button 
+                        @click="addToCart"
+                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+                    >
+                        Sepete Ekle
+                    </button>
                 </div>
 
-                <div class="quantity-selector">
-                    <button class="quantity-btn" onclick="decreaseQuantity()">-</button>
-                    <input type="number" value="1" min="1" class="quantity-input" id="quantity">
-                    <button class="quantity-btn" onclick="increaseQuantity()">+</button>
+                <!-- Ürün Açıklaması -->
+                <div class="mt-8">
+                    <h3 class="font-semibold mb-2">Ürün Açıklaması</h3>
+                    <p class="text-gray-600">{{ product.description }}</p>
                 </div>
-
-                <p class="product-description">
-                    Ürün açıklaması buraya gelecek. Detaylı ürün özellikleri ve açıklamaları...
-                </p>
-
-                <button class="add-to-cart">Sepete Ekle</button>
             </div>
         </div>
 
-        <div class="product-details">
-            <div class="tabs">
-                <button class="tab active" onclick="openTab('description')">Açıklama</button>
-                <button class="tab" onclick="openTab('specifications')">Özellikler</button>
-                <button class="tab" onclick="openTab('reviews')">Yorumlar</button>
-            </div>
-
-            <div id="description" class="tab-content active">
-                <h2>Ürün Açıklaması</h2>
-                <p>Detaylı ürün açıklaması...</p>
-            </div>
-
-            <div id="specifications" class="tab-content">
-                <h2>Teknik Özellikler</h2>
-                <ul>
-                    <li>Özellik 1</li>
-                    <li>Özellik 2</li>
-                    <li>Özellik 3</li>
-                </ul>
-            </div>
-
-            <div id="reviews" class="tab-content">
-                <h2>Müşteri Yorumları</h2>
-                <div class="reviews">
-                    <div class="review">
-                        <div class="review-header">
-                            <strong>Ahmet Y.</strong>
-                            <div class="stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+        <!-- Benzer Ürünler -->
+        <div class="mt-16">
+            <h2 class="text-2xl font-bold mb-6">Benzer Ürünler</h2>
+            <div class="swiper similarProducts">
+                <div class="swiper-wrapper">
+                    <template v-for="item in similarProducts">
+                        <div class="swiper-slide">
+                            <div class="border rounded-lg p-4">
+                                <img :src="item.image" class="w-full h-48 object-cover rounded-lg mb-4">
+                                <h3 class="font-semibold">{{ item.name }}</h3>
+                                <p class="text-gray-600">{{ formatPrice(item.price) }}</p>
                             </div>
                         </div>
-                        <p>Harika bir ürün! Çok memnun kaldım.</p>
-                    </div>
-                    <!-- Diğer yorumlar -->
+                    </template>
                 </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
 
-        <div class="similar-products">
-            <h2>Benzer Ürünler</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <img src="similar1.jpg" alt="Benzer Ürün 1">
-                    <h3>Benzer Ürün 1</h3>
-                    <p>₺799,99</p>
+        <!-- Yorumlar -->
+        <div class="mt-16">
+            <h2 class="text-2xl font-bold mb-6">Müşteri Yorumları</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4 custom-scrollbar max-h-[500px] overflow-y-auto">
+                    <template v-for="review in product.reviews">
+                        <div class="border rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="font-semibold">
+                                                                    {{ review.user }}
+                                </div>
+                                <div class="text-yellow-400">
+                                    {{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5-review.rating) }}
+                                </div>
+                            </div>
+                            <p class="text-gray-600">{{ review.comment }}</p>
+                            <div class="mt-2 text-sm text-gray-500">{{ review.date }}</div>
+                        </div>
+                    </template>
                 </div>
-                <!-- Diğer benzer ürünler -->
+
+                <!-- Yorum Formu -->
+                <div class="border rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Yorum Yap</h3>
+                    <form @submit.prevent="submitReview" class="space-y-4">
+                        <div>
+                            <label class="block mb-2">Puanınız</label>
+                            <div class="flex gap-2">
+                                <template v-for="n in 5">
+                                    <button 
+                                        type="button"
+                                        @click="newReview.rating = n"
+                                        class="text-2xl"
+                                        :class="n <= newReview.rating ? 'text-yellow-400' : 'text-gray-300'"
+                                    >★</button>
+                                </template>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-2">Yorumunuz</label>
+                            <textarea 
+                                v-model="newReview.comment"
+                                class="w-full border rounded-lg p-2 h-32"
+                                required
+                            ></textarea>
+                        </div>
+                        <button 
+                            type="submit"
+                            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+                        >
+                            Yorum Gönder
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Tab değiştirme fonksiyonu
-        function openTab(tabName) {
-            const tabs = document.getElementsByClassName('tab');
-            const tabContents = document.getElementsByClassName('tab-content');
+        const { createApp } = Vue
 
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-                tabContents[i].classList.remove('active');
+        createApp({
+            data() {
+                return {
+                    product: {
+                        id: 1,
+                        name: "Premium Deri Ceket",
+                        price: 2499.99,
+                        description: "Yüksek kaliteli gerçek deri, modern kesim. İç astar ve çoklu cep detayları. Sonbahar/Kış sezonu için ideal.",
+                        images: [
+                            "https://picsum.photos/800/800?random=1",
+                            "https://picsum.photos/800/800?random=2",
+                            "https://picsum.photos/800/800?random=3",
+                            "https://picsum.photos/800/800?random=4"
+                        ],
+                        colors: ['#000000', '#8B4513', '#808080', '#F5F5DC'],
+                        sizes: ['S', 'M', 'L', 'XL'],
+                        reviews: [
+                            {
+                                user: "Ahmet Y.",
+                                rating: 5,
+                                comment: "Harika bir ürün, kalitesi çok iyi.",
+                                date: "2023-10-15"
+                            },
+                            {
+                                user: "Mehmet K.",
+                                rating: 4,
+                                comment: "Güzel ürün ama biraz pahalı.",
+                                date: "2023-10-14"
+                            }
+                        ]
+                    },
+                    similarProducts: [
+                        {
+                            id: 2,
+                            name: "Klasik Deri Ceket",
+                            price: 1999.99,
+                            image: "https://picsum.photos/800/800?random=5"
+                        },
+                        {
+                            id: 3,
+                            name: "Spor Deri Ceket",
+                            price: 2199.99,
+                            image: "https://picsum.photos/800/800?random=6"
+                        },
+                        {
+                            id: 4,
+                            name: "Vintage Deri Ceket",
+                            price: 2299.99,
+                            image: "https://picsum.photos/800/800?random=7"
+                        }
+                    ],
+                    selectedImage: "https://picsum.photos/800/800?random=1",
+                    selectedColor: '#000000',
+                    selectedSize: 'M',
+                    quantity: 1,
+                    newReview: {
+                        rating: 5,
+                        comment: ""
+                    }
+                }
+            },
+            methods: {
+                formatPrice(price) {
+                    return new Intl.NumberFormat('tr-TR', {
+                        style: 'currency',
+                        currency: 'TRY'
+                    }).format(price)
+                },
+                addToCart() {
+                    alert('Ürün sepete eklendi!')
+                },
+                submitReview() {
+                    const review = {
+                        user: "Kullanıcı",
+                        rating: this.newReview.rating,
+                        comment: this.newReview.comment,
+                        date: new Date().toISOString().split('T')[0]
+                    }
+                    this.product.reviews.unshift(review)
+                    this.newReview.comment = ""
+                    alert('Yorumunuz başarıyla eklendi!')
+                }
+            },
+            mounted() {
+                new Swiper('.similarProducts', {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 2,
+                        },
+                        768: {
+                            slidesPerView: 3,
+                        }
+                    }
+                })
             }
-
-            document.getElementById(tabName).classList.add('active');
-            event.currentTarget.classList.add('active');
-        }
-
-        // Thumbnail tıklama işlevi
-        document.querySelectorAll('.thumbnail').forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                document.getElementById('mainImage').src = this.src;
-            });
-        });
-
-        // Miktar artırma/azaltma işlevleri
-        function increaseQuantity() {
-            const input = document.getElementById('quantity');
-            input.value = parseInt(input.value) + 1;
-        }
-
-        function decreaseQuantity() {
-            const input = document.getElementById('quantity');
-            if (parseInt(input.value) > 1) {
-                input.value = parseInt(input.value) - 1;
-            }
-        }
-
-        // Renk seçimi işlevi
-        document.querySelectorAll('.color-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.color-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-            });
-        });
+        }).mount('#app')
     </script>
 </body>
 </html>
