@@ -2,6 +2,9 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="IndustryHub Pro - Endüstriyel Ürün Kataloğu">
     <title>IndustryHub Pro - Ürün Kataloğu</title>
@@ -1360,9 +1363,38 @@
             // Çıkış butonu
             const logoutBtn = document.getElementById('logoutBtn');
             if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    auth.clearAuth();
-                    window.location.href = '/login"';
+                logoutBtn.addEventListener('click', async () => {
+                    try {
+                        showLoading(true);
+                        const userType = localStorage.getItem('userType');
+                        const response = await fetchAPI('/auth/logout', {
+                            method: 'POST'
+                        });
+            
+                        if (response.success) {
+                            auth.clearAuth();
+                            localStorage.removeItem('userType');
+                            
+                            // UserType'a göre yönlendirme
+                            switch(userType) {
+                                case 'manufacturer':
+                                    window.location.replace('ureticiLogin');
+                                    break;
+                                case 'professional':
+                                    window.location.replace('loginForPro');
+                                    break;
+                                case 'admin':
+                                    window.location.replace('adminLogin');
+                                    break;
+                                default:
+                                    window.location.replace('login');
+                            }
+                        }
+                    } catch (error) {
+                        showNotification('Çıkış yapılırken bir hata oluştu', 'error');
+                    } finally {
+                        showLoading(false);
+                    }
                 });
             }
         
