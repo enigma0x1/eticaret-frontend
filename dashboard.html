@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="auth.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -839,7 +840,7 @@
                             Ayarlar
                         </a>
                         <hr class="dropdown-divider">
-                        <button class="dropdown-item danger" id="logoutBtn">
+                        <button class="dropdown-item danger" id="logoutBtn" onclick="AuthManager.logout(); return false;">
                             <i class="fas fa-sign-out-alt"></i>
                             Çıkış Yap
                         </button>
@@ -1359,45 +1360,6 @@
                     }
                 });
             }
-        
-            // Çıkış butonu
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', async () => {
-                    try {
-                        showLoading(true);
-                        const userType = localStorage.getItem('userType');
-                        const response = await fetchAPI('/auth/logout', {
-                            method: 'POST'
-                        });
-            
-                        if (response.success) {
-                            auth.clearAuth();
-                            localStorage.removeItem('userType');
-                            
-                            // UserType'a göre yönlendirme
-                            switch(userType) {
-                                case 'manufacturer':
-                                    window.location.replace('ureticiLogin');
-                                    break;
-                                case 'professional':
-                                    window.location.replace('loginForPro');
-                                    break;
-                                case 'admin':
-                                    window.location.replace('adminLogin');
-                                    break;
-                                default:
-                                    window.location.replace('login');
-                            }
-                        }
-                    } catch (error) {
-                        showNotification('Çıkış yapılırken bir hata oluştu', 'error');
-                    } finally {
-                        showLoading(false);
-                    }
-                });
-            }
-        
             // Sonsuz scroll
             setupInfiniteScroll();
         
