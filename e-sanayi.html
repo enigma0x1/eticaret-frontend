@@ -981,6 +981,7 @@
 	    },
 	    view: 'list'
 	};
+	    
 	
 	// Ana sayfa yüklendiğinde çalışacak fonksiyon
 	document.addEventListener('DOMContentLoaded', async () => {
@@ -1033,7 +1034,41 @@
 	        loader.remove();
 	    }
 	}
+	// Kategori filtrelerini kurma
+	function setupCategoryFilters() {
+	    const filterContent = document.querySelector('.filter-content .checkbox-group');
+	    if (!filterContent) return;
 	
+	    const categoryFiltersHTML = state.categories.map(category => `
+	        <div class="checkbox-item">
+	            <input type="checkbox" id="cat-${category._id}" value="${category._id}">
+	            <label for="cat-${category._id}">${category.name} 
+	                ${category.count ? `(${category.count})` : ''}
+	            </label>
+	        </div>
+	    `).join('');
+	
+	    filterContent.innerHTML = categoryFiltersHTML;
+	
+	    // Kategori checkbox'larına event listener ekle
+	    document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(checkbox => {
+	        checkbox.addEventListener('change', () => {
+	            const checkedCategories = Array.from(document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked'))
+	                .map(cb => cb.value);
+	            
+	            state.filters.category = checkedCategories;
+	            updateManufacturerList();
+	        });
+	    });
+	}
+	
+	// Checkbox'lardan filtreleri güncelleme
+	function updateFiltersFromCheckboxes() {
+	    const checkedCategories = Array.from(document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked'))
+	        .map(cb => cb.value);
+	    
+	    state.filters.category = checkedCategories;
+	}
 	// Hata ve başarı mesajları
 	function showError(message, duration = 5000) {
 	    const errorDiv = document.createElement('div');
