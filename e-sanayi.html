@@ -967,657 +967,507 @@
     </div>
 
     <script>
-        // Favori butonları için
-        document.querySelectorAll('.btn-favorite').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const icon = this.querySelector('i');
-                icon.classList.toggle('far');
-                icon.classList.toggle('fas');
-                this.classList.toggle('active');
-            });
-        });
+	<script>
+// Global state ve API URL tanımı
+const API_BASE_URL = 'https://eticaret-glif.onrender.com/api';
+const state = {
+    manufacturers: [],
+    categories: [],
+    filters: {
+        category: '',
+        search: '',
+        priceRange: { min: 0, max: 999999 },
+        location: '',
+        sortBy: 'rating'
+    },
+    view: 'list'
+};
 
-        // Görünüm değiştirme butonları için
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+// Ana sayfa yüklendiğinde çalışacak fonksiyon
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        showLoading();
 
-        // Filtre açılır/kapanır özelliği için
-        document.querySelectorAll('.filter-header').forEach(header => {
-            header.addEventListener('click', function() {
-                const content = this.nextElementSibling;
-                const icon = this.querySelector('i');
-                content.style.display = content.style.display === 'none' ? 'block' : 'none';
-                icon.classList.toggle('fa-chevron-up');
-                icon.classList.toggle('fa-chevron-down');
-            });
+        // Kategorileri çek
+        const categoryResponse = await fetch(`${API_BASE_URL}/categories`);
+        const categoryData = await categoryResponse.json();
+        if(categoryData.success) {
+            state.categories = categoryData.categories;
+            updateCategories(categoryData.categories);
+            setupCategoryFilters();
+        }
+
+        // Üreticileri çek
+        const manufacturerResponse = await fetch(`${API_BASE_URL}/manufacturer/dashboard`);
+        const manufacturerData = await manufacturerResponse.json();
+        if(manufacturerResponse.success) {
+            state.manufacturers = manufacturerData.products;
+            updateManufacturerList();
+        }
+
+        setupEventListeners();
+        hideLoading();
+
+    } catch (error) {
+        console.error('Veri yükleme hatası:', error);
+        showError('Veriler yüklenirken bir hata oluştu');
+        hideLoading();
+    }
+});
+
+// Loading göstergesi fonksiyonları
+function showLoading() {
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.innerHTML = `
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Yükleniyor...</p>
+        </div>
+    `;
+    document.body.appendChild(loader);
+}
+
+function hideLoading() {
+    const loader = document.getElementById('loader');
+    if (loader) {
+        loader.remove();
+    }
+}
+
+// Hata ve başarı mesajları
+function showError(message, duration = 5000) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #ff5722;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000;
+        animation: slideIn 0.3s ease-out;
+    `;
+    errorDiv.textContent = message;
+    document.body.appendChild(errorDiv);
+
+    setTimeout(() => {
+        errorDiv.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => errorDiv.remove(), 300);
+    }, duration);
+}
+
+function showSuccess(message, duration = 3000) {
+    const successDiv = document.createElement('div');
+    successDiv.className = 'success-message';
+    successDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4caf50;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000;
+        animation: slideIn 0.3s ease-out;
+    `;
+    successDiv.textContent = message;
+    document.body.appendChild(successDiv);
+
+    setTimeout(() => {
+        successDiv.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => successDiv.remove(), 300);
+    }, duration);
+}
+
+// Event Listener'ları kurma
+function setupEventListeners() {
+    // Arama çubuğu
+    const searchInput = document.querySelector('.search-bar input');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(() => {
+            state.filters.search = searchInput.value;
+            updateManufacturerList();
+        }, 300));
+    }
+
+    // Sıralama seçeneği
+    const sortSelect = document.querySelector('.sort-select');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', () => {
+            state.filters.sortBy = sortSelect.value;
+            updateManufacturerList();
         });
-    </script>
-    <script>
-// Global state yönetimi
-	const state = {
-	    manufacturers: [],
-	    categories: [],
-	    filters: {
-	        category: '',
-	        search: '',
-	        priceRange: { min: 0, max: 999999 },
-	        location: '',
-	        sortBy: 'rating'
-	    },
-	    view: 'list' // 'list' veya 'grid'
-	};
-	
-	// Sayfa yüklendiğinde çalışacak ana fonksiyon
-	document.addEventListener('DOMContentLoaded', async () => {
-	    try {
-	        // Yükleniyor durumunu göster
-	        showLoading();
-	
-	        // Kategorileri çek
-	        const categoryResponse = await fetch('/api/categories');
-	        const categoryData = await categoryResponse.json();
-	        if(categoryData.success) {
-	            state.categories = categoryData.categories;
-	            updateCategories(categoryData.categories);
-	            setupCategoryFilters();
-	        }
-	
-	        // Üreticileri çek
-	        const manufacturerResponse = await fetch('/api/manufacturer/dashboard');
-	        const manufacturerData = await manufacturerResponse.json();
-	        if(manufacturerResponse.success) {
-	            state.manufacturers = manufacturerData.products;
-	            updateManufacturerList();
-	        }
-	
-	        // Event listener'ları kur
-	        setupEventListeners();
-	
-	        // Yükleniyor durumunu kaldır
-	        hideLoading();
-	
-	    } catch (error) {
-	        console.error('Veri yükleme hatası:', error);
-	        showError('Veriler yüklenirken bir hata oluştu');
-	        hideLoading();
-	    }
-	});
-	
-	// Loading göstergesi
-	function showLoading() {
-	    const loader = document.createElement('div');
-	    loader.id = 'loader';
-	    loader.innerHTML = `
-	        <div class="loading-spinner">
-	            <div class="spinner"></div>
-	            <p>Yükleniyor...</p>
-	        </div>
-	    `;
-	    document.body.appendChild(loader);
-	}
-	
-	function hideLoading() {
-	    const loader = document.getElementById('loader');
-	    if (loader) {
-	        loader.remove();
-	    }
-	}
-	
-	// Hata mesajı gösterme
-	function showError(message, duration = 5000) {
-	    const errorDiv = document.createElement('div');
-	    errorDiv.className = 'error-message';
-	    errorDiv.style.cssText = `
-	        position: fixed;
-	        top: 20px;
-	        right: 20px;
-	        background: #ff5722;
-	        color: white;
-	        padding: 15px 25px;
-	        border-radius: 4px;
-	        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	        z-index: 1000;
-	        animation: slideIn 0.3s ease-out;
-	    `;
-	    errorDiv.textContent = message;
-	    document.body.appendChild(errorDiv);
-	
-	    setTimeout(() => {
-	        errorDiv.style.animation = 'slideOut 0.3s ease-in';
-	        setTimeout(() => errorDiv.remove(), 300);
-	    }, duration);
-	}
-	
-	// Başarı mesajı gösterme
-	function showSuccess(message, duration = 3000) {
-	    const successDiv = document.createElement('div');
-	    successDiv.className = 'success-message';
-	    successDiv.style.cssText = `
-	        position: fixed;
-	        top: 20px;
-	        right: 20px;
-	        background: #4caf50;
-	        color: white;
-	        padding: 15px 25px;
-	        border-radius: 4px;
-	        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-	        z-index: 1000;
-	        animation: slideIn 0.3s ease-out;
-	    `;
-	    successDiv.textContent = message;
-	    document.body.appendChild(successDiv);
-	
-	    setTimeout(() => {
-	        successDiv.style.animation = 'slideOut 0.3s ease-in';
-	        setTimeout(() => successDiv.remove(), 300);
-	    }, duration);
-	}
-	// Event Listener'ları kurma
-	function setupEventListeners() {
-	    // Arama çubuğu
-	    const searchInput = document.querySelector('.search-bar input');
-	    if (searchInput) {
-	        searchInput.addEventListener('input', debounce(() => {
-	            state.filters.search = searchInput.value;
-	            updateManufacturerList();
-	        }, 300));
-	    }
-	
-	    // Sıralama seçeneği
-	    const sortSelect = document.querySelector('.sort-select');
-	    if (sortSelect) {
-	        sortSelect.addEventListener('change', () => {
-	            state.filters.sortBy = sortSelect.value;
-	            updateManufacturerList();
-	        });
-	    }
-	
-	    // Görünüm değiştirme butonları
-	    const viewButtons = document.querySelectorAll('.view-btn');
-	    viewButtons.forEach(btn => {
-	        btn.addEventListener('click', () => {
-	            viewButtons.forEach(b => b.classList.remove('active'));
-	            btn.classList.add('active');
-	            state.view = btn.querySelector('i').classList.contains('fa-th') ? 'grid' : 'list';
-	            updateManufacturerList();
-	        });
-	    });
-	
-	    // Fiyat filtresi
-	    const priceInputs = document.querySelectorAll('.price-filter input');
-	    priceInputs.forEach(input => {
-	        input.addEventListener('change', () => {
-	            state.filters.priceRange[input.dataset.type] = Number(input.value);
-	            updateManufacturerList();
-	        });
-	    });
-	
-	    // Kategori filtreleri
-	    const categoryCheckboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
-	    categoryCheckboxes.forEach(checkbox => {
-	        checkbox.addEventListener('change', () => {
-	            updateFiltersFromCheckboxes();
-	            updateManufacturerList();
-	        });
-	    });
-	
-	    // Aktif filtreleri temizleme
-	    document.querySelectorAll('.filter-tag i').forEach(closeIcon => {
-	        closeIcon.addEventListener('click', (e) => {
-	            const filterTag = e.target.parentElement;
-	            const filterType = filterTag.dataset.filterType;
-	            clearFilter(filterType);
-	            updateManufacturerList();
-	        });
-	    });
-	}
-	
-	// Debounce fonksiyonu
-	function debounce(func, wait) {
-	    let timeout;
-	    return function executedFunction(...args) {
-	        const later = () => {
-	            clearTimeout(timeout);
-	            func(...args);
-	        };
-	        clearTimeout(timeout);
-	        timeout = setTimeout(later, wait);
-	    };
-	}
-	
-	// Filtreleme mantığı
-	function filterManufacturers(manufacturers) {
-	    return manufacturers.filter(manufacturer => {
-	        // Arama filtresi
-	        if (state.filters.search) {
-	            const searchTerm = state.filters.search.toLowerCase();
-	            const searchableText = `
-	                ${manufacturer.companyName} 
-	                ${manufacturer.businessArea} 
-	                ${manufacturer.description || ''}
-	            `.toLowerCase();
-	            
-	            if (!searchableText.includes(searchTerm)) {
-	                return false;
-	            }
-	        }
-	
-	        // Kategori filtresi
-	        if (state.filters.category && manufacturer.category !== state.filters.category) {
-	            return false;
-	        }
-	
-	        // Fiyat aralığı filtresi
-	        if (manufacturer.price) {
-	            if (manufacturer.price < state.filters.priceRange.min || 
-	                manufacturer.price > state.filters.priceRange.max) {
-	                return false;
-	            }
-	        }
-	
-	        // Lokasyon filtresi
-	        if (state.filters.location && manufacturer.address) {
-	            if (!manufacturer.address.toLowerCase().includes(state.filters.location.toLowerCase())) {
-	                return false;
-	            }
-	        }
-	
-	        return true;
-	    });
-	}
-	
-	// Sıralama mantığı
-	function sortManufacturers(manufacturers) {
-	    return [...manufacturers].sort((a, b) => {
-	        switch (state.filters.sortBy) {
-	            case 'price-asc':
-	                return (a.price || 0) - (b.price || 0);
-	            case 'price-desc':
-	                return (b.price || 0) - (a.price || 0);
-	            case 'rating':
-	                return (b.rating || 0) - (a.rating || 0);
-	            case 'newest':
-	                return new Date(b.createdAt) - new Date(a.createdAt);
-	            default:
-	                return 0;
-	        }
-	    });
-	}
-	
-	// Aktif filtreleri güncelleme
-	function updateActiveFilters() {
-	    const activeFiltersContainer = document.querySelector('.active-filters');
-	    if (!activeFiltersContainer) return;
-	
-	    const activeFilters = [];
-	
-	    if (state.filters.category) {
-	        activeFilters.push({
-	            type: 'category',
-	            label: `Kategori: ${state.filters.category}`
-	        });
-	    }
-	
-	    if (state.filters.search) {
-	        activeFilters.push({
-	            type: 'search',
-	            label: `Arama: ${state.filters.search}`
-	        });
-	    }
-	
-	    if (state.filters.location) {
-	        activeFilters.push({
-	            type: 'location',
-	            label: `Konum: ${state.filters.location}`
-	        });
-	    }
-	
-	    const filtersHTML = activeFilters.map(filter => `
-	        <div class="filter-tag" data-filter-type="${filter.type}">
-	            ${filter.label} <i class="fas fa-times"></i>
-	        </div>
-	    `).join('');
-	
-	    activeFiltersContainer.innerHTML = filtersHTML;
-	}
-	
-	// Filtre temizleme
-	function clearFilter(filterType) {
-	    switch (filterType) {
-	        case 'category':
-	            state.filters.category = '';
-	            document.querySelectorAll('.checkbox-group input[type="checkbox"]')
-	                .forEach(cb => cb.checked = false);
-	            break;
-	        case 'search':
-	            state.filters.search = '';
-	            document.querySelector('.search-bar input').value = '';
-	            break;
-	        case 'location':
-	            state.filters.location = '';
-	            document.querySelector('.location-select').value = '';
-	            break;
-	        case 'all':
-	            state.filters = {
-	                category: '',
-	                search: '',
-	                priceRange: { min: 0, max: 999999 },
-	                location: '',
-	                sortBy: 'rating'
-	            };
-	            // Tüm form elemanlarını sıfırla
-	            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-	            document.querySelector('.search-bar input').value = '';
-	            document.querySelector('.sort-select').value = 'rating';
-	            break;
-	    }
-	    updateActiveFilters();
-	}
-	// Üretici listesini güncelleme
-	function updateManufacturerList() {
-	    const companyList = document.querySelector('.company-list');
-	    if (!companyList) return;
-	
-	    // Filtreleme ve sıralama uygula
-	    let filteredManufacturers = filterManufacturers(state.manufacturers);
-	    filteredManufacturers = sortManufacturers(filteredManufacturers);
-	
-	    // Liste boşsa
-	    if (filteredManufacturers.length === 0) {
-	        companyList.innerHTML = `
-	            <div class="no-results">
-	                <i class="fas fa-search" style="font-size: 48px; color: #ccc; margin-bottom: 20px;"></i>
-	                <h3>Sonuç Bulunamadı</h3>
-	                <p>Arama kriterlerinize uygun sonuç bulunamadı. Lütfen filtrelerinizi değiştirin.</p>
-	                <button onclick="clearFilter('all')" class="action-btn btn-primary">
-	                    <i class="fas fa-sync"></i> Filtreleri Temizle
-	                </button>
-	            </div>
-	        `;
-	        return;
-	    }
-	
-	    // Kartları oluştur
-	    const manufacturerHTML = filteredManufacturers.map(manufacturer => `
-	        <div class="company-card ${state.view === 'grid' ? 'grid-view' : ''}">
-	            <div class="company-header">
-	                <h2 class="company-title">${escapeHtml(manufacturer.companyName)}</h2>
-	                <div class="company-specs">
-	                    <div class="spec-item">
-	                        <span class="spec-label">İşleme Kapasitesi</span>
-	                        <span class="spec-value">${escapeHtml(manufacturer.businessArea || 'Belirtilmemiş')}</span>
-	                    </div>
-	                    ${manufacturer.price ? `
-	                        <div class="spec-item">
-	                            <span class="spec-label">Fiyat</span>
-	                            <span class="spec-value">${formatPrice(manufacturer.price)} TL</span>
-	                        </div>
-	                    ` : ''}
-	                    ${manufacturer.category ? `
-	                        <div class="spec-item">
-	                            <span class="spec-label">Kategori</span>
-	                            <span class="spec-value">${escapeHtml(manufacturer.category)}</span>
-	                        </div>
-	                    ` : ''}
-	                </div>
-	                <div class="tag-container">
-	                    ${manufacturer.certifications ? manufacturer.certifications.map(cert => 
-	                        `<span class="cert-tag">${escapeHtml(cert)}</span>`
-	                    ).join('') : ''}
-	                    ${manufacturer.capabilities ? manufacturer.capabilities.map(cap => 
-	                        `<span class="machine-tag">${escapeHtml(cap)}</span>`
-	                    ).join('') : ''}
-	                </div>
-	            </div>
-	            <div class="company-footer">
-	                <div class="company-info">
-	                    ${manufacturer.logo ? `
-	                        <img src="${escapeHtml(manufacturer.logo)}" alt="${escapeHtml(manufacturer.companyName)}" 
-	                            class="company-logo" onerror="this.src='default-logo.png'">
-	                    ` : `
-	                        <div class="company-logo-placeholder">
-	                            <i class="fas fa-building"></i>
-	                        </div>
-	                    `}
-	                    <div class="company-details">
-	                        <span class="company-name">${escapeHtml(manufacturer.companyName)}</span>
-	                        <span class="company-location">
-	                            <i class="fas fa-map-marker-alt"></i> 
-	                            ${escapeHtml(manufacturer.address || 'Konum belirtilmemiş')}
-	                        </span>
-	                        ${manufacturer.rating ? `
-	                            <span class="company-rating">
-	                                ${generateStarRating(manufacturer.rating)}
-	                                <span class="rating-count">(${manufacturer.ratingCount || 0})</span>
-	                            </span>
-	                        ` : ''}
-	                    </div>
-	                </div>
-	                <div class="action-buttons">
-	                    <button class="action-btn btn-quote" onclick="getTeklif('${manufacturer._id}')">
-	                        <i class="fas fa-file-alt"></i> Teklif Al
-	                    </button>
-	                    <button class="action-btn btn-contact" onclick="contact('${manufacturer._id}')">
-	                        <i class="fas fa-phone"></i> İletişim
-	                    </button>
-	                    <button class="action-btn btn-favorite ${manufacturer.isFavorite ? 'active' : ''}" 
-	                            onclick="toggleFavorite(this, '${manufacturer._id}')">
-	                        <i class="fa${manufacturer.isFavorite ? 's' : 'r'} fa-heart"></i>
-	                    </button>
-	                </div>
-	            </div>
-	        </div>
-	    `).join('');
-	
-	    companyList.innerHTML = manufacturerHTML;
-	    updateActiveFilters();
-	}
-	
-	// Yardımcı fonksiyonlar
-	function escapeHtml(unsafe) {
-	    return unsafe
-	        .replace(/&/g, "&amp;")
-	        .replace(/</g, "<")
-	        .replace(/>/g, ">")
-	        .replace(/"/g, "&quot;")
-	        .replace(/'/g, "'");
-	}
-	
-	function formatPrice(price) {
-	    return new Intl.NumberFormat('tr-TR').format(price);
-	}
-	
-	function generateStarRating(rating) {
-	    const fullStars = Math.floor(rating);
-	    const hasHalfStar = rating % 1 >= 0.5;
-	    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-	    
-	    return `
-	        ${Array(fullStars).fill('<i class="fas fa-star"></i>').join('')}
-	        ${hasHalfStar ? '<i class="fas fa-star-half-alt"></i>' : ''}
-	        ${Array(emptyStars).fill('<i class="far fa-star"></i>').join('')}
-	        <span class="rating-value">${rating.toFixed(1)}</span>
-	    `;
-	}
-	
-	// İşlem fonksiyonları
-	async function getTeklif(manufacturerId) {
-	    try {
-	        const response = await fetch(`/api/manufacturer/${manufacturerId}/quote`, {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json'
-	            }
-	        });
-	        
-	        const data = await response.json();
-	        
-	        if (data.success) {
-	            showSuccess('Teklif talebiniz gönderildi');
-	        } else {
-	            throw new Error(data.message || 'Teklif talebi gönderilemedi');
-	        }
-	    } catch (error) {
-	        console.error('Teklif hatası:', error);
-	        showError('Teklif talebi gönderilirken bir hata oluştu');
-	    }
-	}
-	
-	async function contact(manufacturerId) {
-	    try {
-	        const response = await fetch(`/api/manufacturer/${manufacturerId}/contact`);
-	        const data = await response.json();
-	        
-	        if (data.success) {
-	            // İletişim modalını aç
-	            openContactModal(data.manufacturer);
-	        } else {
-	            throw new Error(data.message || 'İletişim bilgileri alınamadı');
-	        }
-	    } catch (error) {
-	        console.error('İletişim hatası:', error);
-	        showError('İletişim bilgileri alınırken bir hata oluştu');
-	    }
-	}
-	
-	async function toggleFavorite(button, manufacturerId) {
-	    try {
-	        const response = await fetch(`/api/manufacturer/${manufacturerId}/favorite`, {
-	            method: 'POST',
-	            headers: {
-	                'Content-Type': 'application/json'
-	            }
-	        });
-	        
-	        const data = await response.json();
-	        
-	        if (data.success) {
-	            const icon = button.querySelector('i');
-	            button.classList.toggle('active');
-	            icon.classList.toggle('far');
-	            icon.classList.toggle('fas');
-	            
-	            // State'i güncelle
-	            const manufacturer = state.manufacturers.find(m => m._id === manufacturerId);
-	            if (manufacturer) {
-	                manufacturer.isFavorite = !manufacturer.isFavorite;
-	            }
-	            
-	            showSuccess(data.message);
-	        } else {
-	            throw new Error(data.message || 'İşlem başarısız');
-	        }
-	    } catch (error) {
-	        console.error('Favori hatası:', error);
-	        showError('İşlem sırasında bir hata oluştu');
-	    }
-	}
-	
-	// Modal işlemleri
-	function openContactModal(manufacturer) {
-	    const modal = document.createElement('div');
-	    modal.className = 'modal';
-	    modal.innerHTML = `
-	        <div class="modal-content">
-	            <div class="modal-header">
-	                <h2>${escapeHtml(manufacturer.companyName)}</h2>
-	                <button class="close-btn">&times;</button>
-	            </div>
-	            <div class="modal-body">
-	                <div class="contact-info">
-	                    <p><i class="fas fa-phone"></i> ${escapeHtml(manufacturer.phone || 'Telefon bilgisi yok')}</p>
-	                    <p><i class="fas fa-envelope"></i> ${escapeHtml(manufacturer.email || 'E-posta bilgisi yok')}</p>
-	                    <p><i class="fas fa-map-marker-alt"></i> ${escapeHtml(manufacturer.address || 'Adres bilgisi yok')}</p>
-	                </div>
-	                <form id="contact-form" class="contact-form">
-	                    <input type="text" placeholder="Adınız" required>
-	                    <input type="email" placeholder="E-posta Adresiniz" required>
-	                    <textarea placeholder="Mesajınız" required></textarea>
-	                    <button type="submit" class="action-btn btn-primary">
-	                        <i class="fas fa-paper-plane"></i> Mesaj Gönder
-	                    </button>
-	                </form>
-	            </div>
-	        </div>
-	    `;
-	
-	    document.body.appendChild(modal);
-	
-	    // Modal kapatma
-	    modal.querySelector('.close-btn').onclick = () => modal.remove();
-	    modal.onclick = e => {
-	        if (e.target === modal) modal.remove();
-	    };
-	
-	    // Form gönderimi
-	    modal.querySelector('#contact-form').onsubmit = async (e) => {
-	        e.preventDefault();
-	        // Form gönderme işlemleri
-	    };
-	}
-	
-	// CSS Animasyonları
-	const style = document.createElement('style');
-	style.textContent = `
-	    @keyframes slideIn {
-	        from { transform: translateX(100%); opacity: 0; }
-	        to { transform: translateX(0); opacity: 1; }
-	    }
-	
-	    @keyframes slideOut {
-	        from { transform: translateX(0); opacity: 1; }
-	        to { transform: translateX(100%); opacity: 0; }
-	    }
-	
-	    .loading-spinner {
-	        position: fixed;
-	        top: 50%;
-	        left: 50%;
-	        transform: translate(-50%, -50%);
-	        z-index: 1000;
-	    }
-	
-	    .spinner {
-	        width: 50px;
-	        height: 50px;
-	        border: 5px solid #f3f3f3;
-	        border-top: 5px solid #FF5722;
-	        border-radius: 50%;
-	        animation: spin 1s linear infinite;
-	    }
-	
-	    @keyframes spin {
-	        0% { transform: rotate(0deg); }
-	        100% { transform: rotate(360deg); }
-	    }
-	
-	    .modal {
-	        position: fixed;
-	        top: 0;
-	        left: 0;
-	        width: 100%;
-	        height: 100%;
-	        background: rgba(0,0,0,0.5);
-	        display: flex;
-	        justify-content: center;
-	        align-items: center;
-	        z-index: 1000;
-	    }
-	
-	    .modal-content {
-	        background: white;
-	        padding: 20px;
-	        border-radius: 8px;
-	        width: 90%;
-	        max-width: 500px;
-	    }
-	`;
-	
-	document.head.appendChild(style);
+    }
+
+    // Görünüm değiştirme butonları
+    const viewButtons = document.querySelectorAll('.view-btn');
+    viewButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            viewButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            state.view = btn.querySelector('i').classList.contains('fa-th') ? 'grid' : 'list';
+            updateManufacturerList();
+        });
+    });
+
+    // Kategori filtreleri
+    const categoryCheckboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            updateFiltersFromCheckboxes();
+            updateManufacturerList();
+        });
+    });
+
+    // Aktif filtreleri temizleme
+    document.querySelectorAll('.filter-tag i').forEach(closeIcon => {
+        closeIcon.addEventListener('click', (e) => {
+            const filterTag = e.target.parentElement;
+            const filterType = filterTag.dataset.filterType;
+            clearFilter(filterType);
+            updateManufacturerList();
+        });
+    });
+}
+
+// Debounce fonksiyonu
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Kategorileri güncelleme
+function updateCategories(categories) {
+    const categoryNav = document.querySelector('.category-nav');
+    if(!categoryNav) return;
+
+    const categoryHTML = categories.map(category => `
+        <div class="category-item">
+            <a href="#">${escapeHtml(category.name)} <i class="fas fa-chevron-down"></i></a>
+            <div class="submenu">
+                <div class="submenu-column">
+                    <div class="submenu-title">${escapeHtml(category.name)}</div>
+                    <ul class="submenu-list">
+                        ${category.description ? `<li><a href="#">${escapeHtml(category.description)}</a></li>` : ''}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    categoryNav.innerHTML = categoryHTML;
+}
+
+// Üretici listesini güncelleme
+function updateManufacturerList() {
+    const companyList = document.querySelector('.company-list');
+    if (!companyList) return;
+
+    let filteredManufacturers = filterManufacturers(state.manufacturers);
+    filteredManufacturers = sortManufacturers(filteredManufacturers);
+
+    if (filteredManufacturers.length === 0) {
+        companyList.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-search" style="font-size: 48px; color: #ccc; margin-bottom: 20px;"></i>
+                <h3>Sonuç Bulunamadı</h3>
+                <p>Arama kriterlerinize uygun sonuç bulunamadı. Lütfen filtrelerinizi değiştirin.</p>
+                <button onclick="clearFilter('all')" class="action-btn btn-primary">
+                    <i class="fas fa-sync"></i> Filtreleri Temizle
+                </button>
+            </div>
+        `;
+        return;
+    }
+
+    const manufacturerHTML = filteredManufacturers.map(manufacturer => `
+        <div class="company-card ${state.view === 'grid' ? 'grid-view' : ''}">
+            <div class="company-header">
+                <h2 class="company-title">${escapeHtml(manufacturer.companyName)}</h2>
+                <div class="company-specs">
+                    <div class="spec-item">
+                        <span class="spec-label">İşleme Kapasitesi</span>
+                        <span class="spec-value">${escapeHtml(manufacturer.businessArea || 'Belirtilmemiş')}</span>
+                    </div>
+                    ${manufacturer.price ? `
+                        <div class="spec-item">
+                            <span class="spec-label">Fiyat</span>
+                            <span class="spec-value">${formatPrice(manufacturer.price)} TL</span>
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="tag-container">
+                    ${manufacturer.certifications ? manufacturer.certifications.map(cert => 
+                        `<span class="cert-tag">${escapeHtml(cert)}</span>`
+                    ).join('') : ''}
+                </div>
+            </div>
+            <div class="company-footer">
+                <div class="company-info">
+                    <div class="company-details">
+                        <span class="company-name">${escapeHtml(manufacturer.companyName)}</span>
+                        <span class="company-location">
+                            <i class="fas fa-map-marker-alt"></i> 
+                            ${escapeHtml(manufacturer.address || 'Konum belirtilmemiş')}
+                        </span>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn btn-quote" onclick="getTeklif('${manufacturer._id}')">
+                        <i class="fas fa-file-alt"></i> Teklif Al
+                    </button>
+                    <button class="action-btn btn-contact" onclick="contact('${manufacturer._id}')">
+                        <i class="fas fa-phone"></i> İletişim
+                    </button>
+                    <button class="action-btn btn-favorite" onclick="toggleFavorite(this, '${manufacturer._id}')">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    companyList.innerHTML = manufacturerHTML;
+    updateActiveFilters();
+}
+
+// Filtreleme fonksiyonu
+function filterManufacturers(manufacturers) {
+    return manufacturers.filter(manufacturer => {
+        if (state.filters.search) {
+            const searchTerm = state.filters.search.toLowerCase();
+            const searchableText = `
+                ${manufacturer.companyName} 
+                ${manufacturer.businessArea || ''} 
+                ${manufacturer.description || ''}
+            `.toLowerCase();
+            
+            if (!searchableText.includes(searchTerm)) {
+                return false;
+            }
+        }
+
+        if (state.filters.category && manufacturer.category !== state.filters.category) {
+            return false;
+        }
+
+        return true;
+    });
+}
+
+// Sıralama fonksiyonu
+function sortManufacturers(manufacturers) {
+    return [...manufacturers].sort((a, b) => {
+        switch (state.filters.sortBy) {
+            case 'rating':
+                return (b.rating || 0) - (a.rating || 0);
+            case 'newest':
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            default:
+                return 0;
+        }
+    });
+}
+
+// Yardımcı fonksiyonlar
+function escapeHtml(unsafe) {
+    return unsafe
+        ? unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "<")
+            .replace(/>/g, ">")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "'")
+        : '';
+}
+
+function formatPrice(price) {
+    return new Intl.NumberFormat('tr-TR').format(price);
+}
+
+// API işlemleri
+async function getTeklif(manufacturerId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/manufacturer/${manufacturerId}/quote`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showSuccess('Teklif talebiniz gönderildi');
+        } else {
+            throw new Error(data.message || 'Teklif talebi gönderilemedi');
+        }
+    } catch (error) {
+        console.error('Teklif hatası:', error);
+        showError('Teklif talebi gönderilirken bir hata oluştu');
+    }
+}
+
+async function contact(manufacturerId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/manufacturer/${manufacturerId}/contact`);
+        const data = await response.json();
+        
+        if (data.success) {
+            openContactModal(data.manufacturer);
+        } else {
+            throw new Error(data.message || 'İletişim bilgileri alınamadı');
+        }
+    } catch (error) {
+        console.error('İletişim hatası:', error);
+        showError('İletişim bilgileri alınırken bir hata oluştu');
+    }
+}
+
+async function toggleFavorite(button, manufacturerId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/manufacturer/${manufacturerId}/favorite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+                if (data.success) {
+            const icon = button.querySelector('i');
+            button.classList.toggle('active');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+            
+            const manufacturer = state.manufacturers.find(m => m._id === manufacturerId);
+            if (manufacturer) {
+                manufacturer.isFavorite = !manufacturer.isFavorite;
+            }
+            
+            showSuccess(data.message);
+        } else {
+            throw new Error(data.message || 'İşlem başarısız');
+        }
+    } catch (error) {
+        console.error('Favori hatası:', error);
+        showError('İşlem sırasında bir hata oluştu');
+    }
+}
+
+// Modal işlemleri
+function openContactModal(manufacturer) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>${escapeHtml(manufacturer.companyName)}</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="contact-info">
+                    <p><i class="fas fa-phone"></i> ${escapeHtml(manufacturer.phone || 'Telefon bilgisi yok')}</p>
+                    <p><i class="fas fa-envelope"></i> ${escapeHtml(manufacturer.email || 'E-posta bilgisi yok')}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${escapeHtml(manufacturer.address || 'Adres bilgisi yok')}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Modal kapatma
+    modal.querySelector('.close-btn').onclick = () => modal.remove();
+    modal.onclick = e => {
+        if (e.target === modal) modal.remove();
+    };
+}
+
+// CSS Animasyonları
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+
+    .loading-spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #FF5722;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 500px;
+    }
+
+    .close-btn {
+        float: right;
+        border: none;
+        background: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .error-message, .success-message {
+        animation: slideIn 0.3s ease-out;
+    }
+`;
+
+document.head.appendChild(style);
 </script>
+
 </body>
 </html>
