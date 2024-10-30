@@ -6,9 +6,10 @@
     <title>E-Sanayi - Sanayi İşletmeleri</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-	html, body {
-	    overscroll-behavior: none;
-	}
+        html, body {
+            overscroll-behavior: none;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -27,39 +28,56 @@
             padding: 0 15px;
         }
 
+        /* Top Bar Styles */
         .top-bar {
             background: #333;
             color: white;
-            padding: 5px 0;
-            font-size: 14px;
+            padding: 8px 0;
+            font-size: 13px;
         }
 
         .top-bar .container {
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         .top-contact a {
             color: white;
             text-decoration: none;
-            margin-right: 15px;
+            margin-right: 20px;
+            transition: 0.3s;
+        }
+
+        .top-contact a:hover {
+            color: #FF5722;
         }
 
         .social-links a {
             color: white;
-            margin-left: 10px;
+            margin-left: 15px;
+            transition: 0.3s;
         }
 
-        header {
+        .social-links a:hover {
+            color: #FF5722;
+        }
+
+        /* Header Styles */
+        .header {
             background: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .header-top {
             padding: 15px 0;
+            border-bottom: 1px solid #eee;
         }
 
-        .header-top .container {
+        .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -70,205 +88,385 @@
             color: #333;
             text-decoration: none;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: #FF5722;
         }
 
         .search-bar {
             flex: 1;
-            margin: 0 20px;
-            display: flex;
+            max-width: 600px;
+            margin: 0 30px;
+            position: relative;
         }
 
         .search-bar input {
             width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 4px 0 0 4px;
-            font-size: 16px;
+            padding: 12px 20px;
+            border: 2px solid #eee;
+            border-radius: 30px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .search-bar input:focus {
+            border-color: #FF5722;
+            outline: none;
         }
 
         .search-bar button {
-            padding: 10px 20px;
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
             background: #FF5722;
             border: none;
             color: white;
-            border-radius: 0 4px 4px 0;
+            padding: 8px 20px;
+            border-radius: 25px;
             cursor: pointer;
+            transition: 0.3s;
         }
 
-        .user-menu a {
-            margin-left: 15px;
+        .search-bar button:hover {
+            background: #f4511e;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-actions a {
             text-decoration: none;
-            color: #333;
+            color: #666;
+            font-size: 14px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .user-actions a:hover {
+            color: #FF5722;
         }
 
         .btn-primary {
             background: #FF5722;
             color: white !important;
-            padding: 8px 15px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
         }
 
-        .main-nav {
-            background: #333;
-            padding: 10px 0;
+        .btn-primary:hover {
+            background: #f4511e;
         }
 
-        .main-nav ul {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        .main-nav ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 5px 10px;
-        }
-
-        main {
-            padding: 20px 0;
-            display: flex;
-            gap: 20px;
-        }
-
-        .sidebar {
-            width: 300px;
+        /* Mega Menu Styles */
+        .mega-menu {
             background: white;
-            border-radius: 4px;
-            height: fit-content;
+            border-bottom: 1px solid #eee;
+            padding: 0;
         }
 
-        .filter-section {
-            padding: 15px;
+        .category-nav {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .category-item {
+            position: relative;
+            padding: 15px 20px;
+            cursor: pointer;
+        }
+
+        .category-item > a {
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .category-item:hover {
+            background: #f8f8f8;
+        }
+
+        .category-item:hover .submenu {
+            display: flex;
+        }
+
+        .submenu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .submenu-column {
+            flex: 1;
+            padding: 0 15px;
+        }
+
+        .submenu-title {
+            font-weight: bold;
+            color: #FF5722;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .submenu-list {
+            list-style: none;
+        }
+
+        .submenu-list li {
+            margin-bottom: 8px;
+        }
+
+        .submenu-list a {
+            color: #666;
+            text-decoration: none;
+            font-size: 13px;
+            transition: 0.3s;
+        }
+
+        .submenu-list a:hover {
+            color: #FF5722;
+        }
+	        /* Main Content Styles */
+        .main-content {
+            padding: 30px 0;
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Filter Sidebar Styles */
+        .filters {
+            width: 300px;
+            flex-shrink: 0;
+        }
+
+        .filter-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .filter-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .filter-header h3 {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .filter-content {
+            padding: 15px 20px;
         }
 
         .filter-group {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 15px;
+            margin-bottom: 15px;
         }
 
         .filter-group:last-child {
-            border: none;
             margin-bottom: 0;
         }
 
-        .filter-group h3 {
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 16px;
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .filter-group label {
-            display: block;
-            margin-bottom: 10px;
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            font-size: 14px;
             color: #666;
             cursor: pointer;
         }
 
-        .filter-group select,
-        .filter-group input {
+        .range-slider {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
+            margin: 10px 0;
         }
 
+        /* Content Area Styles */
         .content-area {
             flex: 1;
         }
 
-        .sort-bar {
+        .content-header {
             background: white;
-            padding: 15px;
-            border-radius: 4px;
+            border-radius: 8px;
+            padding: 15px 20px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .sort-options {
+        .active-filters {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
         }
 
-        .sort-options select {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .filter-tag {
+            background: #f8f8f8;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .view-options button {
-            padding: 8px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .filter-tag i {
             cursor: pointer;
+            color: #999;
         }
 
-        .view-options button.active {
+        .filter-tag i:hover {
+            color: #FF5722;
+        }
+
+        .sort-options {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sort-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 5px;
+        }
+
+        .view-btn {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            color: #666;
+            transition: 0.3s;
+        }
+
+        .view-btn.active {
             background: #FF5722;
             color: white;
             border-color: #FF5722;
         }
 
+        /* Company Card Styles */
         .company-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
 
-        .company-item {
+        .company-card {
             background: white;
             border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: 0.3s;
         }
 
-        .company-capabilities {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
+        .company-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .company-header {
+            padding: 20px;
             border-bottom: 1px solid #eee;
         }
 
-        .main-capability {
-            font-size: 20px;
+        .company-title {
+            font-size: 18px;
             color: #2196F3;
             margin-bottom: 10px;
+            font-weight: 500;
         }
 
-        .capability-details {
+        .company-specs {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 15px;
         }
 
-        .spec-group {
+        .spec-item {
             display: flex;
             flex-direction: column;
+            gap: 5px;
         }
 
-        .spec-title {
-            font-weight: bold;
+        .spec-label {
+            font-size: 13px;
             color: #666;
-            margin-bottom: 5px;
+            font-weight: 500;
         }
 
-        .machine-tags,
-        .certification-tags {
+        .spec-value {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .tag-container {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 10px;
         }
 
         .machine-tag {
             background: #e3f2fd;
             color: #1976d2;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 4px;
             font-size: 13px;
         }
@@ -276,26 +474,28 @@
         .cert-tag {
             background: #e8f5e9;
             color: #2e7d32;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 4px;
             font-size: 13px;
         }
 
-        .company-info {
+        .company-footer {
+            padding: 15px 20px;
+            background: #f8f8f8;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .company-basic {
+        .company-info {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
         .company-logo {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 4px;
             object-fit: cover;
         }
@@ -303,18 +503,22 @@
         .company-details {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 3px;
         }
 
         .company-name {
             font-size: 14px;
+            color: #333;
+        }
+
+        .company-location {
+            font-size: 13px;
             color: #666;
         }
 
-        .company-location,
         .company-rating {
             font-size: 13px;
-            color: #888;
+            color: #ffa000;
         }
 
         .action-buttons {
@@ -322,22 +526,27 @@
             gap: 10px;
         }
 
-        .btn-primary {
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-quote {
             background: #FF5722;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
         }
 
-        .btn-secondary {
+        .btn-contact {
             background: white;
             border: 1px solid #FF5722;
             color: #FF5722;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
         }
 
         .btn-favorite {
@@ -345,339 +554,447 @@
             height: 36px;
             border: 1px solid #ddd;
             background: white;
-            border-radius: 4px;
-            cursor: pointer;
+            color: #666;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 4px;
         }
 
-        @media (max-width: 1024px) {
-            main {
+        .btn-favorite.active {
+            color: #FF5722;
+            border-color: #FF5722;
+        }
+	        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 5px;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #666;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 4px;
+        }
+
+        .pagination button.active {
+            background: #FF5722;
+            color: white;
+            border-color: #FF5722;
+        }
+
+        .pagination button:hover:not(.active) {
+            background: #f8f8f8;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 20px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
                 flex-direction: column;
             }
 
-            .sidebar {
+            .filters {
                 width: 100%;
+            }
+
+            .company-specs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-bar {
+                margin: 15px 0;
+                max-width: 100%;
+            }
+
+            .company-footer {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .company-info {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .company-specs {
+                grid-template-columns: 1fr;
+            }
+
+            .sort-options {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
-<div class="top-bar">
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-contact">
+                <a href="tel:+902121234567"><i class="fas fa-phone"></i> +90 212 123 45 67</a>
+                <a href="mailto:info@esanayi.com"><i class="fas fa-envelope"></i> info@esanayi.com</a>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <header class="header">
+        <div class="header-top">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <a href="/"><i class="fas fa-industry"></i> E-Sanayi</a>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" placeholder="İhtiyacınız olan üretim/işleme kapasitesini arayın...">
+                        <button><i class="fas fa-search"></i> Ara</button>
+                    </div>
+                    <div class="user-actions">
+                        <a href="/giris"><i class="fas fa-user"></i> Giriş Yap</a>
+                        <a href="/kayit"><i class="fas fa-user-plus"></i> Üye Ol</a>
+                        <a href="/ilan-ver" class="btn-primary"><i class="fas fa-plus"></i> İşletme Ekle</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="mega-menu">
+            <div class="container">
+                <div class="category-nav">
+                    <div class="category-item">
+                        <a href="#">Metal İşleme <i class="fas fa-chevron-down"></i></a>
+                        <div class="submenu">
+                            <div class="submenu-column">
+                                <div class="submenu-title">CNC İşleme</div>
+                                <ul class="submenu-list">
+                                    <li><a href="#">CNC Torna</a></li>
+                                    <li><a href="#">CNC Freze</a></li>
+                                    <li><a href="#">5 Eksen CNC</a></li>
+                                    <li><a href="#">CNC Router</a></li>
+                                </ul>
+                            </div>
+                            <div class="submenu-column">
+                                <div class="submenu-title">Talaşlı İmalat</div>
+                                <ul class="submenu-list">
+                                    <li><a href="#">Universal Torna</a></li>
+                                    <li><a href="#">Universal Freze</a></li>
+                                    <li><a href="#">Taşlama</a></li>
+                                    <li><a href="#">Planya</a></li>
+                                </ul>
+                            </div>
+                            <div class="submenu-column">
+                                <div class="submenu-title">Sac İşleme</div>
+                                <ul class="submenu-list">
+                                    <li><a href="#">Lazer Kesim</a></li>
+                                    <li><a href="#">Plazma Kesim</a></li>
+                                    <li><a href="#">Abkant Büküm</a></li>
+                                    <li><a href="#">Giyotin Kesim</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <a href="#">Plastik İşleme <i class="fas fa-chevron-down"></i></a>
+                        <div class="submenu">
+                            <!-- Plastik işleme alt kategorileri -->
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <a href="#">Kalıp İmalatı <i class="fas fa-chevron-down"></i></a>
+                        <div class="submenu">
+                            <!-- Kalıp imalatı alt kategorileri -->
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <a href="#">Döküm <i class="fas fa-chevron-down"></i></a>
+                        <div class="submenu">
+                            <!-- Döküm alt kategorileri -->
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <a href="#">Elektronik <i class="fas fa-chevron-down"></i></a>
+                        <div class="submenu">
+                            <!-- Elektronik alt kategorileri -->
+                        </div>
+                    </div>
+
+                    <div class="category-item">
+                        <a href="#">Kaplama <i class="fas fa-chevron-down"></i></a>
+                        <div class="submenu">
+                            <!-- Kaplama alt kategorileri -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
     <div class="container">
-        <div class="top-contact">
-            <a href="tel:+902121234567"><i class="fas fa-phone"></i> +90 212 123 45 67</a>
-            <a href="mailto:info@esanayi.com"><i class="fas fa-envelope"></i> info@esanayi.com</a>
-        </div>
-        <div class="social-links">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-linkedin"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
+        <div class="main-content">
+            <!-- Filtreler -->
+            <aside class="filters">
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h3>İşleme Kapasiteleri</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-content">
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cap1">
+                                <label for="cap1">CNC İşleme (245)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cap2">
+                                <label for="cap2">5 Eksen İşleme (124)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cap3">
+                                <label for="cap3">Hassas Tornalama (189)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cap4">
+                                <label for="cap4">Kalıp İmalatı (156)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cap5">
+                                <label for="cap5">Tel Erozyon (78)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h3>İşlenebilen Malzemeler</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-content">
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mat1">
+                                <label for="mat1">Çelik (312)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mat2">
+                                <label for="mat2">Paslanmaz Çelik (245)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mat3">
+                                <label for="mat3">Alüminyum (278)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mat4">
+                                <label for="mat4">Titanyum (89)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mat5">
+                                <label for="mat5">Plastik (167)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h3>Sertifikalar</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-content">
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cert1">
+                                <label for="cert1">ISO 9001 (289)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cert2">
+                                <label for="cert2">ISO 14001 (156)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cert3">
+                                <label for="cert3">AS9100 (67)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="cert4">
+                                <label for="cert4">IATF 16949 (98)</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h3>Lokasyon</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="filter-content">
+                        <select class="sort-select">
+                            <option>İl Seçiniz</option>
+                            <option>İstanbul (456)</option>
+                            <option>Ankara (234)</option>
+                            <option>İzmir (189)</option>
+                            <option>Bursa (167)</option>
+                            <option>Kocaeli (145)</option>
+                        </select>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- İçerik Alanı -->
+            <div class="content-area">
+                <div class="content-header">
+                    <div class="active-filters">
+                        <div class="filter-tag">
+                            CNC İşleme <i class="fas fa-times"></i>
+                        </div>
+                        <div class="filter-tag">
+                            ISO 9001 <i class="fas fa-times"></i>
+                        </div>
+                        <div class="filter-tag">
+                            İstanbul <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                    <div class="sort-options">
+                        <select class="sort-select">
+                            <option>Sıralama</option>
+                            <option>En Yeniler</option>
+                            <option>En Çok Değerlendirilenler</option>
+                            <option>Puanı En Yüksek</option>
+                        </select>
+                        <div class="view-options">
+                            <button class="view-btn active"><i class="fas fa-list"></i></button>
+                            <button class="view-btn"><i class="fas fa-th"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="company-list">
+                    <!-- Firma Kartı 1 -->
+                    <div class="company-card">
+                        <div class="company-header">
+                            <h2 class="company-title">5 Eksen CNC İşleme & Hassas Parça İmalatı</h2>
+                            <div class="company-specs">
+                                <div class="spec-item">
+                                    <span class="spec-label">İşleme Kapasitesi</span>
+                                    <span class="spec-value">Ø5mm - Ø500mm arası hassas işleme</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">Hassasiyet</span>
+                                    <span class="spec-value">±0.005mm tolerans</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">İşlenebilen Malzemeler</span>
+                                    <span class="spec-value">Çelik, Paslanmaz, Alüminyum, Titanyum</span>
+                                </div>
+                            </div>
+                            <div class="tag-container">
+                                <span class="machine-tag">5 Eksen CNC (3)</span>
+                                <span class="machine-tag">CNC Torna (5)</span>
+                                <span class="machine-tag">Tel Erozyon (2)</span>
+                                <span class="machine-tag">CMM Ölçüm</span>
+                                <span class="cert-tag">ISO 9001</span>
+                                <span class="cert-tag">AS9100</span>
+                            </div>
+                        </div>
+                        <div class="company-footer">
+                            <div class="company-info">
+                                <img src="https://via.placeholder.com/50" alt="Logo" class="company-logo">
+                                <div class="company-details">
+                                    <span class="company-name">Teknik Metal San.</span>
+                                    <span class="company-location"><i class="fas fa-map-marker-alt"></i> İstanbul/Dudullu</span>
+                                    <span class="company-rating"><i class="fas fa-star"></i> 4.8/5.0 (156 değerlendirme)</span>
+                                </div>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-quote"><i class="fas fa-file-alt"></i> Teklif Al</button>
+                                <button class="action-btn btn-contact"><i class="fas fa-phone"></i> İletişim</button>
+                                <button class="action-btn btn-favorite"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diğer firma kartları aynı yapıda tekrar edilecek -->
+
+                </div>
+
+                <!-- Sayfalama -->
+                <div class="pagination">
+                    <button><i class="fas fa-chevron-left"></i></button>
+                    <button class="active">1</button>
+                    <button>2</button>
+                    <button>3</button>
+                    <button>4</button>
+                    <button>5</button>
+                    <button><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<header>
-    <div class="header-top">
-        <div class="container">
-            <div class="logo">
-                <a href="/">E-Sanayi</a>
-            </div>
-            <div class="search-bar">
-                <input type="text" placeholder="İhtiyacınız olan üretim/işleme kapasitesini arayın...">
-                <button><i class="fas fa-search"></i></button>
-            </div>
-            <div class="user-menu">
-                <a href="/giris">Giriş Yap</a>
-                <a href="/kayit">Üye Ol</a>
-                <a href="/ilan-ver" class="btn-primary">İşletme Ekle</a>
-            </div>
-        </div>
-    </div>
-    <nav class="main-nav">
-        <div class="container">
-            <ul>
-                <li><a href="/metal-isleme">Metal İşleme</a></li>
-                <li><a href="/plastik">Plastik</a></li>
-                <li><a href="/kalip">Kalıp</a></li>
-                <li><a href="/dokum">Döküm</a></li>
-                <li><a href="/elektronik">Elektronik</a></li>
-                <li><a href="/tekstil">Tekstil</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
-
-<div class="container">
-    <main>
-        <aside class="sidebar">
-            <div class="filter-section">
-                <div class="filter-group">
-                    <h3>İşleme Kapasiteleri</h3>
-                    <label><input type="checkbox"> CNC İşleme</label>
-                    <label><input type="checkbox"> 5 Eksen İşleme</label>
-                    <label><input type="checkbox"> Hassas Tornalama</label>
-                    <label><input type="checkbox"> Kalıp İmalatı</label>
-                    <label><input type="checkbox"> Tel Erozyon</label>
-                    <label><input type="checkbox"> Dalma Erozyon</label>
-                </div>
-
-                <div class="filter-group">
-                    <h3>İşlenebilen Malzemeler</h3>
-                    <label><input type="checkbox"> Çelik</label>
-                    <label><input type="checkbox"> Paslanmaz Çelik</label>
-                    <label><input type="checkbox"> Alüminyum</label>
-                    <label><input type="checkbox"> Titanyum</label>
-                    <label><input type="checkbox"> Plastik</label>
-                </div>
-
-                <div class="filter-group">
-                    <h3>Hassasiyet</h3>
-                    <label><input type="checkbox"> ±0.005mm</label>
-                    <label><input type="checkbox"> ±0.01mm</label>
-                    <label><input type="checkbox"> ±0.05mm</label>
-                </div>
-
-                <div class="filter-group">
-                    <h3>Sertifikalar</h3>
-                    <label><input type="checkbox"> ISO 9001</label>
-                    <label><input type="checkbox"> ISO 14001</label>
-                    <label><input type="checkbox"> AS9100</label>
-                    <label><input type="checkbox"> IATF 16949</label>
-                </div>
-
-                <div class="filter-group">
-                    <h3>Üretim Kapasitesi</h3>
-                    <select>
-                        <option>Seçiniz</option>
-                        <option>0-100 kg/gün</option>
-                        <option>100-500 kg/gün</option>
-                        <option>500+ kg/gün</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <h3>Lokasyon</h3>
-                    <select>
-                        <option>İl Seçiniz</option>
-                        <option>İstanbul</option>
-                        <option>Ankara</option>
-                        <option>İzmir</option>
-                        <option>Bursa</option>
-                        <option>Kocaeli</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <h3>Özel Özellikler</h3>
-                    <label><input type="checkbox"> İhracat Yapabilir</label>
-                    <label><input type="checkbox"> Numune Üretim</label>
-                    <label><input type="checkbox"> Tasarım Desteği</label>
-                    <label><input type="checkbox"> AR-GE Merkezi</label>
-                </div>
-            </div>
-        </aside>
-
-        <div class="content-area">
-            <div class="sort-bar">
-                <div class="sort-options">
-                    <select>
-                        <option>Sıralama</option>
-                        <option>Kapasite (Yüksek-Düşük)</option>
-                        <option>Kapasite (Düşük-Yüksek)</option>
-                        <option>Puana Göre</option>
-                        <option>İlana Göre</option>
-                    </select>
-                    <select>
-                        <option>20 Sonuç/Sayfa</option>
-                        <option>50 Sonuç/Sayfa</option>
-                        <option>100 Sonuç/Sayfa</option>
-                    </select>
-                </div>
-                <div class="view-options">
-                    <button class="active"><i class="fas fa-list"></i></button>
-                    <button><i class="fas fa-th"></i></button>
-                </div>
-            </div>
-
-            <div class="company-list">
-	                    <!-- Firma Listesi -->
-                <div class="company-item">
-                    <div class="company-capabilities">
-                        <h3 class="main-capability">5 Eksen CNC İşleme & Hassas Parça İmalatı</h3>
-                        <div class="capability-details">
-                            <div class="spec-group">
-                                <span class="spec-title">İşleme Kapasitesi:</span>
-                                <span>Ø5mm - Ø500mm arası hassas işleme</span>
-                            </div>
-                            <div class="spec-group">
-                                <span class="spec-title">Hassasiyet:</span>
-                                <span>±0.005mm tolerans</span>
-                            </div>
-                            <div class="spec-group">
-                                <span class="spec-title">İşlenebilen Malzemeler:</span>
-                                <span>Çelik, Paslanmaz, Alüminyum, Titanyum, İnconel</span>
-                            </div>
-                        </div>
-                        <div class="machine-tags">
-                            <span class="machine-tag">5 Eksen CNC (3)</span>
-                            <span class="machine-tag">CNC Torna (5)</span>
-                            <span class="machine-tag">Tel Erozyon (2)</span>
-                            <span class="machine-tag">CMM Ölçüm</span>
-                        </div>
-                        <div class="certification-tags">
-                            <span class="cert-tag">ISO 9001</span>
-                            <span class="cert-tag">AS9100</span>
-                            <span class="cert-tag">IATF 16949</span>
-                        </div>
-                    </div>
-                    <div class="company-info">
-                        <div class="company-basic">
-                            <img src="https://via.placeholder.com/60" alt="Logo" class="company-logo">
-                            <div class="company-details">
-                                <span class="company-name">Teknik Metal San.</span>
-                                <span class="company-location"><i class="fas fa-map-marker-alt"></i> İstanbul/Dudullu</span>
-                                <span class="company-rating"><i class="fas fa-star"></i> 4.8/5.0 (156 değerlendirme)</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn-primary">Teklif Al</button>
-                            <button class="btn-secondary">İletişime Geç</button>
-                            <button class="btn-favorite"><i class="far fa-heart"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- İkinci Firma -->
-                <div class="company-item">
-                    <div class="company-capabilities">
-                        <h3 class="main-capability">Hassas Kalıp İmalatı & Plastik Enjeksiyon</h3>
-                        <div class="capability-details">
-                            <div class="spec-group">
-                                <span class="spec-title">Kalıp Boyutları:</span>
-                                <span>800x600mm'e kadar kalıp imalatı</span>
-                            </div>
-                            <div class="spec-group">
-                                <span class="spec-title">Enjeksiyon Kapasitesi:</span>
-                                <span>50gr - 1500gr arası parça üretimi</span>
-                            </div>
-                            <div class="spec-group">
-                                <span class="spec-title">Malzemeler:</span>
-                                <span>PA, PP, PC, ABS, POM, PEEK</span>
-                            </div>
-                        </div>
-                        <div class="machine-tags">
-                            <span class="machine-tag">Kalıp İşleme (4)</span>
-                            <span class="machine-tag">Enjeksiyon (8)</span>
-                            <span class="machine-tag">3D Ölçüm</span>
-                        </div>
-                        <div class="certification-tags">
-                            <span class="cert-tag">ISO 9001</span>
-                            <span class="cert-tag">ISO 14001</span>
-                        </div>
-                    </div>
-                    <div class="company-info">
-                        <div class="company-basic">
-                            <img src="https://via.placeholder.com/60" alt="Logo" class="company-logo">
-                            <div class="company-details">
-                                <span class="company-name">Yıldız Kalıp Ltd.</span>
-                                <span class="company-location"><i class="fas fa-map-marker-alt"></i> Bursa/Nilüfer</span>
-                                <span class="company-rating"><i class="fas fa-star"></i> 4.6/5.0 (98 değerlendirme)</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn-primary">Teklif Al</button>
-                            <button class="btn-secondary">İletişime Geç</button>
-                            <button class="btn-favorite"><i class="far fa-heart"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Üçüncü Firma -->
-                <div class="company-item">
-                    <div class="company-capabilities">
-                        <h3 class="main-capability">Hassas Sac Metal İşleme & Kaynak İmalatı</h3>
-                        <div class="capability-details">
-                            <div class="spec-group">
-                                <span class="spec-title">İşleme Kapasitesi:</span>
-                                <span>0.5mm - 10mm sac işleme</span>
-                            </div>
-                            <div class="spec-group">
-                                <span class="spec-title">Kaynak Türleri:</span>
-                                <span>TIG, MIG, Punto, Robotik Kaynak</span>
-                            </div>
-                            <div class="spec-group">
-                                <span class="spec-title">Malzemeler:</span>
-                                <span>Sac, Paslanmaz, Alüminyum</span>
-                            </div>
-                        </div>
-                        <div class="machine-tags">
-                            <span class="machine-tag">Fiber Lazer</span>
-                            <span class="machine-tag">Abkant Pres</span>
-                            <span class="machine-tag">Robotik Kaynak (2)</span>
-                        </div>
-                        <div class="certification-tags">
-                            <span class="cert-tag">ISO 9001</span>
-                            <span class="cert-tag">EN 3834</span>
-                        </div>
-                    </div>
-                    <div class="company-info">
-                        <div class="company-basic">
-                            <img src="https://via.placeholder.com/60" alt="Logo" class="company-logo">
-                            <div class="company-details">
-                                <span class="company-name">Anadolu Metal İşleme</span>
-                                <span class="company-location"><i class="fas fa-map-marker-alt"></i> Kocaeli/Gebze</span>
-                                <span class="company-rating"><i class="fas fa-star"></i> 4.7/5.0 (124 değerlendirme)</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn-primary">Teklif Al</button>
-                            <button class="btn-secondary">İletişime Geç</button>
-                            <button class="btn-favorite"><i class="far fa-heart"></i></button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <!-- Sayfalama -->
-            <div class="pagination" style="margin-top: 20px; text-align: center;">
-                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white; cursor: pointer;">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: #FF5722; color: white;">1</button>
-                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">2</button>
-                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">3</button>
-                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">4</button>
-                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">5</button>
-                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
-    </main>
-</div>
-
-<script>
-    // Favori butonları için
-    document.querySelectorAll('.btn-favorite').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const icon = this.querySelector('i');
-            icon.classList.toggle('far');
-            icon.classList.toggle('fas');
-            this.classList.toggle('active');
+    <script>
+        // Favori butonları için
+        document.querySelectorAll('.btn-favorite').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const icon = this.querySelector('i');
+                icon.classList.toggle('far');
+                icon.classList.toggle('fas');
+                this.classList.toggle('active');
+            });
         });
-    });
 
-    // Görünüm değiştirme butonları için
-    document.querySelectorAll('.view-options button').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.view-options button').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+        // Görünüm değiştirme butonları için
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
         });
-    });
-</script>
 
+        // Filtre açılır/kapanır özelliği için
+        document.querySelectorAll('.filter-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                content.style.display = content.style.display === 'none' ? 'block' : 'none';
+                icon.classList.toggle('fa-chevron-up');
+                icon.classList.toggle('fa-chevron-down');
+            });
+        });
+    </script>
 </body>
 </html>
