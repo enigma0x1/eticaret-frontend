@@ -998,7 +998,7 @@
 	        }
 	
 	        // Üreticileri çek
-	        const manufacturerResponse = await fetch(`${API_BASE_URL}/manufacturer/dashboard`);
+	        const manufacturerResponse = await fetch(`${API_BASE_URL}/manufacturer/public`);
 	        const manufacturerData = await manufacturerResponse.json();
 	        if(manufacturerResponse.success) {
 	            state.manufacturers = manufacturerData.products;
