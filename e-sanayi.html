@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Sanayi - Sanayi Platformu</title>
+    <title>E-Sanayi - Sanayi İşletmeleri</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
@@ -58,8 +58,8 @@
 
         .header-top .container {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 20px;
         }
 
         .logo a {
@@ -71,6 +71,7 @@
 
         .search-bar {
             flex: 1;
+            margin: 0 20px;
             display: flex;
         }
 
@@ -92,9 +93,9 @@
         }
 
         .user-menu a {
+            margin-left: 15px;
             text-decoration: none;
             color: #333;
-            margin-left: 15px;
         }
 
         .btn-primary {
@@ -145,44 +146,30 @@
         }
 
         .filter-group:last-child {
-            border-bottom: none;
+            border: none;
+            margin-bottom: 0;
         }
 
-        .filter-group h4 {
-            margin-bottom: 10px;
+        .filter-group h3 {
+            margin-bottom: 15px;
             color: #333;
             font-size: 16px;
         }
 
         .filter-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: #666;
             cursor: pointer;
         }
 
-        .filter-group input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
         .filter-group select,
-        .filter-group input[type="text"],
-        .filter-group input[type="number"] {
+        .filter-group input {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-bottom: 8px;
-        }
-
-        .range-inputs {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .range-inputs input {
-            width: 45%;
+            margin-bottom: 10px;
         }
 
         .content-area {
@@ -199,12 +186,23 @@
             align-items: center;
         }
 
-        .view-options button {
-            padding: 5px 10px;
-            background: none;
+        .sort-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sort-options select {
+            padding: 8px;
             border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .view-options button {
+            padding: 8px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             cursor: pointer;
-            margin-left: 5px;
         }
 
         .view-options button.active {
@@ -214,430 +212,469 @@
         }
 
         .company-list {
-            background: white;
-            border-radius: 4px;
-        }
-
-        .company-item {
             display: flex;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+            flex-direction: column;
             gap: 15px;
         }
 
-        .company-logo {
-            width: 100px;
-            height: 100px;
-            background: #f4f4f4;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
+        .company-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .company-info {
-            flex: 1;
+        .company-capabilities {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
 
-                .company-title {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .company-details {
-            display: flex;
-            gap: 20px;
+        .main-capability {
+            font-size: 20px;
+            color: #2196F3;
             margin-bottom: 10px;
         }
 
-        .company-detail {
-            font-size: 14px;
-            color: #666;
+        .capability-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
         }
 
-        .company-detail i {
-            margin-right: 5px;
-            color: #FF5722;
-        }
-
-        .company-machines {
+        .spec-group {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+        }
+
+        .spec-title {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .machine-tags,
+        .certification-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-bottom: 10px;
         }
 
         .machine-tag {
-            background: #f4f4f4;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 12px;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .cert-tag {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .company-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .company-basic {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .company-details {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .company-name {
+            font-size: 14px;
             color: #666;
         }
 
-        .company-actions {
+        .company-location,
+        .company-rating {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .action-buttons {
             display: flex;
             gap: 10px;
         }
 
-        .action-btn {
-            padding: 5px 15px;
+        .btn-primary {
+            background: #FF5722;
+            color: white;
             border: none;
-            border-radius: 3px;
+            padding: 8px 16px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
-        .btn-contact {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .btn-details {
-            background: #2196F3;
-            color: white;
+        .btn-secondary {
+            background: white;
+            border: 1px solid #FF5722;
+            color: #FF5722;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
         .btn-favorite {
-            background: #fff;
-            border: 1px solid #ddd;
-            color: #666;
-        }
-
-        .btn-favorite.active {
-            color: #FF5722;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 5px;
-        }
-
-        .pagination button {
-            padding: 8px 12px;
+            width: 36px;
+            height: 36px;
             border: 1px solid #ddd;
             background: white;
+            border-radius: 4px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .pagination button.active {
-            background: #FF5722;
-            color: white;
-            border-color: #FF5722;
-        }
-
-        @media (max-width: 1200px) {
+        @media (max-width: 1024px) {
             main {
                 flex-direction: column;
             }
+
             .sidebar {
                 width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .company-item {
-                flex-direction: column;
-            }
-            .company-logo {
-                width: 100%;
-                height: 150px;
-            }
-            .company-actions {
-                flex-wrap: wrap;
-            }
-            .action-btn {
-                flex: 1;
             }
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">
+<div class="top-bar">
+    <div class="container">
+        <div class="top-contact">
+            <a href="tel:+902121234567"><i class="fas fa-phone"></i> +90 212 123 45 67</a>
+            <a href="mailto:info@esanayi.com"><i class="fas fa-envelope"></i> info@esanayi.com</a>
+        </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</div>
+
+<header>
+    <div class="header-top">
         <div class="container">
-            <div class="top-contact">
-                <a href="tel:+902121234567"><i class="fas fa-phone"></i> +90 212 123 45 67</a>
-                <a href="mailto:info@esanayi.com"><i class="fas fa-envelope"></i> info@esanayi.com</a>
+            <div class="logo">
+                <a href="/">E-Sanayi</a>
             </div>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
+            <div class="search-bar">
+                <input type="text" placeholder="İhtiyacınız olan üretim/işleme kapasitesini arayın...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+            <div class="user-menu">
+                <a href="/giris">Giriş Yap</a>
+                <a href="/kayit">Üye Ol</a>
+                <a href="/ilan-ver" class="btn-primary">İşletme Ekle</a>
             </div>
         </div>
     </div>
-
-    <header>
-        <div class="header-top">
-            <div class="container">
-                <div class="logo">
-                    <a href="/">E-Sanayi</a>
-                </div>
-                <div class="search-bar">
-                    <input type="text" placeholder="Firma adı, ürün veya hizmet ara...">
-                    <button><i class="fas fa-search"></i></button>
-                </div>
-                <div class="user-menu">
-                    <a href="/giris">Giriş Yap</a>
-                    <a href="/kayit">Üye Ol</a>
-                    <a href="/ilan-ver" class="btn-primary">Firma Ekle</a>
-                </div>
-            </div>
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="/metal-isleme">Metal İşleme</a></li>
+                <li><a href="/plastik">Plastik</a></li>
+                <li><a href="/kalip">Kalıp</a></li>
+                <li><a href="/dokum">Döküm</a></li>
+                <li><a href="/elektronik">Elektronik</a></li>
+                <li><a href="/tekstil">Tekstil</a></li>
+            </ul>
         </div>
-        <nav class="main-nav">
-            <div class="container">
-                <ul>
-                    <li><a href="/kategori/metal">Metal İşleme</a></li>
-                    <li><a href="/kategori/plastik">Plastik</a></li>
-                    <li><a href="/kategori/elektronik">Elektronik</a></li>
-                    <li><a href="/kategori/tekstil">Tekstil</a></li>
-                    <li><a href="/kategori/otomotiv">Otomotiv</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+    </nav>
+</header>
 
-    <div class="container">
-        <main>
-            <aside class="sidebar">
-                <div class="filter-section">
-                    <div class="filter-group">
-                        <h4>Ana Kategori</h4>
-                        <label><input type="checkbox"> Metal İşleme</label>
-                        <label><input type="checkbox"> Plastik</label>
-                        <label><input type="checkbox"> Elektronik</label>
-                        <label><input type="checkbox"> Tekstil</label>
-                        <label><input type="checkbox"> Otomotiv</label>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4>Alt Kategori</h4>
-                        <label><input type="checkbox"> CNC İşleme</label>
-                        <label><input type="checkbox"> Torna</label>
-                        <label><input type="checkbox"> Freze</label>
-                        <label><input type="checkbox"> Kalıp</label>
-                        <label><input type="checkbox"> Döküm</label>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4>Lokasyon</h4>
-                        <select>
-                            <option>İl Seçiniz</option>
-                            <option>İstanbul</option>
-                            <option>Ankara</option>
-                            <option>İzmir</option>
-                        </select>
-                        <select>
-                            <option>İlçe Seçiniz</option>
-                        </select>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4>Makine Parkuru</h4>
-                        <label><input type="checkbox"> CNC Torna</label>
-                        <label><input type="checkbox"> CNC Freze</label>
-                        <label><input type="checkbox"> 5 Eksen CNC</label>
-                        <label><input type="checkbox"> Universal Torna</label>
-                        <label><input type="checkbox"> Universal Freze</label>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4>Çalışan Sayısı</h4>
-                        <label><input type="checkbox"> 1-10</label>
-                        <label><input type="checkbox"> 11-50</label>
-                        <label><input type="checkbox"> 51-100</label>
-                        <label><input type="checkbox"> 100+</label>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4>Sertifikalar</h4>
-                        <label><input type="checkbox"> ISO 9001</label>
-                        <label><input type="checkbox"> ISO 14001</label>
-                        <label><input type="checkbox"> IATF 16949</label>
-                        <label><input type="checkbox"> AS9100</label>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4>Üretim Kapasitesi (Aylık)</h4>
-                        <div class="range-inputs">
-                            <input type="number" placeholder="Min">
-                            <span>-</span>
-                            <input type="number" placeholder="Max">
-                        </div>
-                    </div>
-
-                    <div class="filter-group">
-                        <h4>Özellikler</h4>
-                        <label><input type="checkbox"> İhracat Yapıyor</label>
-                        <label><input type="checkbox"> Yerinde Kontrol</label>
-                        <label><input type="checkbox"> Numune Üretim</label>
-                        <label><input type="checkbox"> AR-GE Merkezi</label>
-                    </div>
+<div class="container">
+    <main>
+        <aside class="sidebar">
+            <div class="filter-section">
+                <div class="filter-group">
+                    <h3>İşleme Kapasiteleri</h3>
+                    <label><input type="checkbox"> CNC İşleme</label>
+                    <label><input type="checkbox"> 5 Eksen İşleme</label>
+                    <label><input type="checkbox"> Hassas Tornalama</label>
+                    <label><input type="checkbox"> Kalıp İmalatı</label>
+                    <label><input type="checkbox"> Tel Erozyon</label>
+                    <label><input type="checkbox"> Dalma Erozyon</label>
                 </div>
-            </aside>
 
-            <div class="content-area">
-                <div class="sort-bar">
+                <div class="filter-group">
+                    <h3>İşlenebilen Malzemeler</h3>
+                    <label><input type="checkbox"> Çelik</label>
+                    <label><input type="checkbox"> Paslanmaz Çelik</label>
+                    <label><input type="checkbox"> Alüminyum</label>
+                    <label><input type="checkbox"> Titanyum</label>
+                    <label><input type="checkbox"> Plastik</label>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Hassasiyet</h3>
+                    <label><input type="checkbox"> ±0.005mm</label>
+                    <label><input type="checkbox"> ±0.01mm</label>
+                    <label><input type="checkbox"> ±0.05mm</label>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Sertifikalar</h3>
+                    <label><input type="checkbox"> ISO 9001</label>
+                    <label><input type="checkbox"> ISO 14001</label>
+                    <label><input type="checkbox"> AS9100</label>
+                    <label><input type="checkbox"> IATF 16949</label>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Üretim Kapasitesi</h3>
+                    <select>
+                        <option>Seçiniz</option>
+                        <option>0-100 kg/gün</option>
+                        <option>100-500 kg/gün</option>
+                        <option>500+ kg/gün</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Lokasyon</h3>
+                    <select>
+                        <option>İl Seçiniz</option>
+                        <option>İstanbul</option>
+                        <option>Ankara</option>
+                        <option>İzmir</option>
+                        <option>Bursa</option>
+                        <option>Kocaeli</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <h3>Özel Özellikler</h3>
+                    <label><input type="checkbox"> İhracat Yapabilir</label>
+                    <label><input type="checkbox"> Numune Üretim</label>
+                    <label><input type="checkbox"> Tasarım Desteği</label>
+                    <label><input type="checkbox"> AR-GE Merkezi</label>
+                </div>
+            </div>
+        </aside>
+
+        <div class="content-area">
+            <div class="sort-bar">
+                <div class="sort-options">
                     <select>
                         <option>Sıralama</option>
-                        <option>En Yeniler</option>
-                        <option>Çalışan Sayısına Göre</option>
-			                        <option>Puanlamaya Göre</option>
-                        <option>İş Hacmine Göre</option>
+                        <option>Kapasite (Yüksek-Düşük)</option>
+                        <option>Kapasite (Düşük-Yüksek)</option>
+                        <option>Puana Göre</option>
+                        <option>İlana Göre</option>
                     </select>
-                    <div class="view-options">
-                        <button class="active"><i class="fas fa-list"></i></button>
-                        <button><i class="fas fa-th"></i></button>
-                    </div>
+                    <select>
+                        <option>20 Sonuç/Sayfa</option>
+                        <option>50 Sonuç/Sayfa</option>
+                        <option>100 Sonuç/Sayfa</option>
+                    </select>
                 </div>
-
-                <div class="company-list">
-                    <!-- Firma 1 -->
-                    <div class="company-item">
-                        <div class="company-logo">
-                            <img src="placeholder.jpg" alt="Firma Logo">
-                        </div>
-                        <div class="company-info">
-                            <h3 class="company-title">Teknik Metal San. A.Ş.</h3>
-                            <div class="company-details">
-                                <span class="company-detail">
-                                    <i class="fas fa-map-marker-alt"></i> İstanbul, Dudullu
-                                </span>
-                                <span class="company-detail">
-                                    <i class="fas fa-users"></i> 50-100 Çalışan
-                                </span>
-                                <span class="company-detail">
-                                    <i class="fas fa-star"></i> 4.8/5.0
-                                </span>
-                            </div>
-                            <div class="company-machines">
-                                <span class="machine-tag">CNC Torna (5)</span>
-                                <span class="machine-tag">CNC Freze (3)</span>
-                                <span class="machine-tag">5 Eksen CNC (2)</span>
-                                <span class="machine-tag">+4 daha</span>
-                            </div>
-                            <div class="company-actions">
-                                <button class="action-btn btn-contact">
-                                    <i class="fas fa-phone"></i> İletişim
-                                </button>
-                                <button class="action-btn btn-details">
-                                    <i class="fas fa-info-circle"></i> Detaylar
-                                </button>
-                                <button class="action-btn btn-favorite">
-                                    <i class="far fa-heart"></i> Favorilere Ekle
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Firma 2 -->
-                    <div class="company-item">
-                        <div class="company-logo">
-                            <img src="placeholder.jpg" alt="Firma Logo">
-                        </div>
-                        <div class="company-info">
-                            <h3 class="company-title">Yıldız Kalıp ve Plastik Ltd. Şti.</h3>
-                            <div class="company-details">
-                                <span class="company-detail">
-                                    <i class="fas fa-map-marker-alt"></i> Bursa, Nilüfer
-                                </span>
-                                <span class="company-detail">
-                                    <i class="fas fa-users"></i> 10-50 Çalışan
-                                </span>
-                                <span class="company-detail">
-                                    <i class="fas fa-star"></i> 4.5/5.0
-                                </span>
-                            </div>
-                            <div class="company-machines">
-                                <span class="machine-tag">Enjeksiyon (8)</span>
-                                <span class="machine-tag">Kalıp İşleme (4)</span>
-                                <span class="machine-tag">+3 daha</span>
-                            </div>
-                            <div class="company-actions">
-                                <button class="action-btn btn-contact">
-                                    <i class="fas fa-phone"></i> İletişim
-                                </button>
-                                <button class="action-btn btn-details">
-                                    <i class="fas fa-info-circle"></i> Detaylar
-                                </button>
-                                <button class="action-btn btn-favorite">
-                                    <i class="far fa-heart"></i> Favorilere Ekle
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Firma 3 -->
-                    <div class="company-item">
-                        <div class="company-logo">
-                            <img src="placeholder.jpg" alt="Firma Logo">
-                        </div>
-                        <div class="company-info">
-                            <h3 class="company-title">Anadolu Elektronik San. Tic. A.Ş.</h3>
-                            <div class="company-details">
-                                <span class="company-detail">
-                                    <i class="fas fa-map-marker-alt"></i> Ankara, Sincan
-                                </span>
-                                <span class="company-detail">
-                                    <i class="fas fa-users"></i> 100+ Çalışan
-                                </span>
-                                <span class="company-detail">
-                                    <i class="fas fa-star"></i> 4.9/5.0
-                                </span>
-                            </div>
-                            <div class="company-machines">
-                                <span class="machine-tag">SMD Dizgi (12)</span>
-                                <span class="machine-tag">Test Sistemleri (5)</span>
-                                <span class="machine-tag">+6 daha</span>
-                            </div>
-                            <div class="company-actions">
-                                <button class="action-btn btn-contact">
-                                    <i class="fas fa-phone"></i> İletişim
-                                </button>
-                                <button class="action-btn btn-details">
-                                    <i class="fas fa-info-circle"></i> Detaylar
-                                </button>
-                                <button class="action-btn btn-favorite">
-                                    <i class="far fa-heart"></i> Favorilere Ekle
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="pagination">
-                    <button><i class="fas fa-chevron-left"></i></button>
-                    <button class="active">1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>4</button>
-                    <button>5</button>
-                    <button><i class="fas fa-chevron-right"></i></button>
+                <div class="view-options">
+                    <button class="active"><i class="fas fa-list"></i></button>
+                    <button><i class="fas fa-th"></i></button>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <script>
-        document.querySelectorAll('.btn-favorite').forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.classList.toggle('active');
-                const icon = this.querySelector('i');
-                if (this.classList.contains('active')) {
-                    icon.classList.remove('far');
-                    icon.classList.add('fas');
-                } else {
-                    icon.classList.remove('fas');
-                    icon.classList.add('far');
-                }
-            });
+            <div class="company-list">
+	                    <!-- Firma Listesi -->
+                <div class="company-item">
+                    <div class="company-capabilities">
+                        <h3 class="main-capability">5 Eksen CNC İşleme & Hassas Parça İmalatı</h3>
+                        <div class="capability-details">
+                            <div class="spec-group">
+                                <span class="spec-title">İşleme Kapasitesi:</span>
+                                <span>Ø5mm - Ø500mm arası hassas işleme</span>
+                            </div>
+                            <div class="spec-group">
+                                <span class="spec-title">Hassasiyet:</span>
+                                <span>±0.005mm tolerans</span>
+                            </div>
+                            <div class="spec-group">
+                                <span class="spec-title">İşlenebilen Malzemeler:</span>
+                                <span>Çelik, Paslanmaz, Alüminyum, Titanyum, İnconel</span>
+                            </div>
+                        </div>
+                        <div class="machine-tags">
+                            <span class="machine-tag">5 Eksen CNC (3)</span>
+                            <span class="machine-tag">CNC Torna (5)</span>
+                            <span class="machine-tag">Tel Erozyon (2)</span>
+                            <span class="machine-tag">CMM Ölçüm</span>
+                        </div>
+                        <div class="certification-tags">
+                            <span class="cert-tag">ISO 9001</span>
+                            <span class="cert-tag">AS9100</span>
+                            <span class="cert-tag">IATF 16949</span>
+                        </div>
+                    </div>
+                    <div class="company-info">
+                        <div class="company-basic">
+                            <img src="https://via.placeholder.com/60" alt="Logo" class="company-logo">
+                            <div class="company-details">
+                                <span class="company-name">Teknik Metal San.</span>
+                                <span class="company-location"><i class="fas fa-map-marker-alt"></i> İstanbul/Dudullu</span>
+                                <span class="company-rating"><i class="fas fa-star"></i> 4.8/5.0 (156 değerlendirme)</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-primary">Teklif Al</button>
+                            <button class="btn-secondary">İletişime Geç</button>
+                            <button class="btn-favorite"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- İkinci Firma -->
+                <div class="company-item">
+                    <div class="company-capabilities">
+                        <h3 class="main-capability">Hassas Kalıp İmalatı & Plastik Enjeksiyon</h3>
+                        <div class="capability-details">
+                            <div class="spec-group">
+                                <span class="spec-title">Kalıp Boyutları:</span>
+                                <span>800x600mm'e kadar kalıp imalatı</span>
+                            </div>
+                            <div class="spec-group">
+                                <span class="spec-title">Enjeksiyon Kapasitesi:</span>
+                                <span>50gr - 1500gr arası parça üretimi</span>
+                            </div>
+                            <div class="spec-group">
+                                <span class="spec-title">Malzemeler:</span>
+                                <span>PA, PP, PC, ABS, POM, PEEK</span>
+                            </div>
+                        </div>
+                        <div class="machine-tags">
+                            <span class="machine-tag">Kalıp İşleme (4)</span>
+                            <span class="machine-tag">Enjeksiyon (8)</span>
+                            <span class="machine-tag">3D Ölçüm</span>
+                        </div>
+                        <div class="certification-tags">
+                            <span class="cert-tag">ISO 9001</span>
+                            <span class="cert-tag">ISO 14001</span>
+                        </div>
+                    </div>
+                    <div class="company-info">
+                        <div class="company-basic">
+                            <img src="https://via.placeholder.com/60" alt="Logo" class="company-logo">
+                            <div class="company-details">
+                                <span class="company-name">Yıldız Kalıp Ltd.</span>
+                                <span class="company-location"><i class="fas fa-map-marker-alt"></i> Bursa/Nilüfer</span>
+                                <span class="company-rating"><i class="fas fa-star"></i> 4.6/5.0 (98 değerlendirme)</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-primary">Teklif Al</button>
+                            <button class="btn-secondary">İletişime Geç</button>
+                            <button class="btn-favorite"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Üçüncü Firma -->
+                <div class="company-item">
+                    <div class="company-capabilities">
+                        <h3 class="main-capability">Hassas Sac Metal İşleme & Kaynak İmalatı</h3>
+                        <div class="capability-details">
+                            <div class="spec-group">
+                                <span class="spec-title">İşleme Kapasitesi:</span>
+                                <span>0.5mm - 10mm sac işleme</span>
+                            </div>
+                            <div class="spec-group">
+                                <span class="spec-title">Kaynak Türleri:</span>
+                                <span>TIG, MIG, Punto, Robotik Kaynak</span>
+                            </div>
+                            <div class="spec-group">
+                                <span class="spec-title">Malzemeler:</span>
+                                <span>Sac, Paslanmaz, Alüminyum</span>
+                            </div>
+                        </div>
+                        <div class="machine-tags">
+                            <span class="machine-tag">Fiber Lazer</span>
+                            <span class="machine-tag">Abkant Pres</span>
+                            <span class="machine-tag">Robotik Kaynak (2)</span>
+                        </div>
+                        <div class="certification-tags">
+                            <span class="cert-tag">ISO 9001</span>
+                            <span class="cert-tag">EN 3834</span>
+                        </div>
+                    </div>
+                    <div class="company-info">
+                        <div class="company-basic">
+                            <img src="https://via.placeholder.com/60" alt="Logo" class="company-logo">
+                            <div class="company-details">
+                                <span class="company-name">Anadolu Metal İşleme</span>
+                                <span class="company-location"><i class="fas fa-map-marker-alt"></i> Kocaeli/Gebze</span>
+                                <span class="company-rating"><i class="fas fa-star"></i> 4.7/5.0 (124 değerlendirme)</span>
+                            </div>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-primary">Teklif Al</button>
+                            <button class="btn-secondary">İletişime Geç</button>
+                            <button class="btn-favorite"><i class="far fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Sayfalama -->
+            <div class="pagination" style="margin-top: 20px; text-align: center;">
+                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white; cursor: pointer;">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: #FF5722; color: white;">1</button>
+                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">2</button>
+                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">3</button>
+                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">4</button>
+                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">5</button>
+                <button style="padding: 8px 12px; margin: 0 5px; border: 1px solid #ddd; background: white;">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // Favori butonları için
+    document.querySelectorAll('.btn-favorite').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+            this.classList.toggle('active');
         });
-    </script>
+    });
+
+    // Görünüm değiştirme butonları için
+    document.querySelectorAll('.view-options button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.view-options button').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+
 </body>
 </html>
