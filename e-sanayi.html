@@ -996,5 +996,76 @@
             });
         });
     </script>
+    <script>
+	document.addEventListener('DOMContentLoaded', async () => {
+	    try {
+	        const response = await fetch('https://api-adresiniz/api/manufacturer/list');
+	        const data = await response.json();
+	        
+	        if (data.success) {
+	            const companyList = document.querySelector('.company-list');
+	            companyList.innerHTML = data.manufacturers.map(manufacturer => `
+	                <div class="company-card">
+	                    <div class="company-header">
+	                        <h2 class="company-title">${manufacturer.companyName}</h2>
+	                        <div class="company-specs">
+	                            <div class="spec-item">
+	                                <span class="spec-label">İşleme Kapasitesi</span>
+	                                <span class="spec-value">${manufacturer.businessArea || 'Belirtilmemiş'}</span>
+	                            </div>
+	                            <div class="spec-item">
+	                                <span class="spec-label">Konum</span>
+	                                <span class="spec-value">${manufacturer.address || 'Belirtilmemiş'}</span>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="company-footer">
+	                        <div class="company-info">
+	                            <div class="company-details">
+	                                <span class="company-name">${manufacturer.companyName}</span>
+	                                <span class="company-location">${manufacturer.address || 'Konum belirtilmemiş'}</span>
+	                            </div>
+	                        </div>
+	                        <div class="action-buttons">
+	                            <button class="action-btn btn-quote" onclick="getTeklif('${manufacturer.id}')">
+	                                <i class="fas fa-file-alt"></i> Teklif Al
+	                            </button>
+	                            <button class="action-btn btn-contact" onclick="contact('${manufacturer.id}')">
+	                                <i class="fas fa-phone"></i> İletişim
+	                            </button>
+	                            <button class="action-btn btn-favorite" onclick="toggleFavorite('${manufacturer.id}')">
+	                                <i class="far fa-heart"></i>
+	                            </button>
+	                        </div>
+	                    </div>
+	                </div>
+	            `).join('');
+	        }
+	    } catch (error) {
+	        console.error('Veri yükleme hatası:', error);
+	    }
+	});
+	
+	// Yardımcı fonksiyonlar
+	function getTeklif(manufacturerId) {
+	    // Teklif alma işlemleri
+	    console.log('Teklif istendi:', manufacturerId);
+	}
+	
+	function contact(manufacturerId) {
+	    // İletişim işlemleri
+	    console.log('İletişim istendi:', manufacturerId);
+	}
+	
+	function toggleFavorite(manufacturerId) {
+	    const btn = event.currentTarget;
+	    const icon = btn.querySelector('i');
+	    icon.classList.toggle('far');
+	    icon.classList.toggle('fas');
+	    btn.classList.toggle('active');
+	    // Favorilere ekleme/çıkarma işlemleri
+	    console.log('Favori durumu değiştirildi:', manufacturerId);
+}
+</script>
 </body>
 </html>
