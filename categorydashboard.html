@@ -7,14 +7,20 @@
     <meta http-equiv="Expires" content="-1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IndustryHub - Dashboard</title>
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             --header-height: 80px;
-            --card-gap: 20px;
-            --card-width: calc((100% - (var(--card-gap) * 4)) / 5);
+            --footer-bg: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 1) 100%);
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --transition-base: all 0.3s ease;
         }
 
         * {
@@ -26,10 +32,10 @@
 
         body {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            background-attachment: fixed;
-            color: white;
+            color: var(--text-primary);
             min-height: 100vh;
-            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header Styles */
@@ -42,7 +48,6 @@
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
             padding: 0 3rem;
             display: flex;
             justify-content: space-between;
@@ -55,7 +60,7 @@
             align-items: center;
             gap: 15px;
             text-decoration: none;
-            color: white;
+            color: var(--text-primary);
         }
 
         .logo i {
@@ -84,13 +89,12 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+            transition: var(--transition-base);
         }
 
         .producer-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
         }
 
         .user-menu {
@@ -104,11 +108,11 @@
         }
 
         .user-menu a {
-            color: white;
+            color: var(--text-primary);
             text-decoration: none;
             padding: 0.5rem;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            transition: var(--transition-base);
         }
 
         .user-menu a:hover {
@@ -116,35 +120,36 @@
             transform: translateY(-2px);
         }
 
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-top: var(--header-height);
+            padding: 2rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+
         /* Dashboard Container */
         .dashboard-container {
-            margin-top: calc(var(--header-height) + 20px);
+            max-width: 1800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
             padding: 20px;
-            display: flex;
-            gap: var(--card-gap);
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
         }
-
-        .dashboard-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Category Cards */
+                /* Category Card Styles */
         .category-card {
-            flex: 0 0 var(--card-width);
-            scroll-snap-align: start;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 25px;
-            transition: all 0.3s ease;
+            transition: var(--transition-base);
             cursor: pointer;
-            animation: fadeIn 0.6s ease forwards;
+            height: 100%;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
         }
 
         .category-card:hover {
@@ -155,9 +160,9 @@
         }
 
         .category-content {
-            height: 100%;
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
         .category-icon {
@@ -178,7 +183,7 @@
         }
 
         .category-description {
-            color: rgba(255, 255, 255, 0.7);
+            color: var(--text-secondary);
             font-size: 0.9rem;
             line-height: 1.6;
             margin-bottom: 20px;
@@ -212,58 +217,65 @@
             margin-top: 5px;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         /* Responsive Design */
+        @media (max-width: 1800px) {
+            .dashboard-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
         @media (max-width: 1400px) {
-            :root {
-                --card-width: calc((100% - (var(--card-gap) * 3)) / 4);
+            .dashboard-container {
+                grid-template-columns: repeat(3, 1fr);
             }
         }
 
-        @media (max-width: 1200px) {
-            :root {
-                --card-width: calc((100% - (var(--card-gap) * 2)) / 3);
+        @media (max-width: 1024px) {
+            .dashboard-container {
+                grid-template-columns: repeat(2, 1fr);
             }
-        }
-
-        @media (max-width: 900px) {
-            :root {
-                --card-width: calc((100% - var(--card-gap)) / 2);
-            }
+            
             .header {
                 padding: 0 1.5rem;
             }
         }
 
-        @media (max-width: 600px) {
-            :root {
-                --card-width: 100%;
-            }
+        @media (max-width: 768px) {
             .header {
                 padding: 0 1rem;
             }
+            
             .logo span {
                 font-size: 1.4rem;
             }
+            
             .producer-button {
                 padding: 0.6rem 1.2rem;
                 font-size: 0.9rem;
             }
+        }
+
+        @media (max-width: 576px) {
             .dashboard-container {
-                flex-direction: column;
+                grid-template-columns: 1fr;
+            }
+            
+            .category-card {
+                min-height: 300px;
             }
         }
-    </style>
+
+        /* Footer Styles */
+        .footer {
+            background: var(--footer-bg);
+            padding: 60px 0 0;
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Import footer styles from index.html */
+        /* Footer styles buraya eklenecek */
+        </style>
 </head>
 <body>
     <header class="header">
@@ -291,117 +303,122 @@
         </div>
     </header>
 
-    <div class="dashboard-container">
-        <!-- E-Sanayi -->
-        <div class="category-card" data-href="e-sanayi">
-            <div class="category-content">
-                <i class="fas fa-cogs category-icon"></i>
-                <h2 class="category-title">E-Sanayi</h2>
-                <p class="category-description">
-                    Endüstriyel parça ve komponent pazarı. 
-                    Binlerce tedarikçiden kaliteli parçalar.
-                </p>
-                <div class="category-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">50K+</div>
-                        <div class="stat-label">Ürün</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">1000+</div>
-                        <div class="stat-label">Tedarikçi</div>
+    <main class="main-content">
+        <div class="dashboard-container">
+            <!-- E-Sanayi -->
+            <div class="category-card" data-href="e-sanayi">
+                <div class="category-content">
+                    <i class="fas fa-cogs category-icon"></i>
+                    <h2 class="category-title">E-Sanayi</h2>
+                    <p class="category-description">
+                        Endüstriyel parça ve komponent pazarı. 
+                        Binlerce tedarikçiden kaliteli parçalar.
+                    </p>
+                    <div class="category-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">50K+</div>
+                            <div class="stat-label">Ürün</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1000+</div>
+                            <div class="stat-label">Tedarikçi</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Hazır Ürünler -->
-        <div class="category-card" data-href="dashboard">
-            <div class="category-content">
-                <i class="fas fa-box-open category-icon"></i>
-                <h2 class="category-title">Hazır Ürünler</h2>
-                <p class="category-description">
-                    Tamamlanmış ürün kataloğu.
-                    Doğrudan üreticiden son kullanıcıya.
-                </p>
-                <div class="category-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">10K+</div>
-                        <div class="stat-label">Ürün</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">500+</div>
-                        <div class="stat-label">Üretici</div>
+            <!-- Hazır Ürünler -->
+            <div class="category-card" data-href="dashboard">
+                <div class="category-content">
+                    <i class="fas fa-box-open category-icon"></i>
+                    <h2 class="category-title">Hazır Ürünler</h2>
+                    <p class="category-description">
+                        Tamamlanmış ürün kataloğu.
+                        Doğrudan üreticiden son kullanıcıya.
+                    </p>
+                    <div class="category-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">10K+</div>
+                            <div class="stat-label">Ürün</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">500+</div>
+                            <div class="stat-label">Üretici</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- CAD Dosyaları -->
-        <div class="category-card" data-href="cad-dosyalari">
-            <div class="category-content">
-                <i class="fas fa-drafting-compass category-icon"></i>
-                <h2 class="category-title">CAD Dosyaları</h2>
-                <p class="category-description">
-                    Teknik çizim ve 3D model bankası.
-                    Profesyonel tasarım dosyaları.
-                </p>
-                <div class="category-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">25K+</div>
-                        <div class="stat-label">Model</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">100+</div>
-                        <div class="stat-label">Tasarımcı</div>
+            <!-- CAD Dosyaları -->
+            <div class="category-card" data-href="cad-dosyalari">
+                <div class="category-content">
+                    <i class="fas fa-drafting-compass category-icon"></i>
+                    <h2 class="category-title">CAD Dosyaları</h2>
+                    <p class="category-description">
+                        Teknik çizim ve 3D model bankası.
+                        Profesyonel tasarım dosyaları.
+                    </p>
+                    <div class="category-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">25K+</div>
+                            <div class="stat-label">Model</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100+</div>
+                            <div class="stat-label">Tasarımcı</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- İnovasyon Hub -->
-        <div class="category-card" data-href="inovasyon-kapisi">
-            <div class="category-content">
-                <i class="fas fa-lightbulb category-icon"></i>
-                <h2 class="category-title">İnovasyon Kapısı</h2>
-                <p class="category-description">
-                    Proje & yatırım eşleştirme platformu.
-                    Fikirlerinizi hayata geçirin.
-                </p>
-                <div class="category-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">200+</div>
-                        <div class="stat-label">Aktif Proje</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">50M+</div>
-                        <div class="stat-label">Yatırım</div>
+            <!-- İnovasyon Hub -->
+            <div class="category-card" data-href="inovasyon-kapisi">
+                <div class="category-content">
+                    <i class="fas fa-lightbulb category-icon"></i>
+                    <h2 class="category-title">İnovasyon Kapısı</h2>
+                    <p class="category-description">
+                        Proje & yatırım eşleştirme platformu.
+                        Fikirlerinizi hayata geçirin.
+                    </p>
+                    <div class="category-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">200+</div>
+                            <div class="stat-label">Aktif Proje</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">50M+</div>
+                            <div class="stat-label">Yatırım</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Kapasite Borsası -->
-        <div class="category-card" data-href="kapasite-borsasi">
-            <div class="category-content">
-                <i class="fas fa-exchange-alt category-icon"></i>
-                <h2 class="category-title">Kapasite Borsası</h2>
-                <p class="category-description">
-                    Üretim kapasitenizi değerlendirin.
-                    İş birliği fırsatlarını keşfedin.
-                </p>
-                <div class="category-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">250+</div>
-                        <div class="stat-label">Aktif Teklif</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">120+</div>
-                        <div class="stat-label">Eşleşme</div>
+            <!-- Kapasite Borsası -->
+            <div class="category-card" data-href="kapasite-borsasi">
+                <div class="category-content">
+                    <i class="fas fa-exchange-alt category-icon"></i>
+                    <h2 class="category-title">Kapasite Borsası</h2>
+                    <p class="category-description">
+                        Üretim kapasitenizi değerlendirin.
+                        İş birliği fırsatlarını keşfedin.
+                    </p>
+                    <div class="category-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">250+</div>
+                            <div class="stat-label">Aktif Teklif</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">120+</div>
+                            <div class="stat-label">Eşleşme</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Footer'ı buraya ekleyelim -->
+    [Index.html'den footer kısmını buraya ekleyin]
 
     <script src="auth.js"></script>
     <script>
@@ -413,7 +430,36 @@
             });
         });
 
-        // Token kontrolü ve sayfa güvenliği için önceki kodlar buraya eklenebilir
+        // Token kontrolü
+        (function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.replace('login');
+                return;
+            }
+
+            // History kontrolü
+            window.history.pushState(null, document.title, window.location.href);
+            window.addEventListener('popstate', function() {
+                window.history.pushState(null, document.title, window.location.href);
+            });
+
+            // Visibility kontrolü
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    if (!localStorage.getItem('token')) {
+                        window.location.replace('login');
+                    }
+                }
+            });
+
+            // Storage kontrolü
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'token' && !e.newValue) {
+                    window.location.replace('login');
+                }
+            });
+        })();
     </script>
 </body>
 </html>
