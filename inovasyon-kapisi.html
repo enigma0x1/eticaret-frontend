@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İnovasyon Kapısı - Platform</title>
+    <title>İnovasyon Yatırım Platformu</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --secondary: #3b82f6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --gray: #64748b;
+            --primary: #1B3C6B;
+            --secondary: #2D5A9D;
+            --accent: #FF6B35;
+            --success: #27AE60;
+            --warning: #F39C12;
+            --danger: #E74C3C;
+            --dark: #2C3E50;
+            --gray: #607D8B;
+            --light-gray: #ECF0F3;
+            --white: #FFFFFF;
             
             --header-height: 70px;
             --sidebar-width: 280px;
-            --chat-width: 300px;
         }
 
         * {
@@ -30,16 +31,13 @@
         }
 
         body {
-            background: var(--light);
+            background: var(--light-gray);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        /* Header Styles */
         .header {
             height: var(--header-height);
-            background: white;
+            background: var(--white);
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: fixed;
             top: 0;
@@ -48,23 +46,45 @@
             z-index: 1000;
             display: flex;
             align-items: center;
-            padding: 0 1.5rem;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
+            padding: 0 2rem;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--primary);
+            gap: 1rem;
             text-decoration: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-left: 3rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
         }
 
         .search-bar {
@@ -75,8 +95,8 @@
         .search-input {
             width: 100%;
             padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
             font-size: 0.875rem;
         }
 
@@ -88,116 +108,23 @@
             color: var(--gray);
         }
 
-        .header-right {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .action-btn {
-            position: relative;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #f1f5f9;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--dark);
-            transition: all 0.3s;
-        }
-
-        .action-btn:hover {
-            background: #e2e8f0;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--danger);
-            color: white;
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 1rem;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .user-menu:hover {
-            background: #f1f5f9;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        .user-info {
-            display: none;
-        }
-
-        @media (min-width: 768px) {
-            .user-info {
-                display: block;
-            }
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .user-role {
-            font-size: 0.875rem;
-            color: var(--gray);
-        }
-
-        /* Sidebar Styles */
         .sidebar {
             position: fixed;
             left: 0;
             top: var(--header-height);
             bottom: 0;
             width: var(--sidebar-width);
-            background: white;
-            border-right: 1px solid #e2e8f0;
+            background: var(--white);
+            border-right: 1px solid var(--light-gray);
+            padding: 2rem;
             overflow-y: auto;
-            z-index: 100;
-            transition: all 0.3s;
         }
 
-        .sidebar-section {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
+        .filter-section {
+            margin-bottom: 2rem;
         }
 
-        .section-title {
+        .filter-title {
             font-size: 0.875rem;
             font-weight: 600;
             color: var(--gray);
@@ -220,670 +147,712 @@
 
         .filter-select {
             width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #e2e8f0;
-            border-radius: 0.375rem;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
             font-size: 0.875rem;
-            color: var(--dark);
         }
 
-        .range-slider {
-            width: 100%;
-            margin: 1rem 0;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .checkbox-label {
-            font-size: 0.875rem;
-            color: var(--dark);
-        }
-
-        /* Main Content Layout */
         .main-content {
             margin-left: var(--sidebar-width);
             margin-top: var(--header-height);
             padding: 2rem;
-            flex: 1;
         }
 
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-            .sidebar.active {
-                transform: translateX(0);
-            }
+        .project-card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            min-height: 280px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
 
-            .main-content {
-                margin-left: 0;
-            }
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .project-image {
+            width: 320px;
+            min-height: 100%;
+            overflow: hidden;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-content {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-category {
+            background: var(--light-gray);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .project-stage {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--success);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+	                color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        .project-description {
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .funding-status {
+            margin-bottom: 1.5rem;
+        }
+
+        .funding-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .funding-target {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .funding-current {
+            color: var(--success);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--light-gray);
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
-        <div class="header-left">
-            <a href="/" class="logo">
-                <i class="fas fa-lightbulb"></i>
-                İnovasyon Kapısı
-            </a>
+        <a href="/" class="logo">
+            <i class="fas fa-lightbulb"></i>
+            İnovasyon Kapısı
+        </a>
+        <nav class="nav-menu">
+            <a href="#" class="nav-link active">Projeler</a>
+            <a href="#" class="nav-link">Yatırımcılar</a>
+            <a href="#" class="nav-link">İş Birlikleri</a>
+            <a href="#" class="nav-link">OSB'ler</a>
+        </nav>
+        <div class="header-right">
             <div class="search-bar">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="Proje veya yatırımcı ara...">
-            </div>
-        </div>
-        <div class="header-right">
-            <div class="header-actions">
-                <button class="action-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </button>
-                <button class="action-btn">
-                    <i class="fas fa-envelope"></i>
-                    <span class="notification-badge">5</span>
-                </button>
-            </div>
-            <div class="user-menu">
-                <div class="user-avatar">
-                    AY
-                </div>
-                <div class="user-info">
-                    <div class="user-name">Ahmet Yılmaz</div>
-                    <div class="user-role">Girişimci</div>
-                </div>
+                <input type="text" class="search-input" placeholder="Proje veya teknoloji ara...">
             </div>
         </div>
     </header>
 
-    <!-- Sidebar -->
     <aside class="sidebar">
-        <div class="sidebar-section">
-            <h3 class="section-title">Filtreler</h3>
+        <div class="filter-section">
+            <h3 class="filter-title">Filtreler</h3>
             <div class="filter-group">
-                <label class="filter-label">Sektör</label>
+                <label class="filter-label">Teknoloji Alanı</label>
                 <select class="filter-select">
-                    <option value="">Tüm Sektörler</option>
-                    <option value="tech">Teknoloji</option>
-                    <option value="health">Sağlık</option>
-                    <option value="energy">Enerji</option>
-                    <option value="finance">Finans</option>
+                    <option value="">Tüm Alanlar</option>
+                    <option value="yapay-zeka">Yapay Zeka</option>
+                    <option value="iot">IoT</option>
+                    <option value="robotik">Robotik</option>
+                    <option value="yenilenebilir">Yenilenebilir Enerji</option>
                 </select>
             </div>
             <div class="filter-group">
                 <label class="filter-label">Yatırım Aralığı</label>
-                <input type="range" class="range-slider" min="0" max="1000000" step="50000">
-                <div class="range-values">
-                    <span>0 TL</span>
-                    <span>1.000.000 TL</span>
-                </div>
+                <select class="filter-select">
+                    <option value="">Tümü</option>
+                    <option value="0-100">0 - 100.000 ₺</option>
+                    <option value="100-500">100.000 - 500.000 ₺</option>
+                    <option value="500-1000">500.000 - 1.000.000 ₺</option>
+                    <option value="1000+">1.000.000+ ₺</option>
+                </select>
             </div>
             <div class="filter-group">
                 <label class="filter-label">Proje Aşaması</label>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="stage1">
-                        <label class="checkbox-label" for="stage1">Fikir Aşaması</label>
+                <select class="filter-select">
+                    <option value="">Tümü</option>
+                    <option value="fikir">Fikir Aşaması</option>
+                    <option value="mvp">MVP</option>
+                    <option value="pazarlama">Pazarlama</option>
+                    <option value="olceklendirme">Ölçeklendirme</option>
+                </select>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="project-list">
+            <!-- Örnek Proje 1 -->
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="https://example.com/project1.jpg" alt="Akıllı Üretim Sistemi">
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-meta">
+                            <span class="project-category">Yapay Zeka</span>
+                            <span class="project-stage">
+                                <i class="fas fa-chart-line"></i>
+                                MVP Aşaması
+                            </span>
+                        </div>
+                        <h3 class="project-title">Akıllı Üretim Optimizasyon Sistemi</h3>
+                        <p class="project-description">
+                            Yapay zeka destekli üretim optimizasyon sistemi ile fabrikalarda verimliliği %30 artırmayı hedefliyoruz. 
+                            Sistem, üretim hatlarındaki sensörlerden aldığı verileri analiz ederek gerçek zamanlı optimizasyon önerileri sunuyor.
+                        </p>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="stage2">
-                        <label class="checkbox-label" for="stage2">MVP</label>
+                    <div class="funding-status">
+                        <div class="funding-header">
+                            <span class="funding-target">Hedef: 1.000.000 ₺</span>
+                            <span class="funding-current">Toplanan: 400.000 ₺</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="stage3">
-                        <label class="checkbox-label" for="stage3">Pazar Doğrulama</label>
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">6 Ay</div>
+                            <div class="stat-label">Geliştirme Süresi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">5</div>
+                            <div class="stat-label">Takım Üyesi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Pilot Müşteri</div>
+                        </div>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="stage4">
-                        <label class="checkbox-label" for="stage4">Ölçeklendirme</label>
+                    <div class="project-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-file-alt"></i>
+                            Detaylar
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-handshake"></i>
+                            Yatırım Yap
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Örnek Proje 2 -->
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="https://example.com/project2.jpg" alt="IoT Enerji Monitörü">
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-meta">
+                            <span class="project-category">IoT</span>
+                            <span class="project-stage">
+                                <i class="fas fa-rocket"></i>
+                                Pazarlama Aşaması
+                            </span>
+                        </div>
+                        <h3 class="project-title">Endüstriyel IoT Enerji Monitörü</h3>
+                        <p class="project-description">
+                            Endüstriyel tesislerde enerji tüketimini gerçek zamanlı takip eden ve optimize eden IoT tabanlı sistem.
+                            Mevcut pilot uygulamalarda %'e varan enerji tasarrufu sağlandı.
+                        </p>
+                    </div>
+                    <div class="funding-status">
+                        <div class="funding-header">
+			                            <span class="funding-target">Hedef: 750.000 ₺</span>
+                            <span class="funding-current">Toplanan: 525.000 ₺</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">4 Ay</div>
+                            <div class="stat-label">Geliştirme Süresi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">4</div>
+                            <div class="stat-label">Takım Üyesi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Pilot Müşteri</div>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-file-alt"></i>
+                            Detaylar
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-handshake"></i>
+                            Yatırım Yap
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Örnek Proje 3 -->
+            <div class="project-card">
+                <div class="project-image">
+                    <img src="https://example.com/project3.jpg" alt="Robotik Otomasyon">
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-meta">
+                            <span class="project-category">Robotik</span>
+                            <span class="project-stage">
+                                <i class="fas fa-lightbulb"></i>
+                                Fikir Aşaması
+                            </span>
+                        </div>
+                        <h3 class="project-title">Esnek Üretim Robotik Sistem</h3>
+                        <p class="project-description">
+                            Küçük ve orta ölçekli üretim tesisleri için uygun maliyetli, esnek ve kolay programlanabilir robotik otomasyon sistemi.
+                            Sistem, farklı üretim hatlarına hızlıca adapte olabilme özelliğine sahip.
+                        </p>
+                    </div>
+                    <div class="funding-status">
+                        <div class="funding-header">
+                            <span class="funding-target">Hedef: 1.500.000 ₺</span>
+                            <span class="funding-current">Toplanan: 150.000 ₺</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">12 Ay</div>
+                            <div class="stat-label">Geliştirme Süresi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">6</div>
+                            <div class="stat-label">Takım Üyesi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Pilot Müşteri</div>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-file-alt"></i>
+                            Detaylar
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-handshake"></i>
+                            Yatırım Yap
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    </aside>
+    </main>
 </body>
 </html>
-<!-- Önceki kodun devamı -->
-
-<style>
-    /* Ana İçerik Stilleri */
-    .content-wrapper {
-        display: flex;
-        gap: 2rem;
-    }
-
-    .projects-section {
-        flex: 1;
-    }
-
-    .section-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-    }
-
-    .section-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--dark);
-    }
-
-    .view-options {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-    }
-
-    .view-select {
-        padding: 0.5rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-    }
-
-    /* Proje Kartları */
-    .projects-grid {
-        display: grid;
-        gap: 1.5rem;
-    }
-
-    .project-card {
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        overflow: hidden;
-        transition: transform 0.3s;
-    }
-
-    .project-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-
-    .project-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-
-    .project-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .project-category {
-        background: #f1f5f9;
-        padding: 0.25rem 0.75rem;
-        border-radius: 1rem;
-        font-size: 0.75rem;
-        color: var(--primary);
-        font-weight: 500;
-    }
-
-    .project-status {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-    }
-
-    .status-indicator {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-    }
-
-    .status-active {
-        background: var(--success);
-    }
-
-    .project-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: var(--dark);
-        margin-bottom: 0.5rem;
-    }
-
-    .project-description {
-        color: var(--gray);
-        font-size: 0.875rem;
-        line-height: 1.5;
-        margin-bottom: 1rem;
-    }
-
-    .project-stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1rem;
-        padding: 1rem 1.5rem;
-        background: #f8fafc;
-    }
-
-    .stat-item {
-        text-align: center;
-    }
-
-    .stat-value {
-        font-size: 1.25rem;
-        font-weight: 600;
-        color: var(--dark);
-    }
-
-    .stat-label {
-        font-size: 0.75rem;
-        color: var(--gray);
-        margin-top: 0.25rem;
-    }
-
-    .project-footer {
-        padding: 1rem 1.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid #e2e8f0;
-    }
-
-    .project-owner {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-    }
-
-    .owner-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 0.875rem;
-        font-weight: 500;
-    }
-
-    .owner-info {
-        font-size: 0.875rem;
-    }
-
-    .owner-name {
-        color: var(--dark);
-        font-weight: 500;
-    }
-
-    .owner-role {
-        color: var(--gray);
-    }
-
-    .project-actions {
-        display: flex;
-        gap: 0.75rem;
-    }
-
-    .btn {
-        padding: 0.5rem 1rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .btn-primary {
-        background: var(--primary);
-        color: white;
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background: #1d4ed8;
-    }
-
-    .btn-outline {
-        background: white;
-        border: 1px solid #e2e8f0;
-        color: var(--dark);
-    }
-
-    .btn-outline:hover {
-        background: #f8fafc;
-    }
-
-    /* Sağ Sidebar */
-    .right-sidebar {
-        width: 300px;
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        height: fit-content;
-        position: sticky;
-        top: calc(var(--header-height) + 2rem);
-    }
-
-    .sidebar-card {
-        padding: 1.5rem;
-        border-bottom: 1px solid #e2e8f0;
-    }
-
-    .sidebar-card:last-child {
-        border-bottom: none;
-    }
-
-    .active-investors {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .investor-item {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .investor-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-    }
-
-    .investor-info {
-        flex: 1;
-    }
-
-    .investor-name {
-        font-weight: 500;
-        color: var(--dark);
-    }
-
-    .investor-details {
-        font-size: 0.875rem;
-        color: var(--gray);
-    }
-
-    .online-indicator {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--success);
-    }
-</style>
-
-<!-- Ana İçerik -->
-<main class="main-content">
-    <div class="content-wrapper">
-        <section class="projects-section">
-            <div class="section-header">
-                <h2 class="section-title">Aktif Projeler</h2>
-                <div class="view-options">
-                    <select class="view-select">
-                        <option value="newest">En Yeniler</option>
-                        <option value="popular">En Popüler</option>
-                        <option value="funding">Yatırım Miktarı</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="projects-grid">
-                <!-- Proje Kartı 1 -->
-                <article class="project-card">
-                    <div class="project-header">
-                        <div class="project-meta">
-                            <span class="project-category">Yapay Zeka</span>
-                            <div class="project-status">
-                                <span class="status-indicator status-active"></span>
-                                Aktif
-                            </div>
-                        </div>
-                        <h3 class="project-title">Akıllı Üretim Optimizasyonu</h3>
-                        <p class="project-description">
-                            Yapay zeka destekli üretim optimizasyon sistemi ile verimliliği %30 artırın.
-                            Endüstri 4.0'a uyumlu çözümler.
-                        </p>
-                    </div>
-                    <div class="project-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">₺2M</div>
-                            <div class="stat-label">Hedef</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">`</div>
-                            <div class="stat-label">Tamamlanan</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">45</div>
-                            <div class="stat-label">Gün Kaldı</div>
-                        </div>
-                    </div>
-                    <div class="project-footer">
-                        <div class="project-owner">
-                            <div class="owner-avatar">AY</div>
-                            <div class="owner-info">
-                                <div class="owner-name">Ahmet Yılmaz</div>
-                                <div class="owner-role">Kurucu</div>
-                            </div>
-                        </div>
-                        <div class="project-actions">
-                            <button class="btn btn-outline">
-                                <i class="far fa-heart"></i>
-                                İlgilen
-                            </button>
-                            <button class="btn btn-primary">
-                                <i class="fas fa-handshake"></i>
-                                Görüşme Talep Et
-                            </button>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- Diğer proje kartları benzer yapıda -->
-            </div>
-        </section>
-
-        <!-- Sağ Sidebar -->
-        <aside class="right-sidebar">
-            <div class="sidebar-card">
-                <h3 class="section-title">Aktif Yatırımcılar</h3>
-                <div class="active-investors">
-                    <div class="investor-item">
-                        <div class="investor-avatar">MY</div>
-                        <div class="investor-info">
-                            <div class="investor-name">Mehmet Yıldız</div>
-                            <div class="investor-details">Melek Yatırımcı</div>
-                        </div>
-                        <div class="online-indicator"></div>
-                    </div>
-                    <!-- Diğer yatırımcılar -->
-                </div>
-            </div>
-        </aside>
-    </div>
-</main>
-<!-- Önceki kodun sonuna eklenecek -->
-
 <script>
-// API ve State Yönetimi
-const API_URL = 'https://api.inovasyonkapisi.com';
+// Ana State Yönetimi
 const state = {
     projects: [],
     filters: {
-        sector: '',
-        investmentRange: [0, 1000000],
-        stages: [],
+        technology: '',
+        investmentRange: '',
+        stage: '',
         sort: 'newest',
         search: ''
     },
-    user: JSON.parse(localStorage.getItem('user')) || null,
-    notifications: [],
-    messages: [],
     loading: false
 };
 
-// API İstekleri
-const api = {
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-    },
-
-    async get(endpoint) {
+// API İşlemleri
+const API = {
+    baseUrl: '/api',
+    
+    async getProjects(filters = {}) {
         try {
-            const response = await fetch(`${API_URL}${endpoint}`, {
-                headers: this.headers
-            });
-            return await response.json();
-        } catch (error) {
-            console.error('API Error:', error);
-            showNotification('Bir hata oluştu', 'error');
-        }
-    },
+            state.loading = true;
+            updateUI();
 
-    async post(endpoint, data) {
-        try {
-            const response = await fetch(`${API_URL}${endpoint}`, {
-                method: 'POST',
-                headers: this.headers,
-                body: JSON.stringify(data)
-            });
-            return await response.json();
-        } catch (error) {
-            console.error('API Error:', error);
-            showNotification('Bir hata oluştu', 'error');
-        }
-    }
-};
-
-// Proje Yönetimi
-const projectManager = {
-    async loadProjects() {
-        state.loading = true;
-        updateUI();
-
-        try {
             const queryParams = new URLSearchParams({
-                sector: state.filters.sector,
-                minInvestment: state.filters.investmentRange[0],
-                maxInvestment: state.filters.investmentRange[1],
-                stages: state.filters.stages.join(','),
-                sort: state.filters.sort,
-                search: state.filters.search
+                technology: filters.technology || '',
+                investmentRange: filters.investmentRange || '',
+                stage: filters.stage || '',
+                sort: filters.sort || 'newest',
+                search: filters.search || ''
             });
 
-            const data = await api.get(`/projects?${queryParams}`);
-            
-            if (data.success) {
-                state.projects = data.projects;
-                updateUI();
-            }
+            const response = await fetch(`${this.baseUrl}/projects?${queryParams}`);
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.message);
+
+            return data.projects;
         } catch (error) {
-            console.error('Project loading error:', error);
+            showNotification('Veri yüklenirken bir hata oluştu', 'error');
+            console.error('API Error:', error);
+            return [];
         } finally {
             state.loading = false;
             updateUI();
         }
     },
 
-    createProjectCard(project) {
-        return `
-            <article class="project-card" data-id="${project._id}">
-                <div class="project-header">
-                    <div class="project-meta">
-                        <span class="project-category">${project.sector}</span>
-                        <div class="project-status">
-                            <span class="status-indicator status-${project.status}"></span>
-                            ${project.status}
-                        </div>
-                    </div>
-                    <h3 class="project-title">${project.title}</h3>
-                    <p class="project-description">${project.description}</p>
-                </div>
-                <div class="project-stats">
-                    <div class="stat-item">
-                        <div class="stat-value">₺${this.formatMoney(project.targetInvestment)}</div>
-                        <div class="stat-label">Hedef</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">${project.completionPercentage}%</div>
-                        <div class="stat-label">Tamamlanan</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value">${project.daysLeft}</div>
-                        <div class="stat-label">Gün Kaldı</div>
-                    </div>
-                </div>
-                <div class="project-footer">
-                    <div class="project-owner">
-                        <div class="owner-avatar">${this.getInitials(project.owner.name)}</div>
-                        <div class="owner-info">
-                            <div class="owner-name">${project.owner.name}</div>
-                            <div class="owner-role">${project.owner.role}</div>
-                        </div>
-                    </div>
-                    <div class="project-actions">
-                        <button class="btn btn-outline" onclick="projectManager.toggleInterest('${project._id}')">
-                            <i class="far fa-heart"></i>
-                            İlgilen
-                        </button>
-                        <button class="btn btn-primary" onclick="projectManager.requestMeeting('${project._id}')">
-                            <i class="fas fa-handshake"></i>
-                            Görüşme Talep Et
-                        </button>
-                    </div>
-                </div>
-            </article>
-        `;
+    async getProjectDetails(projectId) {
+        try {
+            const response = await fetch(`${this.baseUrl}/projects/${projectId}`);
+            const data = await response.json();
+            return data.project;
+        } catch (error) {
+            showNotification('Proje detayları yüklenemedi', 'error');
+            return null;
+        }
+    },
+
+    async submitInvestment(projectId, amount) {
+        try {
+            const response = await fetch(`${this.baseUrl}/investments`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ projectId, amount })
+            });
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            showNotification('Yatırım talebi gönderilemedi', 'error');
+            return null;
+        }
+    }
+};
+
+// UI İşlemleri
+const UI = {
+    elements: {
+        projectList: document.querySelector('.project-list'),
+        searchInput: document.querySelector('.search-input'),
+        filters: {
+            technology: document.querySelector('select[class="filter-select"]'),
+            investmentRange: document.querySelectorAll('.filter-select')[1],
+            stage: document.querySelectorAll('.filter-select')[2]
+        }
     },
 
     formatMoney(amount) {
         return new Intl.NumberFormat('tr-TR', {
+            style: 'currency',
+            currency: 'TRY',
             minimumFractionDigits: 0,
             maximumFractionDigits: 0
         }).format(amount);
     },
 
-    getInitials(name) {
-        return name
-            .split(' ')
-            .map(word => word[0])
-            .join('')
-            .toUpperCase();
+    calculateProgress(current, target) {
+        return (current / target * 100).toFixed(1);
     },
 
-    async toggleInterest(projectId) {
-        const response = await api.post(`/projects/${projectId}/interest`);
-        if (response.success) {
-            showNotification('İlgi kaydedildi', 'success');
-            this.loadProjects();
+    async renderProjects() {
+        const projects = await API.getProjects(state.filters);
+        
+        if (state.loading) {
+            this.elements.projectList.innerHTML = `
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Projeler yükleniyor...
+                </div>`;
+            return;
         }
+
+        if (projects.length === 0) {
+            this.elements.projectList.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>Sonuç bulunamadı</p>
+                </div>`;
+            return;
+        }
+
+        this.elements.projectList.innerHTML = projects.map(project => this.createProjectCard(project)).join('');
     },
 
-    async requestMeeting(projectId) {
-        const response = await api.post(`/projects/${projectId}/meeting-request`);
-        if (response.success) {
-            showNotification('Görüşme talebi gönderildi', 'success');
-            loadNotifications();
+    createProjectCard(project) {
+        const progress = this.calculateProgress(project.currentInvestment, project.targetInvestment);
+        
+        return `
+            <div class="project-card" data-id="${project.id}">
+                <div class="project-image">
+                    <img src="${project.image}" alt="${project.title}">
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <div class="project-meta">
+                            <span class="project-category">${project.technology}</span>
+                            <span class="project-stage">
+                                <i class="fas ${this.getStageIcon(project.stage)}"></i>
+                                ${project.stage}
+                            </span>
+                        </div>
+                        <h3 class="project-title">${project.title}</h3>
+                        <p class="project-description">${project.description}</p>
+                    </div>
+                    <div class="funding-status">
+                        <div class="funding-header">
+                            <span class="funding-target">Hedef: ${this.formatMoney(project.targetInvestment)}</span>
+                            <span class="funding-current">Toplanan: ${this.formatMoney(project.currentInvestment)}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${project.duration}</div>
+                            <div class="stat-label">Geliştirme Süresi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${project.teamSize}</div>
+                            <div class="stat-label">Takım Üyesi</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${project.pilotCustomers}</div>
+                            <div class="stat-label">Pilot Müşteri</div>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <button class="btn btn-outline" onclick="UI.showProjectDetails('${project.id}')">
+                            <i class="fas fa-file-alt"></i>
+                            Detaylar
+                        </button>
+                        <button class="btn btn-primary" onclick="UI.showInvestmentModal('${project.id}')">
+                            <i class="fas fa-handshake"></i>
+                            Yatırım Yap
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    getStageIcon(stage) {
+        const icons = {
+            'Fikir Aşaması': 'fa-lightbulb',
+            'MVP': 'fa-code',
+            'Pazarlama': 'fa-chart-line',
+            'Ölçeklendirme': 'fa-rocket'
+        };
+        return icons[stage] || 'fa-circle';
+    },
+
+    async showProjectDetails(projectId) {
+        const project = await API.getProjectDetails(projectId);
+        if (!project) return;
+
+        Modal.show({
+            title: project.title,
+            content: `
+                <div class="project-details">
+                    <div class="detail-section">
+                        <h4>Proje Açıklaması</h4>
+                        <p>${project.detailedDescription}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Teknik Detaylar</h4>
+                        <p>${project.technicalDetails}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Pazar Analizi</h4>
+                        <p>${project.marketAnalysis}</p>
+                    </div>
+                    <div class="detail-section">
+                        <h4>Takım</h4>
+                        <p>${project.teamDescription}</p>
+                    </div>
+                </div>
+            `
+        });
+    },
+
+    showInvestmentModal(projectId) {
+        Modal.show({
+            title: 'Yatırım Yap',
+            content: `
+                <div class="investment-form">
+                    <p>Yatırım yapmak istediğiniz tutarı giriniz:</p>
+                    <input type="number" id="investmentAmount" class="form-input" placeholder="Tutar (TL)">
+                    <button class="btn btn-primary" onclick="UI.submitInvestment('${projectId}')">
+                        Yatırım Talebini Gönder
+                    </button>
+                </div>
+            `
+        });
+    },
+
+    async submitInvestment(projectId) {
+        const amountInput = document.getElementById('investmentAmount');
+        const amount = parseInt(amountInput.value);
+
+        if (!amount || amount <= 0) {
+            showNotification('Geçerli bir yatırım tutarı giriniz', 'warning');
+            return;
+        }
+
+        const result = await API.submitInvestment(projectId, amount);
+        if (result) {
+            showNotification('Yatırım talebiniz alındı', 'success');
+	                success');
+            Modal.close();
+            this.renderProjects(); // Projeleri yeniden yükle
+        }
+    }
+};
+
+// Modal Yönetimi
+const Modal = {
+    show({ title, content }) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${title}</h3>
+                    <button class="modal-close" onclick="Modal.close()">&times;</button>
+                </div>
+                <div class="modal-body">${content}</div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // ESC tuşu ile kapatma
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') Modal.close();
+        });
+    },
+
+    close() {
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            modal.classList.add('fade-out');
+            setTimeout(() => modal.remove(), 300);
         }
     }
 };
@@ -893,7 +862,9 @@ function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 
+                       type === 'error' ? 'fa-exclamation-circle' : 
+                       'fa-info-circle'}"></i>
         <span>${message}</span>
     `;
     
@@ -905,152 +876,189 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Filtre Yönetimi
-function setupFilters() {
-    // Sektör filtresi
-    const sectorSelect = document.querySelector('.filter-select');
-    sectorSelect.addEventListener('change', (e) => {
-        state.filters.sector = e.target.value;
-        projectManager.loadProjects();
-    });
+// Yardımcı Fonksiyonlar
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
-    // Yatırım aralığı slider'ı
-    const rangeSlider = document.querySelector('.range-slider');
-    rangeSlider.addEventListener('input', (e) => {
-        state.filters.investmentRange[1] = parseInt(e.target.value);
-        updateRangeValues();
-    });
+// Event Listeners
+function setupEventListeners() {
+    // Arama
+    UI.elements.searchInput.addEventListener('input', debounce((e) => {
+        state.filters.search = e.target.value;
+        UI.renderProjects();
+    }, 300));
 
-    // Proje aşaması checkboxları
-    document.querySelectorAll('.checkbox-item input').forEach(checkbox => {
-        checkbox.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                state.filters.stages.push(e.target.id);
-            } else {
-                state.filters.stages = state.filters.stages.filter(stage => stage !== e.target.id);
-            }
-            projectManager.loadProjects();
+    // Filtreler
+    Object.entries(UI.elements.filters).forEach(([key, element]) => {
+        element.addEventListener('change', (e) => {
+            state.filters[key] = e.target.value;
+            UI.renderProjects();
         });
     });
 
-    // Sıralama seçeneği
-    const sortSelect = document.querySelector('.view-select');
-    sortSelect.addEventListener('change', (e) => {
-        state.filters.sort = e.target.value;
-        projectManager.loadProjects();
-    });
-}
-
-// Arama İşlevi
-function setupSearch() {
-    const searchInput = document.querySelector('.search-input');
-    let searchTimeout;
-
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            state.filters.search = e.target.value;
-            projectManager.loadProjects();
-        }, 300);
-    });
-}
-
-// Mesajlaşma Sistemi
-const messageManager = {
-    async loadMessages() {
-        const data = await api.get('/messages');
-        if (data.success) {
-            state.messages = data.messages;
-            updateMessageCount();
-        }
-    },
-
-    async sendMessage(recipientId, message) {
-        const response = await api.post('/messages', {
-            recipientId,
-            message
-        });
-        
-        if (response.success) {
-            showNotification('Mesaj gönderildi', 'success');
-            this.loadMessages();
-        }
-    }
-};
-
-// UI Güncelleme
-function updateUI() {
-    // Proje listesini güncelle
-    const projectsGrid = document.querySelector('.projects-grid');
-    if (state.loading) {
-        projectsGrid.innerHTML = '<div class="loading">Yükleniyor...</div>';
-        return;
-    }
-
-    projectsGrid.innerHTML = state.projects
-        .map(project => projectManager.createProjectCard(project))
-        .join('');
-
-    // Bildirim sayısını güncelle
-    updateNotificationCount();
-    
-    // Mesaj sayısını güncelle
-    updateMessageCount();
-}
-
-function updateNotificationCount() {
-    const badge = document.querySelector('.notification-badge');
-    if (badge) {
-        badge.textContent = state.notifications.length;
-        badge.style.display = state.notifications.length ? 'block' : 'none';
-    }
-}
-
-function updateMessageCount() {
-    const badge = document.querySelector('.message-badge');
-    if (badge) {
-        badge.textContent = state.messages.filter(m => !m.read).length;
-        badge.style.display = state.messages.filter(m => !m.read).length ? 'block' : 'none';
-    }
-}
-
-// Sayfa Yüklendiğinde
-document.addEventListener('DOMContentLoaded', async () => {
-    setupFilters();
-    setupSearch();
-    await projectManager.loadProjects();
-    await messageManager.loadMessages();
-    
-    // Mobil menü toggle
+    // Responsive menü
     const menuButton = document.createElement('button');
-    menuButton.className = 'mobile-menu-button';
+    menuButton.className = 'mobile-menu-btn';
     menuButton.innerHTML = '<i class="fas fa-bars"></i>';
     menuButton.addEventListener('click', () => {
         document.querySelector('.sidebar').classList.toggle('active');
     });
-    document.querySelector('.header-left').prepend(menuButton);
+    document.querySelector('.header').prepend(menuButton);
+}
+
+// Sayfa Yüklendiğinde
+document.addEventListener('DOMContentLoaded', () => {
+    setupEventListeners();
+    UI.renderProjects();
 });
 
-// Websocket Bağlantısı (Gerçek Zamanlı Bildirimler İçin)
-const ws = new WebSocket('wss://api.inovasyonkapisi.com/ws');
-
-ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    
-    switch (data.type) {
-        case 'new_message':
-            state.messages.unshift(data.message);
-            updateMessageCount();
-            showNotification('Yeni mesajınız var', 'info');
-            break;
-            
-        case 'new_notification':
-            state.notifications.unshift(data.notification);
-            updateNotificationCount();
-            showNotification(data.notification.message, 'info');
-            break;
+// Ek Stil Tanımlamaları
+const style = document.createElement('style');
+style.textContent = `
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
     }
-};
+
+    .modal-content {
+        background: white;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-header {
+        padding: 1rem;
+        border-bottom: 1px solid var(--light-gray);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--gray);
+    }
+
+    .notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 1rem 2rem;
+        border-radius: 4px;
+        background: var(--dark);
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        animation: slideIn 0.3s ease-out;
+        z-index: 1000;
+    }
+
+    .notification-success {
+        background: var(--success);
+    }
+
+    .notification-error {
+        background: var(--danger);
+    }
+
+    .notification-warning {
+        background: var(--warning);
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    .fade-out {
+        animation: fadeOut 0.3s ease-out forwards;
+    }
+
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+        }
+    }
+
+    .investment-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-input {
+        padding: 0.75rem;
+        border: 1px solid var(--light-gray);
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .project-details {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .detail-section {
+        border-bottom: 1px solid var(--light-gray);
+        padding-bottom: 1rem;
+    }
+
+    .detail-section:last-child {
+        border-bottom: none;
+    }
+
+    .detail-section h4 {
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .mobile-menu-btn {
+            display: block;
+        }
+
+        .nav-menu {
+            display: none;
+        }
+    }
+`;
+
+document.head.appendChild(style);
 </script>
 </body>
 </html>
