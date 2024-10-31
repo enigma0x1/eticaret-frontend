@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanayi İnovasyon Portalı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1B3C6B;
+            --secondary: #2D5A9D;
+            --accent: #FF6B35;
+            --dark: #2C3E50;
+            --gray: #607D8B;
+            --light-gray: #ECF0F3;
+            --white: #FFFFFF;
+            --success: #27AE60;
+            --warning: #F39C12;
+            --danger: #E74C3C;
+            --header-height: 70px;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--light-gray);
+            min-height: 100vh;
+        }
+
+        .header {
+            height: var(--header-height);
+            background: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-left: 3rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover {
+            background: var(--light-gray);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: var(--white);
+            border-right: 1px solid var(--light-gray);
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .filter-section {
+            margin-bottom: 2rem;
+        }
+
+        .filter-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2rem;
+        }
+
+        .content-header {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .firma-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .firma-card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex;
+            height: 240px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .firma-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .firma-image {
+            width: 320px;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .firma-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .firma-content {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .firma-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .firma-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .firma-sektor {
+            background: var(--light-gray);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .tech-level {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        .firma-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .firma-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray);
+        }
+
+        .firma-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .firma-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-outline {
+            background: var(--white);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--light-gray);
+        }
+
+        @media (max-width: 1200px) {
+            .firma-card {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .firma-image {
+                width: 100%;
+                height: 200px;
+                border-radius: 8px 8px 0 0;
+            }
+
+            .firma-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <i class="fas fa-industry"></i>
+            Sanayi İnovasyon
+        </a>
+        <nav class="nav-menu">
+            <a href="#" class="nav-link active">Firmalar</a>
+            <a href="#" class="nav-link">Projeler</a>
+            <a href="#" class="nav-link">İş Birlikleri</a>
+            <a href="#" class="nav-link">OSB'ler</a>
+        </nav>
+        <div class="header-right">
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Firma veya proje ara...">
+            </div>
+        </div>
+    </header>
+
+    <aside class="sidebar">
+        <div class="filter-section">
+            <h3 class="filter-title">Filtreler</h3>
+            <div class="filter-group">
+                <label class="filter-label">OSB</label>
+                <select class="filter-select">
+                    <option value="">Tüm OSB'ler</option>
+                    <option value="1">İstanbul Dudullu OSB</option>
+                    <option value="2">Ankara İvedik OSB</option>
+                    <option value="3">İzmir Atatürk OSB</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Sektör</label>
+                <select class="filter-select">
+                    <option value="">Tüm Sektörler</option>
+                    <option value="metal">Metal İşleme</option>
+                    <option value="plastik">Plastik</option>
+                    <option value="elektronik">Elektronik</option>
+                    <option value="otomotiv">Otomotiv</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Teknoloji Seviyesi</label>
+                <select class="filter-select">
+                    <option value="">Tümü</option>
+                    <option value="high">Yüksek Teknoloji</option>
+                    <option value="medium">Orta Teknoloji</option>
+                    <option value="low">Temel Teknoloji</option>
+                </select>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="content-header">
+            <h2 class="content-title">Firmalar</h2>
+            <select class="filter-select">
+                <option value="newest">En Yeniler</option>
+                <option value="oldest">En Eskiler</option>
+                <option value="name">İsme Göre</option>
+            </select>
+        </div>
+
+        <div class="firma-list">
+            <!-- Örnek Firma Kartı -->
+            <div class="firma-card">
+                <div class="firma-image">
+                    <img src="https://example.com/firma1.jpg" alt="Tekno Metal San. ve Tic. A.Ş.">
+                </div>
+                <div class="firma-content">
+                    <div class="firma-header">
+                        <div class="firma-meta">
+                            <span class="firma-sektor">Metal İşleme</span>
+                            <span class="tech-level">
+                                <i class="fas fa-microchip"></i>
+                                Yüksek Teknoloji
+                            </span>
+                        </div>
+                        <h3 class="firma-name">Tekno Metal Sanayi ve Ticaret A.Ş.</h3>
+                        <div class="firma-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            İstanbul Dudullu Organize Sanayi Bölgesi
+                        </div>
+                    </div>
+                    <div class="firma-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">5.000 m²</div>
+                            <div class="stat-label">Üretim Alanı</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">150+</div>
+                            <div class="stat-label">Çalışan Sayısı</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">1985</div>
+                            <div class="stat-label">Kuruluş Yılı</div>
+                        </div>
+                    </div>
+                    <div class="firma-actions">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-handshake"></i>
+                            İş Birliği
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-info-circle"></i>
+                            Detaylar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Diğer firma kartları buraya eklenecek -->
+        </div>
+    </main>
+</body>
+</html>
+<script>
+// Ana State Yönetimi
+const state = {
+    firms: [],
+    filters: {
+        osb: '',
+        sector: '',
+        techLevel: '',
+        sort: 'newest',
+        search: ''
+    },
+    loading: false
+};
+
+// API İşlemleri
+const API = {
+    baseUrl: '/api',
+    
+    async getFirms(filters = {}) {
+        try {
+            state.loading = true;
+            updateUI();
+
+            const queryParams = new URLSearchParams({
+                osb: filters.osb || '',
+                sector: filters.sector || '',
+                techLevel: filters.techLevel || '',
+                sort: filters.sort || 'newest',
+                search: filters.search || ''
+            });
+
+            const response = await fetch(`${this.baseUrl}/firms?${queryParams}`);
+            const data = await response.json();
+
+            if (!response.ok) throw new Error(data.message);
+
+            return data.firms;
+        } catch (error) {
+            showNotification('Veri yüklenirken bir hata oluştu', 'error');
+            console.error('API Error:', error);
+            return [];
+        } finally {
+            state.loading = false;
+            updateUI();
+        }
+    }
+};
+
+// UI İşlemleri
+const UI = {
+    elements: {
+        firmaList: document.querySelector('.firma-list'),
+        searchInput: document.querySelector('.search-input'),
+        filters: {
+            osb: document.querySelector('select[class="filter-select"]'),
+            sector: document.querySelectorAll('.filter-select')[1],
+            techLevel: document.querySelectorAll('.filter-select')[2],
+            sort: document.querySelectorAll('.filter-select')[3]
+        }
+    },
+
+    createFirmaCard(firma) {
+        return `
+            <div class="firma-card" data-id="${firma.id}">
+                <div class="firma-image">
+                    <img src="${firma.image || 'default-company.jpg'}" alt="${firma.name}">
+                </div>
+                <div class="firma-content">
+                    <div class="firma-header">
+                        <div class="firma-meta">
+                            <span class="firma-sektor">${firma.sector}</span>
+                            <span class="tech-level">
+                                <i class="fas fa-microchip"></i>
+                                ${this.getTechLevelText(firma.techLevel)}
+                            </span>
+                        </div>
+                        <h3 class="firma-name">${firma.name}</h3>
+                        <div class="firma-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${firma.location}
+                        </div>
+                    </div>
+                    <div class="firma-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${firma.area} m²</div>
+                            <div class="stat-label">Üretim Alanı</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${firma.employees}+</div>
+                            <div class="stat-label">Çalışan Sayısı</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${firma.foundedYear}</div>
+                            <div class="stat-label">Kuruluş Yılı</div>
+                        </div>
+                    </div>
+                    <div class="firma-actions">
+                        <button class="btn btn-outline" onclick="UI.handleCollaboration('${firma.id}')">
+                            <i class="fas fa-handshake"></i>
+                            İş Birliği
+                        </button>
+                        <button class="btn btn-primary" onclick="UI.showFirmaDetails('${firma.id}')">
+                            <i class="fas fa-info-circle"></i>
+                            Detaylar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    getTechLevelText(level) {
+        const levels = {
+            high: 'Yüksek Teknoloji',
+            medium: 'Orta Teknoloji',
+            low: 'Temel Teknoloji'
+        };
+        return levels[level] || 'Belirtilmemiş';
+    },
+
+    async renderFirms() {
+        const firms = await API.getFirms(state.filters);
+        
+        if (state.loading) {
+            this.elements.firmaList.innerHTML = '<div class="loading">Yükleniyor...</div>';
+            return;
+        }
+
+        if (firms.length === 0) {
+            this.elements.firmaList.innerHTML = '<div class="no-results">Sonuç bulunamadı</div>';
+            return;
+        }
+
+        this.elements.firmaList.innerHTML = firms.map(firm => this.createFirmaCard(firm)).join('');
+    },
+
+    showFirmaDetails(firmaId) {
+        Modal.show({
+            title: 'Firma Detayları',
+            content: 'Detaylar yükleniyor...'
+        });
+        
+        // Detay verisi API'den alınacak
+        API.getFirmDetails(firmaId).then(details => {
+            Modal.update(details);
+        });
+    },
+
+    handleCollaboration(firmaId) {
+        Modal.show({
+            title: 'İş Birliği Talebi',
+            content: `
+                <div class="collaboration-form">
+                    <p>İş birliği talebiniz ilgili firmaya iletilecektir.</p>
+                    <button class="btn btn-primary" onclick="UI.submitCollaboration('${firmaId}')">
+                        Talebi Gönder
+                    </button>
+                </div>
+            `
+        });
+    },
+
+    async submitCollaboration(firmaId) {
+        try {
+            await API.submitCollaboration(firmaId);
+            showNotification('İş birliği talebiniz iletildi', 'success');
+            Modal.close();
+        } catch (error) {
+            showNotification('Bir hata oluştu', 'error');
+        }
+    }
+};
+
+// Modal Yönetimi
+const Modal = {
+    show({ title, content }) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${title}</h3>
+                    <button class="modal-close" onclick="Modal.close()">&times;</button>
+                </div>
+                <div class="modal-body">${content}</div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    },
+
+    update(content) {
+        const modalBody = document.querySelector('.modal-body');
+        if (modalBody) modalBody.innerHTML = content;
+    },
+
+    close() {
+        const modal = document.querySelector('.modal');
+        if (modal) modal.remove();
+    }
+};
+
+// Bildirim Sistemi
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Yardımcı Fonksiyonlar
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Event Listeners
+function setupEventListeners() {
+    // Arama
+    UI.elements.searchInput.addEventListener('input', debounce((e) => {
+        state.filters.search = e.target.value;
+        UI.renderFirms();
+    }, 300));
+
+    // Filtreler
+    Object.entries(UI.elements.filters).forEach(([key, element]) => {
+        element.addEventListener('change', (e) => {
+            state.filters[key] = e.target.value;
+            UI.renderFirms();
+        });
+    });
+
+    // Responsive menü için
+    const menuButton = document.createElement('button');
+    menuButton.className = 'mobile-menu-btn';
+    menuButton.innerHTML = '<i class="fas fa-bars"></i>';
+    menuButton.addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.toggle('active');
+    });
+    document.querySelector('.header').prepend(menuButton);
+}
+
+// Sayfa Yüklendiğinde
+document.addEventListener('DOMContentLoaded', () => {
+    setupEventListeners();
+    UI.renderFirms();
+});
+</script>
+</body>
+</html>
