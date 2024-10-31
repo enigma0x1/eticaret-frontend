@@ -492,6 +492,8 @@
             padding: 2rem;
             transition: transform 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
         }
         
         .step:hover {
@@ -509,7 +511,7 @@
             justify-content: center;
             font-size: 1.5rem;
             font-weight: bold;
-            margin-bottom: 1rem;
+            margin: 0 auto 1rem;
         }
         
         .step h3 {
@@ -518,26 +520,20 @@
             font-size: 1.3rem;
         }
         
-        .step-content {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-        }
-        
-        .step-description {
+        .step p {
             color: var(--text-secondary);
             line-height: 1.6;
-            flex: 1;
+            margin-bottom: 1.5rem;
         }
         
-        .step-icon {
+        .step i {
             font-size: 2rem;
             color: var(--primary-color);
-            opacity: 0.8;
+            margin-top: 1rem;
             transition: transform 0.3s ease;
         }
         
-        .step:hover .step-icon {
+        .step:hover i {
             transform: scale(1.1);
             color: var(--secondary-color);
         }
@@ -1030,49 +1026,32 @@
             <div class="container">
                 <h2 id="solutions-title" class="section-title">Nasıl Çalışır?</h2>
                 <div class="steps-container">
-                <div class="steps-container">
                     <div class="step">
                         <div class="step-number">1</div>
                         <h3>Üyelik Oluşturun</h3>
-                        <div class="step-content">
-                            <p class="step-description">Size uygun portal üzerinden hesabınızı oluşturun</p>
-                            <div class="step-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                        </div>
+                        <p>Size uygun portal üzerinden hesabınızı oluşturun</p>
+                        <i class="fas fa-user-plus"></i>
                     </div>
                     
                     <div class="step">
                         <div class="step-number">2</div>
                         <h3>Profil Doğrulama</h3>
-                        <div class="step-content">
-                            <p class="step-description">Şirket belgelerinizle profilinizi doğrulayın</p>
-                            <div class="step-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                        </div>
+                        <p>Şirket belgelerinizle profilinizi doğrulayın</p>
+                        <i class="fas fa-check-circle"></i>
                     </div>
                     
                     <div class="step">
                         <div class="step-number">3</div>
                         <h3>Keşfedin</h3>
-                        <div class="step-content">
-                            <p class="step-description">E sanayi, Kapasite market, İnovasyon kapısı, Hazır market'den kendinize uygun olanı seçin</p>
-                            <div class="step-icon">
-                                <i class="fas fa-compass"></i>
-                            </div>
-                        </div>
+                        <p>E sanayi, Kapasite market, İnovasyon kapısı, Hazır market'den kendinize uygun olanı seçin</p>
+                        <i class="fas fa-compass"></i>
                     </div>
                     
                     <div class="step">
                         <div class="step-number">4</div>
                         <h3>Aksiyon Alın</h3>
-                        <div class="step-content">
-                            <p class="step-description">Üretici olarak B2B alışveriş yapın veya ürün satın. Profesyonel olarak B2C marketimizi ziyaret edin. Cad bankamızdan ürünlerin 3b dosyalarına erişim elde edin, projelerinizde test edin. İş fikirlerinizi paylaşın, girişiminiz için fon arayın</p>
-                            <div class="step-icon">
-                                <i class="fas fa-rocket"></i>
-                            </div>
-                        </div>
+                        <p>Üretici olarak B2B alışveriş yapın veya ürün satın. Profesyonel olarak B2C marketimizi ziyaret edin. Cad bankamızdan ürünlerin 3b dosyalarına erişim elde edin, projelerinizde test edin. İş fikirlerinizi paylaşın, girişiminiz için fon arayın</p>
+                        <i class="fas fa-rocket"></i>
                     </div>
                 </div>
             </div>
