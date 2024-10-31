@@ -819,7 +819,6 @@ const UI = {
         const result = await API.submitInvestment(projectId, amount);
         if (result) {
             showNotification('Yatırım talebiniz alındı', 'success');
-	                success');
             Modal.close();
             this.renderProjects(); // Projeleri yeniden yükle
         }
