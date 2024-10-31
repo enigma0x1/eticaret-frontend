@@ -18,11 +18,19 @@
             min-height: 100vh;
             background: #0f0c29;
             background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
+            background-size: 400% 400%;
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
@@ -97,16 +105,31 @@
 
         .portal-content {
             padding: 30px;
+            text-align: center;
+        }
+
+        .portal-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .portal-title {
             font-size: 24px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             background: linear-gradient(to right, #fff, #a7a7a7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-align: center;
+        }
+
+        .portal-description {
+            color: #cecece;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
 
         .portal-button {
@@ -122,7 +145,6 @@
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-            margin-top: 20px;
         }
 
         .portal-button:hover {
@@ -177,7 +199,9 @@
             <!-- Üretici Portalı -->
             <div class="portal-card">
                 <div class="portal-content">
+                    <i class="fas fa-industry portal-icon"></i>
                     <h2 class="portal-title">Üretici Portalı</h2>
+                    <p class="portal-description">Üretim süreçlerinizi yönetin, tedarik zincirini optimize edin ve üretim verimliliğinizi artırın.</p>
                     <a href="/ureticiLogin" class="portal-button">Üretici Girişi</a>
                 </div>
             </div>
@@ -185,7 +209,9 @@
             <!-- Profesyonel Portalı -->
             <div class="portal-card">
                 <div class="portal-content">
+                    <i class="fas fa-user-tie portal-icon"></i>
                     <h2 class="portal-title">Profesyonel Portalı</h2>
+                    <p class="portal-description">Endüstriyel projeleri yönetin, iş ağınızı genişletin ve profesyonel hizmetlerinizi sunun.</p>
                     <a href="/loginForPro" class="portal-button">Profesyonel Girişi</a>
                 </div>
             </div>
@@ -193,7 +219,9 @@
             <!-- Perakende Portalı -->
             <div class="portal-card">
                 <div class="portal-content">
+                    <i class="fas fa-store portal-icon"></i>
                     <h2 class="portal-title">Perakende Portalı</h2>
+                    <p class="portal-description">Stok yönetimi yapın, siparişleri takip edin ve müşteri ilişkilerinizi güçlendirin.</p>
                     <a href="/perakende-login" class="portal-button">Perakende Girişi</a>
                 </div>
             </div>
