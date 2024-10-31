@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İnovasyon Kapısı - Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            
+            --header-height: 70px;
+            --sidebar-width: 280px;
+            --chat-width: 300px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            height: var(--header-height);
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .user-menu:hover {
+            background: #f1f5f9;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .user-info {
+                display: block;
+            }
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .user-role {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            bottom: 0;
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .sidebar-section {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            color: var(--dark);
+        }
+
+        .range-slider {
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-label {
+            font-size: 0.875rem;
+            color: var(--dark);
+        }
+
+        /* Main Content Layout */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2rem;
+            flex: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/" class="logo">
+                <i class="fas fa-lightbulb"></i>
+                İnovasyon Kapısı
+            </a>
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Proje veya yatırımcı ara...">
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="header-actions">
+                <button class="action-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="action-btn">
+                    <i class="fas fa-envelope"></i>
+                    <span class="notification-badge">5</span>
+                </button>
+            </div>
+            <div class="user-menu">
+                <div class="user-avatar">
+                    AY
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Ahmet Yılmaz</div>
+                    <div class="user-role">Girişimci</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3 class="section-title">Filtreler</h3>
+            <div class="filter-group">
+                <label class="filter-label">Sektör</label>
+                <select class="filter-select">
+                    <option value="">Tüm Sektörler</option>
+                    <option value="tech">Teknoloji</option>
+                    <option value="health">Sağlık</option>
+                    <option value="energy">Enerji</option>
+                    <option value="finance">Finans</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Yatırım Aralığı</label>
+                <input type="range" class="range-slider" min="0" max="1000000" step="50000">
+                <div class="range-values">
+                    <span>0 TL</span>
+                    <span>1.000.000 TL</span>
+                </div>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Proje Aşaması</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="stage1">
+                        <label class="checkbox-label" for="stage1">Fikir Aşaması</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="stage2">
+                        <label class="checkbox-label" for="stage2">MVP</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="stage3">
+                        <label class="checkbox-label" for="stage3">Pazar Doğrulama</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="stage4">
+                        <label class="checkbox-label" for="stage4">Ölçeklendirme</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+</body>
+</html>
+<!-- Önceki kodun devamı -->
+
+<style>
+    /* Ana İçerik Stilleri */
+    .content-wrapper {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .projects-section {
+        flex: 1;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .view-options {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .view-select {
+        padding: 0.5rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+    }
+
+    /* Proje Kartları */
+    .projects-grid {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .project-card {
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: transform 0.3s;
+    }
+
+    .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .project-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .project-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .project-category {
+        background: #f1f5f9;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        color: var(--primary);
+        font-weight: 500;
+    }
+
+    .project-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .status-active {
+        background: var(--success);
+    }
+
+    .project-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .project-description {
+        color: var(--gray);
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+    }
+
+    .project-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        background: #f8fafc;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--dark);
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: var(--gray);
+        margin-top: 0.25rem;
+    }
+
+    .project-footer {
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .project-owner {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .owner-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .owner-info {
+        font-size: 0.875rem;
+    }
+
+    .owner-name {
+        color: var(--dark);
+        font-weight: 500;
+    }
+
+    .owner-role {
+        color: var(--gray);
+    }
+
+    .project-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: #1d4ed8;
+    }
+
+    .btn-outline {
+        background: white;
+        border: 1px solid #e2e8f0;
+        color: var(--dark);
+    }
+
+    .btn-outline:hover {
+        background: #f8fafc;
+    }
+
+    /* Sağ Sidebar */
+    .right-sidebar {
+        width: 300px;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        height: fit-content;
+        position: sticky;
+        top: calc(var(--header-height) + 2rem);
+    }
+
+    .sidebar-card {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .sidebar-card:last-child {
+        border-bottom: none;
+    }
+
+    .active-investors {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .investor-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .investor-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .investor-info {
+        flex: 1;
+    }
+
+    .investor-name {
+        font-weight: 500;
+        color: var(--dark);
+    }
+
+    .investor-details {
+        font-size: 0.875rem;
+        color: var(--gray);
+    }
+
+    .online-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--success);
+    }
+</style>
+
+<!-- Ana İçerik -->
+<main class="main-content">
+    <div class="content-wrapper">
+        <section class="projects-section">
+            <div class="section-header">
+                <h2 class="section-title">Aktif Projeler</h2>
+                <div class="view-options">
+                    <select class="view-select">
+                        <option value="newest">En Yeniler</option>
+                        <option value="popular">En Popüler</option>
+                        <option value="funding">Yatırım Miktarı</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="projects-grid">
+                <!-- Proje Kartı 1 -->
+                <article class="project-card">
+                    <div class="project-header">
+                        <div class="project-meta">
+                            <span class="project-category">Yapay Zeka</span>
+                            <div class="project-status">
+                                <span class="status-indicator status-active"></span>
+                                Aktif
+                            </div>
+                        </div>
+                        <h3 class="project-title">Akıllı Üretim Optimizasyonu</h3>
+                        <p class="project-description">
+                            Yapay zeka destekli üretim optimizasyon sistemi ile verimliliği %30 artırın.
+                            Endüstri 4.0'a uyumlu çözümler.
+                        </p>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">₺2M</div>
+                            <div class="stat-label">Hedef</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">`</div>
+                            <div class="stat-label">Tamamlanan</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">45</div>
+                            <div class="stat-label">Gün Kaldı</div>
+                        </div>
+                    </div>
+                    <div class="project-footer">
+                        <div class="project-owner">
+                            <div class="owner-avatar">AY</div>
+                            <div class="owner-info">
+                                <div class="owner-name">Ahmet Yılmaz</div>
+                                <div class="owner-role">Kurucu</div>
+                            </div>
+                        </div>
+                        <div class="project-actions">
+                            <button class="btn btn-outline">
+                                <i class="far fa-heart"></i>
+                                İlgilen
+                            </button>
+                            <button class="btn btn-primary">
+                                <i class="fas fa-handshake"></i>
+                                Görüşme Talep Et
+                            </button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Diğer proje kartları benzer yapıda -->
+            </div>
+        </section>
+
+        <!-- Sağ Sidebar -->
+        <aside class="right-sidebar">
+            <div class="sidebar-card">
+                <h3 class="section-title">Aktif Yatırımcılar</h3>
+                <div class="active-investors">
+                    <div class="investor-item">
+                        <div class="investor-avatar">MY</div>
+                        <div class="investor-info">
+                            <div class="investor-name">Mehmet Yıldız</div>
+                            <div class="investor-details">Melek Yatırımcı</div>
+                        </div>
+                        <div class="online-indicator"></div>
+                    </div>
+                    <!-- Diğer yatırımcılar -->
+                </div>
+            </div>
+        </aside>
+    </div>
+</main>
+<!-- Önceki kodun sonuna eklenecek -->
+
+<script>
+// API ve State Yönetimi
+const API_URL = 'https://api.inovasyonkapisi.com';
+const state = {
+    projects: [],
+    filters: {
+        sector: '',
+        investmentRange: [0, 1000000],
+        stages: [],
+        sort: 'newest',
+        search: ''
+    },
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    notifications: [],
+    messages: [],
+    loading: false
+};
+
+// API İstekleri
+const api = {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+    },
+
+    async get(endpoint) {
+        try {
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                headers: this.headers
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('API Error:', error);
+            showNotification('Bir hata oluştu', 'error');
+        }
+    },
+
+    async post(endpoint, data) {
+        try {
+            const response = await fetch(`${API_URL}${endpoint}`, {
+                method: 'POST',
+                headers: this.headers,
+                body: JSON.stringify(data)
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('API Error:', error);
+            showNotification('Bir hata oluştu', 'error');
+        }
+    }
+};
+
+// Proje Yönetimi
+const projectManager = {
+    async loadProjects() {
+        state.loading = true;
+        updateUI();
+
+        try {
+            const queryParams = new URLSearchParams({
+                sector: state.filters.sector,
+                minInvestment: state.filters.investmentRange[0],
+                maxInvestment: state.filters.investmentRange[1],
+                stages: state.filters.stages.join(','),
+                sort: state.filters.sort,
+                search: state.filters.search
+            });
+
+            const data = await api.get(`/projects?${queryParams}`);
+            
+            if (data.success) {
+                state.projects = data.projects;
+                updateUI();
+            }
+        } catch (error) {
+            console.error('Project loading error:', error);
+        } finally {
+            state.loading = false;
+            updateUI();
+        }
+    },
+
+    createProjectCard(project) {
+        return `
+            <article class="project-card" data-id="${project._id}">
+                <div class="project-header">
+                    <div class="project-meta">
+                        <span class="project-category">${project.sector}</span>
+                        <div class="project-status">
+                            <span class="status-indicator status-${project.status}"></span>
+                            ${project.status}
+                        </div>
+                    </div>
+                    <h3 class="project-title">${project.title}</h3>
+                    <p class="project-description">${project.description}</p>
+                </div>
+                <div class="project-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">₺${this.formatMoney(project.targetInvestment)}</div>
+                        <div class="stat-label">Hedef</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${project.completionPercentage}%</div>
+                        <div class="stat-label">Tamamlanan</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${project.daysLeft}</div>
+                        <div class="stat-label">Gün Kaldı</div>
+                    </div>
+                </div>
+                <div class="project-footer">
+                    <div class="project-owner">
+                        <div class="owner-avatar">${this.getInitials(project.owner.name)}</div>
+                        <div class="owner-info">
+                            <div class="owner-name">${project.owner.name}</div>
+                            <div class="owner-role">${project.owner.role}</div>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <button class="btn btn-outline" onclick="projectManager.toggleInterest('${project._id}')">
+                            <i class="far fa-heart"></i>
+                            İlgilen
+                        </button>
+                        <button class="btn btn-primary" onclick="projectManager.requestMeeting('${project._id}')">
+                            <i class="fas fa-handshake"></i>
+                            Görüşme Talep Et
+                        </button>
+                    </div>
+                </div>
+            </article>
+        `;
+    },
+
+    formatMoney(amount) {
+        return new Intl.NumberFormat('tr-TR', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(amount);
+    },
+
+    getInitials(name) {
+        return name
+            .split(' ')
+            .map(word => word[0])
+            .join('')
+            .toUpperCase();
+    },
+
+    async toggleInterest(projectId) {
+        const response = await api.post(`/projects/${projectId}/interest`);
+        if (response.success) {
+            showNotification('İlgi kaydedildi', 'success');
+            this.loadProjects();
+        }
+    },
+
+    async requestMeeting(projectId) {
+        const response = await api.post(`/projects/${projectId}/meeting-request`);
+        if (response.success) {
+            showNotification('Görüşme talebi gönderildi', 'success');
+            loadNotifications();
+        }
+    }
+};
+
+// Bildirim Sistemi
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('fade-out');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Filtre Yönetimi
+function setupFilters() {
+    // Sektör filtresi
+    const sectorSelect = document.querySelector('.filter-select');
+    sectorSelect.addEventListener('change', (e) => {
+        state.filters.sector = e.target.value;
+        projectManager.loadProjects();
+    });
+
+    // Yatırım aralığı slider'ı
+    const rangeSlider = document.querySelector('.range-slider');
+    rangeSlider.addEventListener('input', (e) => {
+        state.filters.investmentRange[1] = parseInt(e.target.value);
+        updateRangeValues();
+    });
+
+    // Proje aşaması checkboxları
+    document.querySelectorAll('.checkbox-item input').forEach(checkbox => {
+        checkbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                state.filters.stages.push(e.target.id);
+            } else {
+                state.filters.stages = state.filters.stages.filter(stage => stage !== e.target.id);
+            }
+            projectManager.loadProjects();
+        });
+    });
+
+    // Sıralama seçeneği
+    const sortSelect = document.querySelector('.view-select');
+    sortSelect.addEventListener('change', (e) => {
+        state.filters.sort = e.target.value;
+        projectManager.loadProjects();
+    });
+}
+
+// Arama İşlevi
+function setupSearch() {
+    const searchInput = document.querySelector('.search-input');
+    let searchTimeout;
+
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            state.filters.search = e.target.value;
+            projectManager.loadProjects();
+        }, 300);
+    });
+}
+
+// Mesajlaşma Sistemi
+const messageManager = {
+    async loadMessages() {
+        const data = await api.get('/messages');
+        if (data.success) {
+            state.messages = data.messages;
+            updateMessageCount();
+        }
+    },
+
+    async sendMessage(recipientId, message) {
+        const response = await api.post('/messages', {
+            recipientId,
+            message
+        });
+        
+        if (response.success) {
+            showNotification('Mesaj gönderildi', 'success');
+            this.loadMessages();
+        }
+    }
+};
+
+// UI Güncelleme
+function updateUI() {
+    // Proje listesini güncelle
+    const projectsGrid = document.querySelector('.projects-grid');
+    if (state.loading) {
+        projectsGrid.innerHTML = '<div class="loading">Yükleniyor...</div>';
+        return;
+    }
+
+    projectsGrid.innerHTML = state.projects
+        .map(project => projectManager.createProjectCard(project))
+        .join('');
+
+    // Bildirim sayısını güncelle
+    updateNotificationCount();
+    
+    // Mesaj sayısını güncelle
+    updateMessageCount();
+}
+
+function updateNotificationCount() {
+    const badge = document.querySelector('.notification-badge');
+    if (badge) {
+        badge.textContent = state.notifications.length;
+        badge.style.display = state.notifications.length ? 'block' : 'none';
+    }
+}
+
+function updateMessageCount() {
+    const badge = document.querySelector('.message-badge');
+    if (badge) {
+        badge.textContent = state.messages.filter(m => !m.read).length;
+        badge.style.display = state.messages.filter(m => !m.read).length ? 'block' : 'none';
+    }
+}
+
+// Sayfa Yüklendiğinde
+document.addEventListener('DOMContentLoaded', async () => {
+    setupFilters();
+    setupSearch();
+    await projectManager.loadProjects();
+    await messageManager.loadMessages();
+    
+    // Mobil menü toggle
+    const menuButton = document.createElement('button');
+    menuButton.className = 'mobile-menu-button';
+    menuButton.innerHTML = '<i class="fas fa-bars"></i>';
+    menuButton.addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.toggle('active');
+    });
+    document.querySelector('.header-left').prepend(menuButton);
+});
+
+// Websocket Bağlantısı (Gerçek Zamanlı Bildirimler İçin)
+const ws = new WebSocket('wss://api.inovasyonkapisi.com/ws');
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    
+    switch (data.type) {
+        case 'new_message':
+            state.messages.unshift(data.message);
+            updateMessageCount();
+            showNotification('Yeni mesajınız var', 'info');
+            break;
+            
+        case 'new_notification':
+            state.notifications.unshift(data.notification);
+            updateNotificationCount();
+            showNotification(data.notification.message, 'info');
+            break;
+    }
+};
+</script>
+</body>
+</html>
