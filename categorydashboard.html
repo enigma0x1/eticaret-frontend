@@ -2,93 +2,19 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <head>
-    <!-- Önce meta tag'ler -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, private">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="-1">
-
-    <!-- Sonra auth.js -->
-    <script src="auth.js"></script>
-
-    <!-- Sonra sayfa kontrolü için script -->
-    <script>
-        (function() {
-            // Sayfa yüklendiğinde token kontrolü
-            function checkAuth() {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    document.body.style.display = 'none';
-                    window.location.replace('login');
-                    return false;
-                }
-                return true;
-            }
-    
-            // İlk kontrol
-            if (!checkAuth()) return;
-    
-            // History kontrolü
-            window.history.pushState(null, document.title, window.location.href);
-            window.addEventListener('popstate', function() {
-                window.history.pushState(null, document.title, window.location.href);
-                checkAuth();
-            });
-    
-            // Visibility kontrolü
-            document.addEventListener('visibilitychange', function() {
-                if (document.visibilityState === 'visible') {
-                    checkAuth();
-                }
-            });
-    
-            // Storage kontrolü
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'token' && !e.newValue) {
-                    document.body.style.display = 'none';
-                    window.location.replace('login');
-                }
-            });
-    
-            // Sağ tık ve F12 engelleme (opsiyonel)
-            document.addEventListener('contextmenu', function(e) {
-                if (!localStorage.getItem('token')) {
-                    e.preventDefault();
-                }
-            });
-    
-            document.addEventListener('keydown', function(e) {
-                if (!localStorage.getItem('token') && e.key === 'F12') {
-                    e.preventDefault();
-                }
-            });
-        })();
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IndustryHub - Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        html {
-            overflow-y: scroll; /* Scrollbar'ı her zaman göster */
-        }
-        
-        body {
-            margin-right: calc(-1 * (100vw - 100%)); /* Scrollbar zıplamasını önler */
-        }
         :root {
-            --primary-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            --esanayi-gradient: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
-            --hazir-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --cad-gradient: linear-gradient(135deg, #834d9b 0%, #d04ed6 100%);
-            --inovasyon-gradient: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
-            --producer-gradient: linear-gradient(135deg, #FF416C 0%, #FF4B2B 100%);
-            --kapasite-gradient: linear-gradient(135deg, #1D976C 0%, #93F9B9 100%);
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --primary-gradient: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --header-height: 80px;
+            --card-gap: 20px;
+            --card-width: calc((100% - (var(--card-gap) * 4)) / 5);
         }
 
         * {
@@ -99,8 +25,9 @@
         }
 
         body {
-            background: #0f172a;
-            color: var(--text-primary);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background-attachment: fixed;
+            color: white;
             min-height: 100vh;
             overflow-x: hidden;
         }
@@ -111,605 +38,382 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1000;
-            background: rgba(15, 23, 42, 0.9);
+            height: var(--header-height);
+            background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 0 3rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 1000;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
+            gap: 15px;
             text-decoration: none;
+            color: white;
+        }
+
+        .logo i {
+            font-size: 24px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .producer-button {
-            background: var(--producer-gradient);
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
+            background: var(--primary-gradient);
+            padding: 0.8rem 1.8rem;
+            border-radius: 12px;
             color: white;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
         }
 
         .producer-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .producer-button i {
-            font-size: 1.2rem;
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.3);
         }
 
         .user-menu {
             display: flex;
             align-items: center;
-            gap: 2rem;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .user-menu a {
-            color: var(--text-secondary);
+            color: white;
             text-decoration: none;
-            transition: var(--transition);
-            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
 
         .user-menu a:hover {
-            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1);
             transform: translateY(-2px);
         }
 
-        /* Dashboard Grid düzenlemesi */
+        /* Dashboard Container */
         .dashboard-container {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            padding: 1.5rem;
-            max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
+            margin-top: calc(var(--header-height) + 20px);
+            padding: 20px;
+            display: flex;
+            gap: var(--card-gap);
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        
-        /* Kart boyutları ve padding düzenlemesi */
+
+        .dashboard-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Category Cards */
         .category-card {
-            position: relative;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            height: 320px; /* Sabit yükseklik */
-            overflow: hidden;
+            flex: 0 0 var(--card-width);
+            scroll-snap-align: start;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            transition: all 0.3s ease;
             cursor: pointer;
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-content {
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            transition: var(--transition);
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        /* İkon boyutu düzenlemesi */
+
         .category-icon {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
-        /* Başlık boyutu düzenlemesi */
+
         .category-title {
             font-size: 1.5rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #fff, #a7a7a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
-        /* Açıklama metni düzenlemesi */
+
         .category-description {
+            color: rgba(255, 255, 255, 0.7);
             font-size: 0.9rem;
-            line-height: 1.4;
-            margin-bottom: 1rem;
-            opacity: 0.9;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
         }
-        
-        /* Buton düzenlemesi */
-        .category-button {
-            padding: 0.75rem 1.5rem;
-            font-size: 0.9rem;
-            border-radius: 1.5rem;
-        }
-        
-        /* İstatistik bölümü düzenlemesi */
+
         .category-stats {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 15px;
             display: flex;
-            gap: 1.5rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: space-around;
+            margin-top: auto;
         }
-        
+
         .stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
+            text-align: center;
         }
-        
+
         .stat-value {
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
+
         .stat-label {
             font-size: 0.8rem;
-            opacity: 0.8;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
         }
-        
-        /* Responsive düzenlemeler */
-        @media (max-width: 768px) {
-            .dashboard-container {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                padding: 1rem;
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-        
-            .category-card {
-                height: 280px;
-                padding: 1.25rem;
-            }
-        
-            .category-icon {
-                font-size: 2rem;
-            }
-        
-            .category-title {
-                font-size: 1.25rem;
-            }
-        
-            .category-description {
-                font-size: 0.85rem;
-            }
-        
-            .category-button {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.85rem;
-            }
-        
-            .stat-value {
-                font-size: 1rem;
-            }
-        
-            .stat-label {
-                font-size: 0.75rem;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
         /* Responsive Design */
-        @media (max-width: 1200px) {
-            .dashboard-container {
-                grid-template-columns: repeat(2, 1fr);
-                grid-template-rows: repeat(3, 1fr);
+        @media (max-width: 1400px) {
+            :root {
+                --card-width: calc((100% - (var(--card-gap) * 3)) / 4);
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1200px) {
+            :root {
+                --card-width: calc((100% - (var(--card-gap) * 2)) / 3);
+            }
+        }
+
+        @media (max-width: 900px) {
+            :root {
+                --card-width: calc((100% - var(--card-gap)) / 2);
+            }
             .header {
-                padding: 1rem;
-                flex-wrap: wrap;
-                gap: 1rem;
+                padding: 0 1.5rem;
             }
+        }
 
-            .logo {
-                font-size: 1.2rem;
+        @media (max-width: 600px) {
+            :root {
+                --card-width: 100%;
             }
-
+            .header {
+                padding: 0 1rem;
+            }
+            .logo span {
+                font-size: 1.4rem;
+            }
             .producer-button {
-                padding: 0.6rem 1rem;
+                padding: 0.6rem 1.2rem;
                 font-size: 0.9rem;
             }
-
             .dashboard-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: repeat(5, 1fr);
-            }
-
-            .category-title {
-                font-size: 1.5rem;
-            }
-
-            .category-icon {
-                font-size: 3rem;
-            }
-
-            .category-stats {
                 flex-direction: column;
-                gap: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
-        <a href="#" class="logo">
+        <a href="/" class="logo">
             <i class="fas fa-industry"></i>
-            IndustryHub MFG
+            <span>IndustryHub MFG</span>
         </a>
         <a href="manufacturer-dashboard" class="producer-button">
             <i class="fas fa-industry"></i>
             Üretici Paneli
         </a>
         <div class="user-menu">
-            <a href="#" title="Bildirimler" class="notification-link">
+            <a href="#" title="Bildirimler">
                 <i class="fas fa-bell"></i>
-                <span class="notification-badge" style="display: none">0</span>
             </a>
-            <a href="#" title="Mesajlar" class="message-link">
+            <a href="#" title="Mesajlar">
                 <i class="fas fa-envelope"></i>
-                <span class="message-badge" style="display: none">0</span>
             </a>
-            <a href="#" title="Profil" class="profile-link">
+            <a href="#" title="Profil">
                 <i class="fas fa-user-circle"></i>
             </a>
-            <a href="#" title="Çıkış Yap" class="logout-link" onclick="AuthManager.logout(); return false;">
+            <a href="#" title="Çıkış Yap" onclick="AuthManager.logout(); return false;">
                 <i class="fas fa-sign-out-alt"></i>
             </a>
         </div>
     </header>
 
-    <!-- Dashboard Grid -->
     <div class="dashboard-container">
         <!-- E-Sanayi -->
-        <div class="category-card e-sanayi" data-href="e-sanayi">
+        <div class="category-card" data-href="e-sanayi">
             <div class="category-content">
-                <div class="category-icon">
-                    <i class="fas fa-cogs"></i>
-                </div>
+                <i class="fas fa-cogs category-icon"></i>
                 <h2 class="category-title">E-Sanayi</h2>
                 <p class="category-description">
                     Endüstriyel parça ve komponent pazarı. 
                     Binlerce tedarikçiden kaliteli parçalar.
                 </p>
-                <button class="category-button">
-                    Parça Kataloğuna Git
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-            <div class="category-stats">
-                <div class="stat-item">
-                    <span class="stat-value">50K+</span>
-                    <span class="stat-label">Ürün</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">1000+</span>
-                    <span class="stat-label">Tedarikçi</span>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">50K+</div>
+                        <div class="stat-label">Ürün</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">1000+</div>
+                        <div class="stat-label">Tedarikçi</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Hazır Ürünler -->
-        <div class="category-card hazir-urunler" data-href="dashboard">
+        <div class="category-card" data-href="dashboard">
             <div class="category-content">
-                <div class="category-icon">
-                    <i class="fas fa-box-open"></i>
-                </div>
+                <i class="fas fa-box-open category-icon"></i>
                 <h2 class="category-title">Hazır Ürünler</h2>
                 <p class="category-description">
                     Tamamlanmış ürün kataloğu.
                     Doğrudan üreticiden son kullanıcıya.
                 </p>
-                <button class="category-button">
-                    Ürünleri Görüntüle
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-            <div class="category-stats">
-                <div class="stat-item">
-                    <span class="stat-value">10K+</span>
-                    <span class="stat-label">Ürün</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">500+</span>
-                    <span class="stat-label">Üretici</span>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">10K+</div>
+                        <div class="stat-label">Ürün</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">500+</div>
+                        <div class="stat-label">Üretici</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- CAD Dosyaları -->
-        <div class="category-card cad-dosyalari" data-href="cad-dosyalari">
+        <div class="category-card" data-href="cad-dosyalari">
             <div class="category-content">
-                <div class="category-icon">
-                    <i class="fas fa-drafting-compass"></i>
-                </div>
+                <i class="fas fa-drafting-compass category-icon"></i>
                 <h2 class="category-title">CAD Dosyaları</h2>
                 <p class="category-description">
                     Teknik çizim ve 3D model bankası.
                     Profesyonel tasarım dosyaları.
                 </p>
-                <button class="category-button">
-                    Dosyaları İncele
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-            <div class="category-stats">
-                <div class="stat-item">
-                    <span class="stat-value">25K+</span>
-                    <span class="stat-label">Model</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">100+</span>
-                    <span class="stat-label">Tasarımcı</span>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">25K+</div>
+                        <div class="stat-label">Model</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">100+</div>
+                        <div class="stat-label">Tasarımcı</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- İnovasyon Hub -->
-        <div class="category-card inovasyon-hub" data-href="inovasyon-kapisi">
+        <div class="category-card" data-href="inovasyon-kapisi">
             <div class="category-content">
-                <div class="category-icon">
-                    <i class="fas fa-lightbulb"></i>
-                </div>
-                <h2 class="category-title">inovasyon kapisi</h2>
+                <i class="fas fa-lightbulb category-icon"></i>
+                <h2 class="category-title">İnovasyon Kapısı</h2>
                 <p class="category-description">
                     Proje & yatırım eşleştirme platformu.
                     Fikirlerinizi hayata geçirin.
                 </p>
-                <button class="category-button">
-                    Projeleri Keşfet
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-            <div class="category-stats">
-                <div class="stat-item">
-                    <span class="stat-value">200+</span>
-                    <span class="stat-label">Aktif Proje</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">50M+</span>
-                    <span class="stat-label">Yatırım</span>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">200+</div>
+                        <div class="stat-label">Aktif Proje</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">50M+</div>
+                        <div class="stat-label">Yatırım</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Kapasite Borsası -->
-        <div class="category-card kapasite-borsasi" data-href="kapasite-borsasi">
+        <div class="category-card" data-href="kapasite-borsasi">
             <div class="category-content">
-                <div class="category-icon">
-                    <i class="fas fa-exchange-alt"></i>
-                </div>
+                <i class="fas fa-exchange-alt category-icon"></i>
                 <h2 class="category-title">Kapasite Borsası</h2>
                 <p class="category-description">
                     Üretim kapasitenizi değerlendirin.
                     İş birliği fırsatlarını keşfedin.
                 </p>
-                <button class="category-button">
-                    Kapasite Platformu
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-            </div>
-            <div class="category-stats">
-                <div class="stat-item">
-                    <span class="stat-value">250+</span>
-                    <span class="stat-label">Aktif Teklif</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-value">120+</span>
-                    <span class="stat-label">Eşleşme</span>
+                <div class="category-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">250+</div>
+                        <div class="stat-label">Aktif Teklif</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">120+</div>
+                        <div class="stat-label">Eşleşme</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="auth.js"></script>
     <script>
-        const ApiService = {
-            API_URL: 'https://eticaret-glif.onrender.com/api',
-            
-            async request(endpoint, options = {}) {
-                try {
-                    const response = await fetch(`${this.API_URL}${endpoint}`, {
-                        ...options,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            ...options.headers
-                        }
-                    });
-                    return await response.json();
-                } catch (error) {
-                    console.error('API Error:', error);
-                    throw error;
-                }
-            },
-
-            async verifyToken(token) {
-                return this.request('/auth/verify-token', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-            },
-
-            async getDashboardData(token) {
-                return this.request('/manufacturer/dashboard', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-            },
-
-            async logout(token) {
-                return this.request('/auth/logout', {  // endpoint değişti
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-            }
-        };
-
-        // Yardımcı fonksiyonlar
-        const UIHelpers = {
-            updateNotificationBadge(count) {
-                const badge = document.querySelector('.notification-badge');
-                if (badge) {
-                    badge.textContent = count;
-                    badge.style.display = count > 0 ? 'block' : 'none';
-                }
-            },
-
-            updateMessageBadge(count) {
-                const badge = document.querySelector('.message-badge');
-                if (badge) {
-                    badge.textContent = count;
-                    badge.style.display = count > 0 ? 'block' : 'none';
-                }
-            },
-
-            updateDashboardStats(data) {
-                try {
-                    // E-Sanayi istatistikleri
-                    if (data.eSanayi) {
-                        document.querySelector('.e-sanayi .stat-value:nth-child(1)').textContent = 
-                            `${data.eSanayi.totalProducts || '0'}+`;
-                        document.querySelector('.e-sanayi .stat-value:nth-child(2)').textContent = 
-                            `${data.eSanayi.totalSuppliers || '0'}+`;
-                    }
-
-                    // Hazır Ürünler istatistikleri
-                    if (data.hazirUrunler) {
-                        document.querySelector('.hazir-urunler .stat-value:nth-child(1)').textContent = 
-                            `${data.hazirUrunler.totalProducts || '0'}+`;
-                        document.querySelector('.hazir-urunler .stat-value:nth-child(2)').textContent = 
-                            `${data.hazirUrunler.totalManufacturers || '0'}+`;
-                    }
-
-                    // CAD Dosyaları istatistikleri
-                    if (data.cadDosyalari) {
-                        document.querySelector('.cad-dosyalari .stat-value:nth-child(1)').textContent = 
-                            `${data.cadDosyalari.totalModels || '0'}+`;
-                        document.querySelector('.cad-dosyalari .stat-value:nth-child(2)').textContent = 
-                            `${data.cadDosyalari.totalDesigners || '0'}+`;
-                    }
-
-                    // İnovasyon Hub istatistikleri
-                    if (data.inovasyonHub) {
-                        document.querySelector('.inovasyon-hub .stat-value:nth-child(1)').textContent = 
-                            `${data.inovasyonHub.activeProjects || '0'}+`;
-                        document.querySelector('.inovasyon-hub .stat-value:nth-child(2)').textContent = 
-                            `${data.inovasyonHub.totalInvestment || '0'}M+`;
-                    }
-
-                    // Kapasite Borsası istatistikleri
-                    if (data.kapasiteBorsasi) {
-                        document.querySelector('.kapasite-borsasi .stat-value:nth-child(1)').textContent = 
-                            `${data.kapasiteBorsasi.activeOffers || '0'}+`;
-                        document.querySelector('.kapasite-borsasi .stat-value:nth-child(2)').textContent = 
-                            `${data.kapasiteBorsasi.totalMatches || '0'}+`;
-                    }
-                } catch (error) {
-                    console.error('Stats güncelleme hatası:', error);
-                }
-            },
-
-            showLoading() {
-                // Loading göstergesi eklenebilir
-            },
-
-            hideLoading() {
-                // Loading göstergesi kaldırılabilir
-            }
-        };
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', async () => {
-            const token = localStorage.getItem('token');
-            const userType = localStorage.getItem('userType');
-            
-            if (!token || userType !== 'manufacturer') {
-                window.location.href = 'ureticiLogin';
-                return;
-            }
-
-            try {
-                UIHelpers.showLoading();
-                
-                // Token doğrulama
-                const verifyResult = await ApiService.verifyToken(token);
-                if (!verifyResult.success) {
-                    localStorage.clear();
-                    window.location.href = 'ureticiLogin';
-                    return;
-                }
-
-                // Kullanıcı bilgilerini göster
-                const user = JSON.parse(localStorage.getItem('user'));
-                if (user) {
-                    document.querySelector('.logo').innerHTML = `
-                        <i class="fas fa-industry"></i>
-                        IndustryHub MFG - ${user.companyName}
-                    `;
-                }
-
-                // Dashboard verilerini yükle
-                const dashboardData = await ApiService.getDashboardData(token);
-                if (dashboardData.success) {
-                    UIHelpers.updateDashboardStats(dashboardData.data);
-                }
-
-            } catch (error) {
-                console.error('Dashboard error:', error);
-                localStorage.clear();
-                window.location.href = 'ureticiLogin';
-            } finally {
-                UIHelpers.hideLoading();
-            }
-        });
-
-        // Kategori kartlarına tıklama olayı
+        // Kartlara tıklama olayı
         document.querySelectorAll('.category-card').forEach(card => {
             card.addEventListener('click', () => {
                 const href = card.getAttribute('data-href');
-                if (href) {
-                    UIHelpers.showLoading();
-                    window.location.href = href;
-                }
+                if (href) window.location.href = href;
             });
         });
 
-        // Çıkış yapma olayı
-        document.querySelector('.logout-link').addEventListener('click', async (e) => {
-            e.preventDefault();
-            const token = localStorage.getItem('token');
-            
-            try {
-                UIHelpers.showLoading();
-                const response = await ApiService.logout(token);
-                
-                if (response.success) {
-                    localStorage.clear();
-                    window.location.replace('ureticiLogin'); // replace kullanıyoruz
-                } else {
-                    throw new Error('Logout failed');
-                }
-            } catch (error) {
-                console.error('Logout error:', error);
-                localStorage.clear();
-                window.location.replace('ureticiLogin'); // hata durumunda da replace
-            } finally {
-                UIHelpers.hideLoading();
-            }
-        });
+        // Token kontrolü ve sayfa güvenliği için önceki kodlar buraya eklenebilir
     </script>
 </body>
 </html>
