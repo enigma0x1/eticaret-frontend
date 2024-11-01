@@ -711,7 +711,7 @@
         button.classList.add('loading');
         
         try {
-            const response = await fetch(`${ApiService.API_URL}/auth/manufacturer/login`, {
+            const response = await fetch(`${ApiService.API_URL}/auth/manufacturerAuth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
