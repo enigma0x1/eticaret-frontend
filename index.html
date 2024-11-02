@@ -94,6 +94,154 @@
             color: var(--text-primary);
         }
 
+        /* Footer Styles */
+        .footer {
+            background: var(--surface);
+            padding: 6rem 0 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-md);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .social-link:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .footer-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 0.5rem;
+        }
+        
+        .footer-contact {
+            list-style: none;
+        }
+        
+        .footer-contact li {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        
+        .footer-contact i {
+            color: var(--primary);
+        }
+        
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .footer-copyright {
+            color: var(--text-secondary);
+        }
+        
+        .footer-legal {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .footer-legal a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-legal a:hover {
+            color: var(--primary);
+        }
+        
+        @media (max-width: 1200px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+        
+            .footer-legal {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
         .logo-icon {
             width: 2.5rem;
             height: 2.5rem;
@@ -602,6 +750,79 @@
                 statsObserver.observe(stat);
             });
         </script>
+        <!-- Main kapanış tag'inden önce ekleyin -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <a href="/" class="footer-logo">
+                            <div class="logo-icon">SK</div>
+                            <span>sanayikapısı</span>
+                        </a>
+                        <p class="footer-description">
+                            Türkiye'nin lider endüstriyel B2B platformu. Profesyonel üretim çözümleri ve tedarik zinciri yönetimi.
+                        </p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3 class="footer-title">Hızlı Erişim</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">Ana Sayfa</a></li>
+                            <li><a href="#">Hakkımızda</a></li>
+                            <li><a href="#">Ürünler</a></li>
+                            <li><a href="#">Hizmetler</a></li>
+                            <li><a href="#">İletişim</a></li>
+                        </ul>
+                    </div>
+        
+                    <div class="footer-column">
+                        <h3 class="footer-title">Hizmetler</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">E-Sanayi</a></li>
+                            <li><a href="#">Hazır Ürünler</a></li>
+                            <li><a href="#">CAD Dosyaları</a></li>
+                            <li><a href="#">İnovasyon Hub</a></li>
+                            <li><a href="#">Tedarikçi Portalı</a></li>
+                        </ul>
+                    </div>
+        
+                    <div class="footer-column">
+                        <h3 class="footer-title">İletişim</h3>
+                        <ul class="footer-contact">
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Merkez Mah. Sanayi Cad. No:123<br>34000 İstanbul, Türkiye</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <span>+90 (212) 123 45 67</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span>info@sanayikapisi.com</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <div class="footer-copyright">
+                        © 2024 Sanayi Kapısı. Tüm hakları saklıdır.
+                    </div>
+                    <div class="footer-legal">
+                        <a href="#">Gizlilik Politikası</a>
+                        <a href="#">Kullanım Şartları</a>
+                        <a href="#">KVKK</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
     </main>
 </body>
 </html>
