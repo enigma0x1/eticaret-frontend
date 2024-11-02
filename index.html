@@ -306,9 +306,22 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(4, 1fr); /* 4 sütunlu grid */
             gap: 2rem;
             margin-top: 4rem;
+        }
+        
+        /* Responsive tasarım için medya sorguları */
+        @media (max-width: 1200px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr); /* Tablet için 2 sütun */
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr; /* Mobil için tek sütun */
+            }
         }
 
         .feature-card {
