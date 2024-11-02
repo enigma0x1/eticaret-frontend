@@ -3,174 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sanayi Kapısı - Modern Endüstriyel Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Sanayi Kapısı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #7c3aed;
-            --accent: #06b6d4;
-            --background: #ffffff;
-            --surface: #f8fafc;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-tertiary: #94a3b8;
-            --success: #22c55e;
-            --warning: #eab308;
-            --error: #ef4444;
-            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
-            --gradient-accent: linear-gradient(135deg, var(--accent), var(--secondary));
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            --header-height: 5rem;
-            --max-width: 1400px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #a855f7;
+            --background-light: #f8fafc;
+            --background-white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6);
+            --gradient-secondary: linear-gradient(135deg, #f8fafc, #ffffff);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --header-height: 80px;
+            --transition-base: all 0.3s ease;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
+        * {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif;}
 
         body {
-            background: var(--background);
+            background: var(--background-light);
             color: var(--text-primary);
+            min-height: 100vh;
             line-height: 1.6;
-            overflow-x: hidden;
         }
 
         .container {
-            max-width: var(--max-width);
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 2rem;
         }
 
-        /* Header Styles */
-        .header {
+        .main-header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: var(--header-height);
-            background: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            z-index: 1000;
-            transition: var(--transition);
-        }
-
-        .header.scrolled {
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: var(--shadow-md);
         }
 
         .header-container {
-            height: 100%;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
             text-decoration: none;
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--text-primary);
         }
 
         .logo-icon {
-            width: 2.5rem;
-            height: 2.5rem;
+            width: 40px;
+            height: 40px;
             background: var(--gradient-primary);
-            border-radius: var(--radius-md);
+            border-radius: var(--border-radius);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            font-weight: bold;
         }
 
-        .nav {
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-list {
             display: flex;
             gap: 2rem;
+            list-style: none;
         }
 
-        .nav-link {
-            text-decoration: none;
+        .nav-list a {
             color: var(--text-secondary);
+            text-decoration: none;
             font-weight: 500;
-            transition: var(--transition);
             padding: 0.5rem 1rem;
-            border-radius: var(--radius-md);
+            border-radius: var(--border-radius);
+            transition: var(--transition-base);
         }
 
-        .nav-link:hover {
-            color: var(--primary);
-            background: var(--surface);
+        .nav-list a:hover {
+            color: var(--primary-color);
+            background: var(--background-light);
         }
 
-        .auth-buttons {
+        .auth-section {
             display: flex;
             gap: 1rem;
         }
 
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
+        .auth-section a {
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--border-radius);
             text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            font-weight: 500;
+            transition: var(--transition-base);
         }
 
-        .btn-outline {
+        .login-btn {
             color: var(--text-primary);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: var(--background-light);
         }
 
-        .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--surface);
-        }
-
-        .btn-primary {
+        .register-btn {
             background: var(--gradient-primary);
             color: white;
-            box-shadow: var(--shadow-md);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* Hero Section */
         .hero {
-            padding-top: calc(var(--header-height) + 4rem);
-            padding-bottom: 6rem;
-            background: 
-                radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding-top: var(--header-height);
         }
 
         .hero::before {
@@ -178,417 +147,459 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            top: 0;
-            left: 0;
-            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="1" fill="#2563eb" opacity="0.1"/></svg>') repeat;
-            background-size: 30px 30px;
-            animation: moveBackground 20s linear infinite;
-            opacity: 0.5;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+            animation: pulseGlow 8s ease-in-out infinite alternate;
         }
 
-        @keyframes moveBackground {
-            from { transform: translateX(0) translateY(0); }
-            to { transform: translateX(-30px) translateY(-30px); }
+        .hero-grid {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
+            align-items: center;
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow-lg);
         }
 
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+        .hero-tag {
+            display: inline-block;
             padding: 0.5rem 1rem;
-            background: rgba(37, 99, 235, 0.1);
-            border-radius: 100px;
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.875rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 50px;
+            color: var(--primary-color);
+            font-size: 0.9rem;
             margin-bottom: 2rem;
+            animation: slideIn 0.5s ease-out;
         }
 
         .hero-title {
             font-size: clamp(2.5rem, 5vw, 4rem);
             line-height: 1.2;
             margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            animation: fadeUp 0.5s ease-out 0.2s both;
+        }
+
+        .hero-title span {
+            display: block;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
-            font-weight: 800;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero-description {
-            font-size: clamp(1.1rem, 2vw, 1.25rem);
+            font-size: clamp(1.1rem, 1.5vw, 1.3rem);
             color: var(--text-secondary);
             margin-bottom: 3rem;
             max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 4rem;
+            animation: fadeUp 0.5s ease-out 0.4s both;
         }
 
         .hero-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
+            margin-bottom: 3rem;
+            animation: fadeUp 0.5s ease-out 0.6s both;
         }
 
-        .stat-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+        .stat-item {
             text-align: center;
-            transition: var(--transition);
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: var(--transition-base);
         }
 
-        .stat-card:hover {
+        .stat-item:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-md);
         }
 
         .stat-number {
             font-size: 2.5rem;
-            font-weight: 800;
+            font-weight: 700;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
-            color: transparent;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
         }
 
         .stat-label {
             color: var(--text-secondary);
-            font-weight: 500;
+            font-size: 0.9rem;
         }
 
-        /* Features Section */
-        .features {
-            padding: 8rem 0;
-            background: var(--surface);
-        }
-
-        .section-header {
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto 4rem;
-        }
-
-        .section-title {
-            font-size: clamp(2rem, 3vw, 2.5rem);
-            margin-bottom: 1rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-weight: 800;
-        }
-
-        .section-description {
-            color: var(--text-secondary);
-            font-size: 1.125rem;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--gradient-primary);
-            transform: scaleX(0);
-            transition: var(--transition);
-            transform-origin: left;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-icon {
-            width: 3rem;
-            height: 3rem;
-            background: var(--gradient-primary);
-            border-radius: var(--radius-md);
+        .hero-cta {
             display: flex;
+            gap: 1.5rem;
+            animation: fadeUp 0.5s ease-out 0.8s both;
+        }
+
+        .hero-btn {
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition-base);
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .hero-btn-primary {
+            background: var(--gradient-primary);
             color: white;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
         }
 
-        .feature-title {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+        .hero-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .hero-btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
             color: var(--text-primary);
-            font-weight: 700;
+            border: 1px solid rgba(99, 102, 241, 0.2);
         }
 
-        .feature-description {
-            color: var(--text-secondary);
-            line-height: 1.6;
+        .hero-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
         }
 
-        @media (max-width: 768px) {
-            .nav, .auth-buttons {
-                display: none;
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-content {
+                padding: 2rem 1rem;
+            }
+
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
             }
 
             .hero-stats {
-                grid-template-columns: 1fr;
+                justify-content: center;
             }
 
-            .features-grid {
-                grid-template-columns: 1fr;
+            .hero-cta {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 1rem;
+            }
+
+            .nav-list, .auth-section {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container header-container">
+    <header class="main-header">
+        <div class="header-container">
             <a href="/" class="logo">
                 <div class="logo-icon">SK</div>
-                <span>sanayikapısı</span>
+                <span class="logo-text">sanayikapısı</span>
             </a>
-            <nav class="nav">
-                <a href="#features" class="nav-link">Özellikler</a>
-                <a href="#how-it-works" class="nav-link">Nasıl Çalışır?</a>
-                <a href="#testimonials" class="nav-link">Referanslar</a>
-                <a href="#blog" class="nav-link">Blog</a>
-                <a href="#contact" class="nav-link">İletişim</a>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li><a href="#features">Özellikler</a></li>
+                    <li><a href="#how-it-works">Nasıl Çalışır?</a></li>
+                    <li><a href="#partners">İş Ortakları</a></li>
+                    <li><a href="#about">Hakkımızda</a></li>
+                    <li><a href="#contact">İletişim</a></li>
+                </ul>
             </nav>
-            <div class="auth-buttons">
-                <a href="/login" class="btn btn-outline">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Giriş Yap
-                </a>
-                <a href="/register" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    Ücretsiz Başla
-                </a>
+            <div class="auth-section">
+                <a href="/login" class="login-btn">Giriş Yap</a>
+                <a href="/register" class="register-btn">Ücretsiz Başla</a>
             </div>
         </div>
     </header>
 
     <main>
         <section class="hero">
-            <div class="container">
+            <div class="hero-grid">
                 <div class="hero-content">
-                    <div class="hero-badge">
-                        <i class="fas fa-star"></i>
-                        Türkiye'nin Lider Sanayi Platformu
-                    </div>
+                    <div class="hero-tag">Türkiye'nin Lider Sanayi Platformu</div>
                     <h1 class="hero-title">
-                        Endüstriyel Üretimin<br>
-                        Dijital Geleceği
+                        Endüstriyel Üretimin
+                        <span>Dijital Geleceği</span>
                     </h1>
                     <p class="hero-description">
                         65.000+ ürün ve 1500+ tedarikçi ile profesyonel üretim çözümleri sunan, 
                         Türkiye'nin en kapsamlı endüstriyel B2B platformu
                     </p>
-                    <div class="hero-buttons">
-                        <a href="/register" class="btn btn-primary">
-                            <i class="fas fa-rocket"></i>
-                            Hemen Başla
-                        </a>
-                        <a href="#demo" class="btn btn-outline">
-                            <i class="fas fa-play"></i>
-                            Demo İzle
-                        </a>
-                    </div>
                     <div class="hero-stats">
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="65000">65K+</div>
+                        <div class="stat-item">
+                            <div class="stat-number">65K+</div>
                             <div class="stat-label">Toplam Ürün</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="1500">1.5K+</div>
+                        <div class="stat-item">
+                            <div class="stat-number">1.5K+</div>
                             <div class="stat-label">Aktif Tedarikçi</div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="50">50M+</div>
+                        <div class="stat-item">
+                            <div class="stat-number">50M+</div>
                             <div class="stat-label">Yatırım Hacmi</div>
                         </div>
                     </div>
+                    <div class="hero-cta">
+                        <a href="/register" class="hero-btn hero-btn-primary">
+                            <i class="fas fa-rocket"></i>
+                            Hemen Başla
+                        </a>
+                        <a href="#features" class="hero-btn hero-btn-secondary">
+                            <i class="fas fa-play"></i>
+                            Nasıl Çalışır?
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="features" id="features">
+        <section class="features" id="features" style="margin-top: 100px; padding: 80px 0;">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Neler Sunuyoruz?</h2>
-                    <p class="section-description">
-                        Endüstriyel üretim süreçlerinizi dijitalleştirin, verimliliğinizi artırın
-                    </p>
-                </div>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-industry"></i>
-                        </div>
-                        <h3 class="feature-title">E-Sanayi</h3>
-                        <p class="feature-description">
-                            50.000+ ürün, 1000+ tedarikçi ile profesyonel üretim çözümleri
-                        </p>
+                <h2 class="section-title" style="text-align: center; font-size: 2.5rem; margin-bottom: 60px;">Neler Sunuyoruz?</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; max-width: 1400px; margin: 0 auto;">
+                    <div style="flex: 1; min-width: 280px; max-width: 300px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                        <i class="fas fa-industry" style="font-size: 2.5rem; color: #6366f1; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 15px; color: #1e293b;">E-Sanayi</h3>
+                        <p style="color: #64748b;">Endüstriyel parça ve komponent pazarı. 50.000+ ürün, 1000+ tedarikçi ile profesyonel üretim çözümleri.</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-box-open"></i>
-                        </div>
-                        <h3 class="feature-title">Hazır Ürünler</h3>
-                        <p class="feature-description">
-                            10.000+ ürün, 500+ üretici ile doğrudan fabrikadan tedarik
-                        </p>
+                    <div style="flex: 1; min-width: 280px; max-width: 300px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                        <i class="fas fa-box-open" style="font-size: 2.5rem; color: #6366f1; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 15px; color: #1e293b;">Hazır Ürünler</h3>
+                        <p style="color: #64748b;">10.000+ ürün, 500+ üretici ile doğrudan fabrikadan son kullanıcıya ulaşın.</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-drafting-compass"></i>
-                        </div>
-                        <h3 class="feature-title">CAD Dosyaları</h3>
-                        <p class="feature-description">
-                            25.000+ teknik çizim ve 3D model ile tasarım desteği
-                        </p>
+                    <div style="flex: 1; min-width: 280px; max-width: 300px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                        <i class="fas fa-drafting-compass" style="font-size: 2.5rem; color: #6366f1; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 15px; color: #1e293b;">CAD Dosyaları</h3>
+                        <p style="color: #64748b;">25.000+ teknik çizim ve 3D model ile profesyonel tasarım desteği.</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <h3 class="feature-title">İnovasyon Hub</h3>
-                        <p class="feature-description">
-                            200+ aktif proje, 50M+ yatırım hacmi ile inovasyon desteği
-                        </p>
+                    <div style="flex: 1; min-width: 280px; max-width: 300px; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                        <i class="fas fa-lightbulb" style="font-size: 2.5rem; color: #6366f1; margin-bottom: 20px;"></i>
+                        <h3 style="margin-bottom: 15px; color: #1e293b;">İnovasyon Hub</h3>
+                        <p style="color: #64748b;">200+ aktif proje, 50M+ yatırım hacmi ile fikirlerinizi hayata geçirin.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- JavaScript -->
-        <script>
-            // Header Scroll Effect
-            const header = document.querySelector('.header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
+        <section style="background: #f8fafc; padding: 100px 0; margin-top: 80px;">
+            <div class="container">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 60px; color: #1e293b;">Nasıl Çalışır?</h2>
+                <div style="max-width: 1000px; margin: 0 auto;">
+                    <div style="display: flex; align-items: center; margin-bottom: 40px; gap: 30px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">1</div>
+                        <div style="flex: 1; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 10px; color: #1e293b;">Üyelik Oluşturun</h3>
+                            <p style="color: #64748b;">Size uygun portal üzerinden hesabınızı oluşturun</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 40px; gap: 30px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">2</div>
+                        <div style="flex: 1; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 10px; color: #1e293b;">Profil Doğrulama</h3>
+                            <p style="color: #64748b;">Şirket belgelerinizle profilinizi doğrulayın</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; margin-bottom: 40px; gap: 30px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">3</div>
+                        <div style="flex: 1; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 10px; color: #1e293b;">Keşfedin</h3>
+                            <p style="color: #64748b;">E-sanayi, Kapasite market, İnovasyon kapısı, Hazır market'den size uygun olanı seçin</p>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 30px;">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #6366f1, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">4</div>
+                        <div style="flex: 1; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 10px; color: #1e293b;">Aksiyon Alın</h3>
+                            <p style="color: #64748b;">Üretici olarak B2B alışveriş yapın veya ürün satın. Profesyonel olarak B2C marketimizi ziyaret edin.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer style="background: white; padding: 80px 0 40px; border-top: 1px solid rgba(0,0,0,0.1);">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 60px;">
+                    <div>
+                        <h4 style="color: #1e293b; margin-bottom: 20px; font-size: 1.2rem;">Kurumsal</h4>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">Hakkımızda</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">Kariyer</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">İletişim</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #1e293b; margin-bottom: 20px; font-size: 1.2rem;">Hizmetler</h4>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">E-Sanayi</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">Hazır Ürünler</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">CAD Dosyaları</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #1e293b; margin-bottom: 20px; font-size: 1.2rem;">Yardım</h4>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">SSS</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">Destek</a></li>
+                            <li style="margin-bottom: 10px;"><a href="#" style="color: #64748b; text-decoration: none;">Güvenlik</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: #1e293b; margin-bottom: 20px; font-size: 1.2rem;">İletişim</h4>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 10px; color: #64748b;">info@sanayikapisi.com</li>
+                            <li style="margin-bottom: 10px; color: #64748b;">0850 123 45 67</li>
+                            <li style="margin-bottom: 10px; color: #64748b;">Teknopark İstanbul</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="text-align: center; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); color: #64748b;">
+                    <p>&copy; 2024 Sanayi Kapısı. Tüm hakları saklıdır.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
+        });
 
-            // Smooth Scroll
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
+        let lastScroll = 0;
+        const header = document.querySelector('.main-header');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll <= 0) {
+                header.classList.remove('scroll-up');
+                return;
+            }
+            if (currentScroll > lastScroll && !header.classList.contains('scroll-down')) {
+                header.classList.remove('scroll-up');
+                header.classList.add('scroll-down');
+            } else if (currentScroll < lastScroll && header.classList.contains('scroll-down')) {
+                header.classList.remove('scroll-down');
+                header.classList.add('scroll-up');
+            }
+            lastScroll = currentScroll;
+        });
+
+        const cards = document.querySelectorAll('[style*="flex: 1"]');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)';
+                card.style.boxShadow = '0 10px 15px rgba(0,0,0,0.1)';
             });
-
-            // Feature Cards Animation
-            const cards = document.querySelectorAll('.feature-card');
-            const cardObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                        cardObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
             });
+        });
 
-            cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                cardObserver.observe(card);
+        const steps = document.querySelectorAll('[style*="display: flex; align-items: center;"]');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateX(0)';
+                }
             });
+        }, { threshold: 0.5 });
 
-            // Stats Animation
-            const animateValue = (element, start, end, duration) => {
-                let startTimestamp = null;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    const value = Math.floor(progress * (end - start) + start);
-                    
-                    if (end >= 1000) {
-                        element.textContent = (value/1000).toFixed(1) + 'K+';
+        steps.forEach(step => {
+            step.style.opacity = '0';
+            step.style.transform = 'translateX(-20px)';
+            step.style.transition = 'all 0.6s ease';
+            observer.observe(step);
+        });
+
+        const animateNumbers = () => {
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(number => {
+                const target = parseInt(number.textContent);
+                let current = 0;
+                const increment = target / 100;
+                const updateNumber = () => {
+                    if (current < target) {
+                        current += increment;
+                        number.textContent = Math.ceil(current) + '+';
+                        requestAnimationFrame(updateNumber);
                     } else {
-                        element.textContent = value + 'M+';
-                    }
-                    
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
+                        number.textContent = target + '+';
                     }
                 };
-                window.requestAnimationFrame(step);
-            };
-
-            const statsObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const statNumber = entry.target;
-                        const value = parseInt(statNumber.getAttribute('data-value'));
-                        animateValue(statNumber, 0, value, 2000);
-                        statsObserver.unobserve(statNumber);
-                    }
-                });
-            }, {
-                threshold: 0.5
+                updateNumber();
             });
+        };
 
-            document.querySelectorAll('.stat-number').forEach(stat => {
-                statsObserver.observe(stat);
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateNumbers();
+                    statsObserver.unobserve(entry.target);
+                }
             });
-        </script>
-    </main>
+        }, { threshold: 0.5 });
+
+        document.querySelector('.hero-stats').forEach(stats => {
+            statsObserver.observe(stats);
+        });
+    </script>
 </body>
 </html>
