@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Türkiye'nin lider endüstriyel B2B platformu. Profesyonel üretim çözümleri ve tedarik zinciri yönetimi.">
+    <meta name="keywords" content="sanayi, endüstri, B2B, tedarik, üretim, fabrika">
+    <meta name="author" content="Sanayi Kapısı">
+    <meta property="og:title" content="Sanayi Kapısı - Modern Endüstriyel Platform">
+    <meta property="og:description" content="Türkiye'nin lider endüstriyel B2B platformu">
+    <meta property="og:image" content="/images/og-image.jpg">
     <title>Sanayi Kapısı - Modern Endüstriyel Platform</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -213,7 +220,7 @@
         .hero-title {
             font-size: clamp(2.5rem, 5vw, 4rem);
             line-height: 1.2;
-            margin-bottom: 1.5rem;
+                        margin-bottom: 1.5rem;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
@@ -466,243 +473,806 @@
             left: -1rem;
         }
 
-                    .testimonial-author {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-            .testimonial-author img {
-                width: 4rem;
-                height: 4rem;
-                border-radius: 50%;
-                object-fit: cover;
-            }
+        .testimonial-author img {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
 
-            .testimonial-author h4 {
-                font-weight: 700;
-                color: var(--text-primary);
-            }
+        .testimonial-author h4 {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
 
-            .testimonial-author p {
-                color: var(--text-secondary);
-                font-size: 0.875rem;
-            }
+        .testimonial-author p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
 
-            .trust-indicators {
-                padding: 6rem 0;
-                background: var(--background);
+        .trust-indicators {
+            padding: 6rem 0;
+            background: var(--background);
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            align-items: center;
+            margin-top: 4rem;
+        }
+
+        .partner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+        }
+
+        .partner:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .partner img {
+            max-width: 100%;
+            height: auto;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .partner:hover img {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        .certificates {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .certificate {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .certificate img {
+            width: 5rem;
+            height: 5rem;
+            object-fit: contain;
+        }
+
+        .certificate span {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .cta {
+            padding: 8rem 0;
+            background: var(--gradient-primary);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: clamp(2rem, 3vw, 2.5rem);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .cta-content p {
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .cta .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .cta .btn-outline {
+            border-color: white;
+            color: white;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-100%);
+            transition: var(--transition);
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+        }
+
+        .mobile-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mobile-nav .nav-link {
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            background: var(--surface);
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--surface);
+            border-bottom-color: var(--primary);
+            border-radius: 50%;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            background: var(--surface);
+            padding: 6rem 0 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-md);
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .social-link:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .footer-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            padding-left: 0.5rem;
+        }
+
+        .footer-contact {
+            list-style: none;
+        }
+
+        .footer-contact li {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-contact i {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-copyright {
+            color: var(--text-secondary);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-legal a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-legal a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 1200px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .partners-grid {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 3rem;
-                align-items: center;
-                margin-top: 4rem;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav, .auth-buttons {
+                display: none;
             }
 
-            .partner {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 2rem;
-                background: var(--surface);
-                border-radius: var(--radius-lg);
-                transition: var(--transition);
+            .mobile-menu-btn {
+                display: block;
             }
 
-            .partner:hover {
-                transform: translateY(-5px);
-                box-shadow: var(--shadow-md);
+            .hero-stats {
+                grid-template-columns: 1fr;
             }
 
-            .partner img {
-                max-width: 100%;
-                height: auto;
-                filter: grayscale(100%);
-                opacity: 0.7;
-                transition: var(--transition);
+            .features-grid {
+                grid-template-columns: 1fr;
             }
 
-            .partner:hover img {
-                filter: grayscale(0%);
-                opacity: 1;
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .step:not(:last-child)::after {
+                display: none;
+            }
+
+            .testimonials-slider {
+                grid-template-columns: 1fr;
+            }
+
+            .partners-grid {
+                grid-template-columns: 1fr;
             }
 
             .certificates {
-                display: flex;
-                justify-content: center;
-                gap: 3rem;
-                margin-top: 4rem;
-            }
-
-            .certificate {
-                display: flex;
                 flex-direction: column;
-                align-items: center;
-                gap: 1rem;
             }
 
-            .certificate img {
-                width: 5rem;
-                height: 5rem;
-                object-fit: contain;
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
 
-            .certificate span {
-                font-weight: 600;
-                color: var(--text-secondary);
-            }
-
-            .cta {
-                padding: 8rem 0;
-                background: var(--gradient-primary);
-                color: white;
+            .footer-bottom {
+                flex-direction: column;
                 text-align: center;
             }
 
-            .cta-content {
-                max-width: 800px;
-                margin: 0 auto;
-            }
-
-            .cta-content h2 {
-                font-size: clamp(2rem, 3vw, 2.5rem);
-                margin-bottom: 1rem;
-                font-weight: 800;
-            }
-
-            .cta-content p {
-                font-size: 1.25rem;
-                margin-bottom: 3rem;
-                opacity: 0.9;
-            }
-
-            .cta-buttons {
-                display: flex;
+            .footer-legal {
+                flex-direction: column;
                 gap: 1rem;
-                justify-content: center;
             }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loader"></div>
+    </div>
 
-            .cta .btn-primary {
-                background: white;
-                color: var(--primary);
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <div class="logo-icon">SK</div>
+                <span>sanayikapısı</span>
+            </a>
+            <nav class="nav">
+                <a href="#features" class="nav-link">Özellikler</a>
+                <a href="#how-it-works" class="nav-link">Nasıl Çalışır?</a>
+                <a href="#testimonials" class="nav-link">Referanslar</a>
+                <a href="#blog" class="nav-link">Blog</a>
+                <a href="#contact" class="nav-link">İletişim</a>
+            </nav>
+            <div class="auth-buttons">
+                <a href="/login" class="btn btn-outline">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Giriş Yap
+                </a>
+                <a href="/register" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Ücretsiz Başla
+                </a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu">
+        <nav class="mobile-nav">
+            <a href="#features" class="nav-link">Özellikler</a>
+            <a href="#how-it-works" class="nav-link">Nasıl Çalışır?</a>
+            <a href="#testimonials" class="nav-link">Referanslar</a>
+            <a href="#blog" class="nav-link">Blog</a>
+            <a href="#contact" class="nav-link">İletişim</a>
+            <a href="/login" class="nav-link">Giriş Yap</a>
+            <a href="/register" class="nav-link">Ücretsiz Başla</a>
+        </nav>
+    </div>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-star"></i>
+                        Türkiye'nin Lider Sanayi Platformu
+                    </div>
+                    <h1 class="hero-title">
+                        Endüstriyel Üretimin<br>
+                        Dijital Geleceği
+                    </h1>
+                    <p class="hero-description">
+                        65.000+ ürün ve 1500+ tedarikçi ile profesyonel üretim çözümleri sunan, 
+                        Türkiye'nin en kapsamlı endüstriyel B2B platformu
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="/register" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i>
+                            Hemen Başla
+                        </a>
+                        <a href="#demo" class="btn btn-outline">
+                            <i class="fas fa-play"></i>
+                            Demo İzle
+                        </a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-card">
+                            <div class="stat-number" data-value="65000">65K+</div>
+                            <div class="stat-label">Toplam Ürün</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" data-value="1500">1.5K+</div>
+                            <div class="stat-label">Aktif Tedarikçi</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" data-value="50">50M+</div>
+                            <div class="stat-label">Yatırım Hacmi</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Neler Sunuyoruz?</h2>
+                    <p class="section-description">
+                        Endüstriyel üretim süreçlerinizi dijitalleştirin, verimliliğinizi artırın
+                    </p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <h3 class="feature-title">E-Sanayi</h3>
+                        <p class="feature-description">
+                            50.000+ ürün, 1000+ tedarikçi ile profesyonel üretim çözümleri
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <h3 class="feature-title">Hazır Ürünler</h3>
+                        <p class="feature-description">
+                            10.000+ ürün, 500+ üretici ile doğrudan fabrikadan tedarik
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-drafting-compass"></i>
+                        </div>
+                        <h3 class="feature-title">CAD Dosyaları</h3>
+                        <p class="feature-description">
+                            25.000+ teknik çizim ve 3D model ile tasarım desteği
+                        </p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3 class="feature-title">İnovasyon Hub</h3>
+                        <p class="feature-description">
+                            200+ aktif proje, 50M+ yatırım hacmi ile inovasyon desteği
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works" id="how-it-works">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Nasıl Çalışır?</h2>
+                    <p class="section-description">Sadece 3 adımda sisteme dahil olun</p>
+                </div>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                        <h3>Ücretsiz Kayıt</h3>
+                        <p>Hızlı kayıt formumuzu doldurun ve platformumuza ücretsiz katılın.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-icon"><i class="fas fa-search"></i></div>
+                        <h3>Ürün/Tedarikçi Bulun</h3>
+                        <p>Binlerce ürün ve tedarikçi arasından size uygun olanı seçin.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-icon"><i class="fas fa-handshake"></i></div>
+                        <h3>Anlaşma Yapın</h3>
+                        <p>Güvenli platform üzerinden iletişime geçin ve anlaşmanızı yapın.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials" id="testimonials">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Müşterilerimiz Ne Diyor?</h2>
+                    <p class="section-description">Başarı hikayelerimizden bazıları</p>
+                </div>
+                <div class="testimonials-slider">
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"Sanayikapısı sayesinde tedarik sürecimizi %40 hızlandırdık."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Ahmet Yılmaz">
+                            <div>
+                                <h4>Ahmet Yılmaz</h4>
+                                <p>ABC Makine Ltd. - CEO</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"Platform üzerinden bulduğumuz tedarikçilerle uzun vadeli iş birlikleri geliştirdik."</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Ayşe Kaya">
+                            <div>
+                                <h4>Ayşe Kaya</h4>
+                                <p>XYZ Endüstri A.Ş. - Satın Alma Müdürü</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="trust-indicators">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Güvenilir İş Ortağınız</h2>
+                    <p class="section-description">Sektör liderleri tarafından tercih edilen ve onaylanan platform</p>
+                </div>
+                <div class="partners-grid">
+                    <div class="partner">
+                        <img src="https://via.placeholder.com/150x50" alt="Partner 1">
+                    </div>
+                    <div class="partner">
+                        <img src="https://via.placeholder.com/150x50" alt="Partner 2">
+                    </div>
+                    <div class="partner">
+                        <img src="https://via.placeholder.com/150x50" alt="Partner 3">
+                    </div>
+                    <div class="partner">
+                        <img src="https://via.placeholder.com/150x50" alt="Partner 4">
+                    </div>
+                </div>
+                <div class="certificates">
+                    <div class="certificate">
+                        <img src="https://via.placeholder.com/80" alt="ISO 27001">
+                        <span>ISO 27001</span>
+                    </div>
+                    <div class="certificate">
+                        <img src="https://via.placeholder.com/80" alt="ISO 9001">
+                        <span>ISO 9001</span>
+                    </div>
+                    <div class="certificate">
+                        <img src="https://via.placeholder.com/80" alt="TÜRKAK">
+                        <span>TÜRKAK</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Hemen Ücretsiz Deneyin</h2>
+                    <p>30 gün boyunca tüm premium özelliklere ücretsiz erişim</p>
+                    <div class="cta-buttons">
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i>
+                            Ücretsiz Başla
+                        </a>
+                        <a href="#" class="btn btn-outline">
+                            <i class="fas fa-headset"></i>
+                            Demo Talep Et
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <a href="/" class="footer-logo">
+                        <div class="logo-icon">SK</div>
+                        <span>sanayikapısı</span>
+                    </a>
+                    <p class="footer-description">
+                        Türkiye'nin lider endüstriyel B2B platformu. Profesyonel üretim çözümleri ve tedarik zinciri yönetimi.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3 class="footer-title">Hızlı Erişim</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Ana Sayfa</a></li>
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Ürünler</a></li>
+                        <li><a href="#">Hizmetler</a></li>
+                        <li><a href="#">İletişim</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3 class="footer-title">Hizmetler</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">E-Sanayi</a></li>
+                        <li><a href="#">Hazır Ürünler</a></li>
+                        <li><a href="#">CAD Dosyaları</a></li>
+                        <li><a href="#">İnovasyon Hub</a></li>
+                        <li><a href="#">Tedarikçi Portalı</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3 class="footer-title">İletişim</h3>
+                    <ul class="footer-contact">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Merkez Mah. Sanayi Cad. No:123<br>34000 İstanbul, Türkiye</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <span>+90 (212) 123 45 67</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>info@sanayikapisi.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    © 2024 Sanayi Kapısı. Tüm hakları saklıdır.
+                </div>
+                <div class="footer-legal">
+                    <a href="#">Gizlilik Politikası</a>
+                    <a href="#">Kullanım Şartları</a>
+                    <a href="#">KVKK</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            const loadingScreen = document.querySelector('.loading-screen');
+            loadingScreen.classList.add('fade-out');
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 500);
+        });
+
+        const header = document.querySelector('.header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
+        });
 
-            .cta .btn-outline {
-                border-color: white;
-                color: white;
-            }
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
+            mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+        });
 
-            @media (max-width: 1200px) {
-                .features-grid {
-                    grid-template-columns: repeat(2, 1fr);
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
+            });
+        });
 
-                .partners-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-            }
-
-            @media (max-width: 768px) {
-                .nav, .auth-buttons {
-                    display: none;
-                }
-
-                .hero-stats {
-                    grid-template-columns: 1fr;
-                }
-
-                .features-grid {
-                    grid-template-columns: 1fr;
-                }
-
-                .steps {
-                    grid-template-columns: 1fr;
-                }
-
-                .step:not(:last-child)::after {
-                    display: none;
-                }
-
-                .testimonials-slider {
-                    grid-template-columns: 1fr;
-                }
-
-                .partners-grid {
-                    grid-template-columns: 1fr;
-                }
-
-                .certificates {
-                    flex-direction: column;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <!-- Mevcut header ve hero section'ları aynı kalacak -->
-        <!-- Features section'dan sonra aşağıdaki kodları ekleyin -->
-
-        <script>
-            const header = document.querySelector('.header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
+        const animateValue = (element, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                
+                if (end >= 1000) {
+                    element.textContent = (value/1000).toFixed(1) + 'K+';
                 } else {
-                    header.classList.remove('scrolled');
+                    element.textContent = value + 'M+';
+                }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumber = entry.target;
+                    const value = parseInt(statNumber.getAttribute('data-value'));
+                    animateValue(statNumber, 0, value, 2000);
+                    statsObserver.unobserve(statNumber);
                 }
             });
+        }, {
+            threshold: 0.5
+        });
 
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                });
-            });
-
-            const animateValue = (element, start, end, duration) => {
-                let startTimestamp = null;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    const value = Math.floor(progress * (end - start) + start);
-                    
-                    if (end >= 1000) {
-                        element.textContent = (value/1000).toFixed(1) + 'K+';
-                    } else {
-                        element.textContent = value + 'M+';
-                    }
-                    
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
-                    }
-                };
-                window.requestAnimationFrame(step);
-            };
-
-            const statsObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const statNumber = entry.target;
-                        const value = parseInt(statNumber.getAttribute('data-value'));
-                        animateValue(statNumber, 0, value, 2000);
-                        statsObserver.unobserve(statNumber);
-                    }
-                });
-            }, {
-                threshold: 0.5
-            });
-
-            document.querySelectorAll('.stat-number').forEach(stat => {
-                statsObserver.observe(stat);
-            });
-        </script>
-    </body>
+        document.querySelectorAll('.stat-number').forEach(stat => {
+            statsObserver.observe(stat);
+        });
+    </script>
+</body>
 </html>
