@@ -3,75 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Türkiye'nin lider endüstriyel B2B platformu. Profesyonel üretim çözümleri ve tedarik zinciri yönetimi.">
-    <meta name="keywords" content="sanayi, endüstri, B2B, tedarik, üretim, fabrika">
+    <meta name="description" content="Sanayi Kapısı - Türkiye'nin lider endüstriyel B2B platformu">
+    <meta name="keywords" content="sanayi, endüstri, B2B, üretim, tedarik, fabrika">
     <meta name="author" content="Sanayi Kapısı">
     <meta property="og:title" content="Sanayi Kapısı - Modern Endüstriyel Platform">
     <meta property="og:description" content="Türkiye'nin lider endüstriyel B2B platformu">
     <meta property="og:image" content="/images/og-image.jpg">
     <title>Sanayi Kapısı - Modern Endüstriyel Platform</title>
     <link rel="icon" type="image/png" href="/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Swiper.js -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <!-- AOS - Animate On Scroll -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #7c3aed;
-            --accent: #06b6d4;
-            --background: #ffffff;
-            --surface: #f8fafc;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-tertiary: #94a3b8;
-            --success: #22c55e;
-            --warning: #eab308;
+            /* Ana Renkler - Modern ve Profesyonel */
+            --primary-50: #eef2ff;
+            --primary-100: #e0e7ff;
+            --primary-200: #c7d2fe;
+            --primary-300: #a5b4fc;
+            --primary-400: #818cf8;
+            --primary-500: #6366f1;
+            --primary-600: #4f46e5;
+            --primary-700: #4338ca;
+            --primary-800: #3730a3;
+            --primary-900: #312e81;
+
+            /* Nötr Renkler - Sofistike */
+            --neutral-50: #fafafa;
+            --neutral-100: #f4f4f5;
+            --neutral-200: #e4e4e7;
+            --neutral-300: #d4d4d8;
+            --neutral-400: #a1a1aa;
+            --neutral-500: #71717a;
+            --neutral-600: #52525b;
+            --neutral-700: #3f3f46;
+            --neutral-800: #27272a;
+            --neutral-900: #18181b;
+
+            /* Aksan Renkler */
+            --accent-purple: #8b5cf6;
+            --accent-indigo: #6366f1;
+            --accent-blue: #3b82f6;
+            --success: #10b981;
+            --warning: #f59e0b;
             --error: #ef4444;
-            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
-            --gradient-accent: linear-gradient(135deg, var(--accent), var(--secondary));
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+
+            /* Gradyanlar */
+            --gradient-primary: linear-gradient(135deg, var(--primary-600), var(--accent-purple));
+            --gradient-secondary: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            --gradient-surface: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+
+            /* Gölgeler */
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.03);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02);
+
+            /* Yuvarlatmalar */
             --radius-sm: 0.375rem;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
             --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+
+            /* Diğer */
             --header-height: 5rem;
+            --footer-height: 22rem;
             --max-width: 1400px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: var(--header-height);
         }
 
         body {
-            background: var(--background);
-            color: var(--text-primary);
+            background: var(--neutral-50);
+            color: var(--neutral-900);
             line-height: 1.6;
             overflow-x: hidden;
         }
 
+        /* Particles Background */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Container */
         .container {
             max-width: var(--max-width);
             margin: 0 auto;
             padding: 0 2rem;
+            position: relative;
         }
 
+        /* Header */
         .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             height: var(--header-height);
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--gradient-surface);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             z-index: 1000;
@@ -79,7 +131,7 @@
         }
 
         .header.scrolled {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             box-shadow: var(--shadow-md);
         }
 
@@ -95,9 +147,15 @@
             align-items: center;
             gap: 0.75rem;
             text-decoration: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 700;
             font-size: 1.5rem;
-            color: var(--text-primary);
+            color: var(--neutral-900);
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
         }
 
         .logo-icon {
@@ -109,6 +167,24 @@
             align-items: center;
             justify-content: center;
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-icon::after {
+            transform: translateX(100%);
         }
 
         .nav {
@@ -118,16 +194,33 @@
 
         .nav-link {
             text-decoration: none;
-            color: var(--text-secondary);
+            color: var(--neutral-600);
             font-weight: 500;
             transition: var(--transition);
             padding: 0.5rem 1rem;
             border-radius: var(--radius-md);
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: var(--transition);
+            border-radius: var(--radius-sm);
         }
 
         .nav-link:hover {
-            color: var(--primary);
-            background: var(--surface);
+            color: var(--primary-600);
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
         }
 
         .auth-buttons {
@@ -144,22 +237,26 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            cursor: pointer;
         }
 
         .btn-outline {
-            color: var(--text-primary);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--neutral-700);
+            border: 2px solid var(--neutral-200);
+            background: transparent;
         }
 
         .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background: var(--surface);
+            border-color: var(--primary-500);
+            color: var(--primary-600);
+            background: var(--primary-50);
+            transform: translateY(-2px);
         }
 
         .btn-primary {
             background: var(--gradient-primary);
             color: white;
+            border: none;
             box-shadow: var(--shadow-md);
         }
 
@@ -168,40 +265,38 @@
             box-shadow: var(--shadow-lg);
         }
 
+        /* Hero Section */
         .hero {
             padding-top: calc(var(--header-height) + 4rem);
             padding-bottom: 6rem;
-            background: 
-                radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(124, 58, 237, 0.1) 0%, transparent 50%);
             position: relative;
             overflow: hidden;
+            background: linear-gradient(135deg, 
+                var(--primary-50) 0%, 
+                var(--neutral-50) 100%);
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            width: 100%;
-            height: 100%;
             top: 0;
             left: 0;
-            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="1" fill="#2563eb" opacity="0.1"/></svg>') repeat;
-            background-size: 30px 30px;
-            animation: moveBackground 20s linear infinite;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,<svg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><g fill='#4338ca' fill-opacity='0.05'><path d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E</svg>");
             opacity: 0.5;
         }
 
-        @keyframes moveBackground {
-            from { transform: translateX(0) translateY(0); }
-            to { transform: translateX(-30px) translateY(-30px); }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
         }
 
         .hero-content {
             position: relative;
             z-index: 1;
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
         }
 
         .hero-badge {
@@ -209,18 +304,20 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 1rem;
-            background: rgba(37, 99, 235, 0.1);
+            background: white;
             border-radius: 100px;
-            color: var(--primary);
+            color: var(--primary-600);
             font-weight: 600;
             font-size: 0.875rem;
             margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
         }
 
         .hero-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: clamp(2.5rem, 5vw, 4rem);
             line-height: 1.2;
-                        margin-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
@@ -230,17 +327,14 @@
 
         .hero-description {
             font-size: clamp(1.1rem, 2vw, 1.25rem);
-            color: var(--text-secondary);
+            color: var(--neutral-600);
             margin-bottom: 3rem;
             max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .hero-buttons {
             display: flex;
             gap: 1rem;
-            justify-content: center;
             margin-bottom: 4rem;
         }
 
@@ -248,18 +342,16 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
+            background: white;
+            padding: 1.5rem;
             border-radius: var(--radius-lg);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-md);
             text-align: center;
             transition: var(--transition);
+            border: 1px solid var(--neutral-200);
         }
 
         .stat-card:hover {
@@ -275,16 +367,88 @@
             background-clip: text;
             color: transparent;
             margin-bottom: 0.5rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         .stat-label {
-            color: var(--text-secondary);
+            color: var(--neutral-600);
             font-weight: 500;
         }
 
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-image-main {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            transform-style: preserve-3d;
+            transition: var(--transition);
+        }
+
+        .hero-image:hover .hero-image-main {
+            transform: translateZ(20px);
+        }
+
+        .floating-card {
+            position: absolute;
+            background: white;
+            padding: 1rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .floating-card-1 {
+            top: 10%;
+            left: -10%;
+            transform: translateZ(40px);
+        }
+
+        .floating-card-2 {
+            bottom: 10%;
+            right: -10%;
+            transform: translateZ(40px);
+        }
+
+        .floating-card:hover {
+            transform: translateZ(60px);
+        }
+
+        .floating-card-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .floating-card-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            
+            color: var(--neutral-800);
+        }
+
+        .floating-card-content p {
+            font-size: 0.875rem;
+            color: var(--neutral-600);
+        }
+
+        /* Features Section */
         .features {
             padding: 8rem 0;
-            background: var(--surface);
+            background: white;
+            position: relative;
         }
 
         .section-header {
@@ -294,6 +458,7 @@
         }
 
         .section-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: clamp(2rem, 3vw, 2.5rem);
             margin-bottom: 1rem;
             background: var(--gradient-primary);
@@ -304,24 +469,23 @@
         }
 
         .section-description {
-            color: var(--text-secondary);
+            color: var(--neutral-600);
             font-size: 1.125rem;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
-            margin-top: 4rem;
         }
 
         .feature-card {
             background: white;
             padding: 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
             transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--neutral-200);
             position: relative;
             overflow: hidden;
         }
@@ -341,7 +505,7 @@
 
         .feature-card:hover {
             transform: translateY(-10px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-xl);
         }
 
         .feature-card:hover::before {
@@ -349,55 +513,93 @@
         }
 
         .feature-icon {
-            width: 3rem;
-            height: 3rem;
+            width: 4rem;
+            height: 4rem;
             background: var(--gradient-primary);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon::after {
+            transform: translateX(100%);
         }
 
         .feature-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1.25rem;
             margin-bottom: 1rem;
-            color: var(--text-primary);
+            color: var(--neutral-800);
             font-weight: 700;
         }
 
         .feature-description {
-            color: var(--text-secondary);
+            color: var(--neutral-600);
             line-height: 1.6;
         }
 
+        /* How It Works Section */
         .how-it-works {
             padding: 8rem 0;
-            background: var(--background);
+            background: var(--neutral-50);
+            position: relative;
+            overflow: hidden;
         }
 
         .steps {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3rem;
-            margin-top: 4rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            position: relative;
+        }
+
+        .step-connector {
+            position: absolute;
+            top: 4rem;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--neutral-200);
+            z-index: 0;
+        }
+
+        .step-connector::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: var(--gradient-primary);
+            transition: width 1s ease-in-out;
+        }
+
+        .step-connector.active::before {
+            width: 100%;
         }
 
         .step {
             text-align: center;
             position: relative;
-        }
-
-        .step:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 4rem;
-            right: -1.5rem;
-            width: 3rem;
-            height: 2px;
-            background: var(--gradient-primary);
+            z-index: 1;
         }
 
         .step-number {
@@ -412,65 +614,78 @@
             font-weight: 700;
             font-size: 1.25rem;
             margin: 0 auto 2rem;
-        }
-
-        .step-icon {
-            width: 5rem;
-            height: 5rem;
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2rem;
-            color: var(--primary);
-            transition: var(--transition);
-        }
-
-        .step:hover .step-icon {
-            transform: translateY(-5px);
-            background: var(--gradient-primary);
-            color: white;
-        }
-
-        .testimonials {
-            padding: 8rem 0;
-            background: var(--surface);
-        }
-
-        .testimonials-slider {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin-top: 4rem;
-        }
-
-        .testimonial {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            transition: var(--transition);
-        }
-
-        .testimonial:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .testimonial-content {
-            margin-bottom: 2rem;
             position: relative;
         }
 
-        .testimonial-content i {
-            color: var(--primary);
-            font-size: 2rem;
-            opacity: 0.2;
+        .step-number::before {
+            content: '';
             position: absolute;
-            top: -1rem;
-            left: -1rem;
+            top: -0.5rem;
+            left: -0.5rem;
+            right: -0.5rem;
+            bottom: -0.5rem;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            opacity: 0.2;
+            z-index: -1;
+            transform: scale(0);
+            transition: var(--transition);
+        }
+
+        .step:hover .step-number::before {
+            transform: scale(1);
+        }
+
+        .step-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-800);
+            font-weight: 700;
+        }
+
+        .step-description {
+            color: var(--neutral-600);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 8rem 0;
+            background: white;
+            position: relative;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition);
+            border: 1px solid var(--neutral-200);
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .testimonial-content {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .testimonial-quote {
+            font-size: 1.125rem;
+            color: var(--neutral-700);
+            line-height: 1.6;
         }
 
         .testimonial-author {
@@ -479,108 +694,61 @@
             gap: 1rem;
         }
 
-        .testimonial-author img {
+        .author-avatar {
             width: 4rem;
             height: 4rem;
             border-radius: 50%;
             object-fit: cover;
         }
 
-        .testimonial-author h4 {
+        .author-info h4 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--neutral-800);
+            margin-bottom: 0.25rem;
         }
 
-        .testimonial-author p {
-            color: var(--text-secondary);
+        .author-info p {
+            color: var(--neutral-600);
             font-size: 0.875rem;
         }
 
-        .trust-indicators {
-            padding: 6rem 0;
-            background: var(--background);
-        }
-
-        .partners-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 3rem;
-            align-items: center;
-            margin-top: 4rem;
-        }
-
-        .partner {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            transition: var(--transition);
-        }
-
-        .partner:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .partner img {
-            max-width: 100%;
-            height: auto;
-            filter: grayscale(100%);
-            opacity: 0.7;
-            transition: var(--transition);
-        }
-
-        .partner:hover img {
-            filter: grayscale(0%);
-            opacity: 1;
-        }
-
-        .certificates {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 4rem;
-        }
-
-        .certificate {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .certificate img {
-            width: 5rem;
-            height: 5rem;
-            object-fit: contain;
-        }
-
-        .certificate span {
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
+        /* CTA Section */
         .cta {
             padding: 8rem 0;
             background: var(--gradient-primary);
             color: white;
-            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,<svg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'><g fill='none' fill-rule='evenodd'><g fill='#ffffff' fill-opacity='0.1'><path d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E</g>%3C/g%3E%3C/svg%3E");
+            opacity: 0.1;
         }
 
         .cta-content {
+            text-align: center;
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
-        .cta-content h2 {
+        .cta-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: clamp(2rem, 3vw, 2.5rem);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             font-weight: 800;
         }
 
-        .cta-content p {
+        .cta-description {
             font-size: 1.25rem;
             margin-bottom: 3rem;
             opacity: 0.9;
@@ -592,98 +760,44 @@
             justify-content: center;
         }
 
-        .cta .btn-primary {
+        .btn-white {
             background: white;
-            color: var(--primary);
+            color: var(--primary-600);
         }
 
-        .cta .btn-outline {
-            border-color: white;
+        .btn-white:hover {
+            background: var(--neutral-50);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-white {
+            border: 2px solid white;
             color: white;
         }
 
-        .mobile-menu-btn {
-            display: none;
-            font-size: 1.5rem;
-            color: var(--text-primary);
-            background: none;
-            border: none;
-            cursor: pointer;
+        .btn-outline-white:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
-        .mobile-menu {
-            display: none;
-            position: fixed;
-            top: var(--header-height);
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 1rem;
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-100%);
-            transition: var(--transition);
-        }
-
-        .mobile-menu.active {
-            transform: translateY(0);
-        }
-
-        .mobile-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .mobile-nav .nav-link {
-            padding: 1rem;
-            border-radius: var(--radius-md);
-            background: var(--surface);
-        }
-
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s;
-        }
-
-        .loading-screen.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loader {
-            width: 48px;
-            height: 48px;
-            border: 5px solid var(--surface);
-            border-bottom-color: var(--primary);
-            border-radius: 50%;
-            animation: rotation 1s linear infinite;
-        }
-
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        /* Footer */
         .footer {
-            background: var(--surface);
+            background: white;
             padding: 6rem 0 2rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1.5fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 4rem;
             margin-bottom: 4rem;
+        }
+
+        .footer-brand {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .footer-logo {
@@ -691,19 +805,20 @@
             align-items: center;
             gap: 0.75rem;
             text-decoration: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-weight: 700;
             font-size: 1.25rem;
-            color: var(--text-primary);
+            color: var(--neutral-900);
             margin-bottom: 1.5rem;
         }
 
         .footer-description {
-            color: var(--text-secondary);
+            color: var(--neutral-600);
             margin-bottom: 2rem;
             line-height: 1.6;
         }
 
-        .social-links {
+        .footer-social {
             display: flex;
             gap: 1rem;
         }
@@ -712,27 +827,29 @@
             width: 2.5rem;
             height: 2.5rem;
             border-radius: var(--radius-md);
-            background: white;
+            background: var(--neutral-50);
+            color: var(--neutral-600);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
             text-decoration: none;
             transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--neutral-200);
         }
 
         .social-link:hover {
             background: var(--gradient-primary);
             color: white;
             transform: translateY(-3px);
+            border-color: transparent;
         }
 
         .footer-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 1.125rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
-            color: var(--text-primary);
+            color: var(--neutral-900);
         }
 
         .footer-links {
@@ -744,43 +861,41 @@
         }
 
         .footer-links a {
-            color: var(--text-secondary);
+            color: var(--neutral-600);
             text-decoration: none;
             transition: var(--transition);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .footer-links a:hover {
-            color: var(--primary);
-            padding-left: 0.5rem;
+            color: var(--primary-600);
+            transform: translateX(5px);
         }
 
-        .footer-contact {
-            list-style: none;
+        .footer-links a i {
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: var(--transition);
         }
 
-        .footer-contact li {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-        }
-
-        .footer-contact i {
-            color: var(--primary);
+        .footer-links a:hover i {
+            opacity: 1;
         }
 
         .footer-bottom {
             padding-top: 2rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            border-top: 1px solid var(--neutral-200);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
         }
 
         .footer-copyright {
-            color: var(--text-secondary);
+            color: var(--neutral-600);
+            font-size: 0.875rem;
         }
 
         .footer-legal {
@@ -789,38 +904,51 @@
         }
 
         .footer-legal a {
-            color: var(--text-secondary);
+            color: var(--neutral-600);
             text-decoration: none;
             transition: var(--transition);
+            font-size: 0.875rem;
         }
 
         .footer-legal a:hover {
-            color: var(--primary);
+            color: var(--primary-600);
         }
 
-        @media (max-width: 1200px) {
+        /* Responsive Design */
+        @media (max-width:  1200px) {
             .features-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .partners-grid {
+            .steps {
                 grid-template-columns: repeat(2, 1fr);
+            }
+
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-grid {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-image {
+                order: -1;
+            }
+
+            .floating-card {
+                display: none;
             }
         }
 
         @media (max-width: 768px) {
-            .nav, .auth-buttons {
-                display: none;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .hero-stats {
-                grid-template-columns: 1fr;
-            }
-
             .features-grid {
                 grid-template-columns: 1fr;
             }
@@ -829,44 +957,127 @@
                 grid-template-columns: 1fr;
             }
 
-            .step:not(:last-child)::after {
-                display: none;
-            }
-
-            .testimonials-slider {
+            .testimonials-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .partners-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .certificates {
-                flex-direction: column;
             }
 
             .footer-grid {
                 grid-template-columns: 1fr;
-                gap: 2rem;
             }
 
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
+            .nav {
+                display: none;
             }
 
-            .footer-legal {
-                flex-direction: column;
-                gap: 1rem;
+            .auth-buttons {
+                display: none;
             }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .animate-pulse {
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--neutral-700);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 1rem;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-100%);
+            transition: var(--transition);
+            z-index: 999;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+        }
+
+        .mobile-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-nav .nav-link {
+            padding: 1rem;
+            background: var(--neutral-50);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 4px solid var(--neutral-200);
+            border-top-color: var(--primary-600);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="loading-screen">
-        <div class="loader"></div>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
     </div>
 
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+
+    <!-- Header -->
     <header class="header">
         <div class="container header-container">
             <a href="/" class="logo">
@@ -877,7 +1088,6 @@
                 <a href="#features" class="nav-link">Özellikler</a>
                 <a href="#how-it-works" class="nav-link">Nasıl Çalışır?</a>
                 <a href="#testimonials" class="nav-link">Referanslar</a>
-                <a href="#blog" class="nav-link">Blog</a>
                 <a href="#contact" class="nav-link">İletişim</a>
             </nav>
             <div class="auth-buttons">
@@ -890,78 +1100,104 @@
                     Ücretsiz Başla
                 </a>
             </div>
-            <button class="mobile-menu-btn">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
     </header>
 
-    <div class="mobile-menu">
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
         <nav class="mobile-nav">
             <a href="#features" class="nav-link">Özellikler</a>
             <a href="#how-it-works" class="nav-link">Nasıl Çalışır?</a>
             <a href="#testimonials" class="nav-link">Referanslar</a>
-            <a href="#blog" class="nav-link">Blog</a>
             <a href="#contact" class="nav-link">İletişim</a>
             <a href="/login" class="nav-link">Giriş Yap</a>
             <a href="/register" class="nav-link">Ücretsiz Başla</a>
         </nav>
     </div>
 
+    <!-- Main Content -->
     <main>
+        <!-- Hero Section -->
         <section class="hero">
             <div class="container">
-                <div class="hero-content">
-                    <div class="hero-badge">
-                        <i class="fas fa-star"></i>
-                        Türkiye'nin Lider Sanayi Platformu
-                    </div>
-                    <h1 class="hero-title">
-                        Endüstriyel Üretimin<br>
-                        Dijital Geleceği
-                    </h1>
-                    <p class="hero-description">
-                        65.000+ ürün ve 1500+ tedarikçi ile profesyonel üretim çözümleri sunan, 
-                        Türkiye'nin en kapsamlı endüstriyel B2B platformu
-                    </p>
-                    <div class="hero-buttons">
-                        <a href="/register" class="btn btn-primary">
-                            <i class="fas fa-rocket"></i>
-                            Hemen Başla
-                        </a>
-                        <a href="#demo" class="btn btn-outline">
-                            <i class="fas fa-play"></i>
-                            Demo İzle
-                        </a>
-                    </div>
-                    <div class="hero-stats">
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="65000">65K+</div>
-                            <div class="stat-label">Toplam Ürün</div>
+                <div class="hero-grid">
+                    <div class="hero-content" data-aos="fade-right">
+                        <div class="hero-badge">
+                            <i class="fas fa-star"></i>
+                            Türkiye'nin Lider Sanayi Platformu
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="1500">1.5K+</div>
-                            <div class="stat-label">Aktif Tedarikçi</div>
+                        <h1 class="hero-title">
+                            Endüstriyel Üretimin<br>
+                            Dijital Geleceği
+                        </h1>
+                        <p class="hero-description">
+                            65.000+ ürün ve 1500+ tedarikçi ile profesyonel üretim çözümleri sunan,
+                            Türkiye'nin en kapsamlı endüstriyel B2B platformu
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="/register" class="btn btn-primary">
+                                <i class="fas fa-rocket"></i>
+                                Hemen Başla
+                            </a>
+                            <a href="#demo" class="btn btn-outline">
+                                <i class="fas fa-play"></i>
+                                Demo İzle
+                            </a>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="50">50M+</div>
-                            <div class="stat-label">Yatırım Hacmi</div>
+                        <div class="hero-stats">
+                            <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                                <div class="stat-number">65K+</div>
+                                <div class="stat-label">Toplam Ürün</div>
+                            </div>
+                            <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                                <div class="stat-number">1.5K+</div>
+                                <div class="stat-label">Aktif Tedarikçi</div>
+                            </div>
+                            <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                                <div class="stat-number">50M+</div>
+                                <div class="stat-label">Yatırım Hacmi</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-image" data-aos="fade-left">
+                        <img src="hero-image.jpg" alt="Platform Preview" class="hero-image-main">
+                        <div class="floating-card floating-card-1 animate-float">
+                            <div class="floating-card-icon">
+                                <i class="fas fa-industry"></i>
+                            </div>
+                            <div class="floating-card-content">
+                                <h4>Akıllı Üretim</h4>
+                                <p>Endüstri 4.0 Çözümleri</p>
+                            </div>
+                        </div>
+                        <div class="floating-card floating-card-2 animate-float">
+                            <div class="floating-card-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="floating-card-content">
+                                <h4>Verimlilik Artışı</h4>
+                                <p>@ Daha Hızlı Süreçler</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Features Section -->
         <section class="features" id="features">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header" data-aos="fade-up">
                     <h2 class="section-title">Neler Sunuyoruz?</h2>
                     <p class="section-description">
                         Endüstriyel üretim süreçlerinizi dijitalleştirin, verimliliğinizi artırın
                     </p>
                 </div>
                 <div class="features-grid">
-                    <div class="feature-card">
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="feature-icon">
                             <i class="fas fa-industry"></i>
                         </div>
@@ -970,7 +1206,7 @@
                             50.000+ ürün, 1000+ tedarikçi ile profesyonel üretim çözümleri
                         </p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="feature-icon">
                             <i class="fas fa-box-open"></i>
                         </div>
@@ -979,7 +1215,7 @@
                             10.000+ ürün, 500+ üretici ile doğrudan fabrikadan tedarik
                         </p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
                         <div class="feature-icon">
                             <i class="fas fa-drafting-compass"></i>
                         </div>
@@ -988,78 +1224,109 @@
                             25.000+ teknik çizim ve 3D model ile tasarım desteği
                         </p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <h3 class="feature-title">İnovasyon Hub</h3>
-                        <p class="feature-description">
-                            200+ aktif proje, 50M+ yatırım hacmi ile inovasyon desteği
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works" id="how-it-works">
+            <div class="container">
+                <div class="section-header" data-aos="fade-up">
+                    <h2 class="section-title">Nasıl Çalışır?</h2>
+                    <p class="section-description">
+                        Sadece 4 adımda sisteme dahil olun ve üretim süreçlerinizi optimize edin
+                    </p>
+                </div>
+                <div class="steps">
+                    <div class="step-connector"></div>
+                    <div class="step" data-aos="fade-up" data-aos-delay="100">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Ücretsiz Kayıt</h3>
+                        <p class="step-description">
+                            
+                            Hızlı kayıt formumuzu doldurun ve platformumuza ücretsiz katılın
+                        </p>
+                    </div>
+                    <div class="step" data-aos="fade-up" data-aos-delay="200">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Profil Oluştur</h3>
+                        <p class="step-description">
+                            Şirket profilinizi oluşturun ve ürünlerinizi ekleyin
+                        </p>
+                    </div>
+                    <div class="step" data-aos="fade-up" data-aos-delay="300">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Bağlantı Kur</h3>
+                        <p class="step-description">
+                            Potansiyel müşteri ve tedarikçilerle iletişime geçin
+                        </p>
+                    </div>
+                    <div class="step" data-aos="fade-up" data-aos-delay="400">
+                        <div class="step-number">4</div>
+                        <h3 class="step-title">İşi Büyüt</h3>
+                        <p class="step-description">
+                            Yeni iş fırsatları yakalayın ve işinizi büyütün
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="how-it-works" id="how-it-works">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Nasıl Çalışır?</h2>
-                    <p class="section-description">Sadece 3 adımda sisteme dahil olun</p>
-                </div>
-                <div class="steps">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-icon"><i class="fas fa-user-plus"></i></div>
-                        <h3>Ücretsiz Kayıt</h3>
-                        <p>Hızlı kayıt formumuzu doldurun ve platformumuza ücretsiz katılın.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-icon"><i class="fas fa-search"></i></div>
-                        <h3>Ürün/Tedarikçi Bulun</h3>
-                        <p>Binlerce ürün ve tedarikçi arasından size uygun olanı seçin.</p>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-icon"><i class="fas fa-handshake"></i></div>
-                        <h3>Anlaşma Yapın</h3>
-                        <p>Güvenli platform üzerinden iletişime geçin ve anlaşmanızı yapın.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        <!-- Testimonials Section -->
         <section class="testimonials" id="testimonials">
             <div class="container">
-                <div class="section-header">
+                <div class="section-header" data-aos="fade-up">
                     <h2 class="section-title">Müşterilerimiz Ne Diyor?</h2>
-                    <p class="section-description">Başarı hikayelerimizden bazıları</p>
+                    <p class="section-description">
+                        Başarı hikayelerimizden bazıları
+                    </p>
                 </div>
-                <div class="testimonials-slider">
-                    <div class="testimonial">
+                <div class="testimonials-grid">
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="testimonial-content">
-                            <i class="fas fa-quote-left"></i>
-                            <p>"Sanayikapısı sayesinde tedarik sürecimizi %40 hızlandırdık."</p>
+                            <p class="testimonial-quote">
+                                "Sanayikapısı sayesinde tedarik sürecimizi @ hızlandırdık ve 
+                                maliyetlerimizi önemli ölçüde düşürdük."
+                            </p>
                         </div>
                         <div class="testimonial-author">
-                            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Ahmet Yılmaz">
-                            <div>
+                            <img src="https://randomuser.me/api/portraits/men/1.jpg" 
+                                 alt="Ahmet Yılmaz" class="author-avatar">
+                            <div class="author-info">
                                 <h4>Ahmet Yılmaz</h4>
                                 <p>ABC Makine Ltd. - CEO</p>
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial">
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="testimonial-content">
-                            <i class="fas fa-quote-left"></i>
-                            <p>"Platform üzerinden bulduğumuz tedarikçilerle uzun vadeli iş birlikleri geliştirdik."</p>
+                            <p class="testimonial-quote">
+                                "Platform üzerinden bulduğumuz tedarikçilerle uzun vadeli iş 
+                                birlikleri geliştirdik."
+                            </p>
                         </div>
                         <div class="testimonial-author">
-                            <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Ayşe Kaya">
-                            <div>
+                            <img src="https://randomuser.me/api/portraits/women/1.jpg" 
+                                 alt="Ayşe Kaya" class="author-avatar">
+                            <div class="author-info">
                                 <h4>Ayşe Kaya</h4>
                                 <p>XYZ Endüstri A.Ş. - Satın Alma Müdürü</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="testimonial-content">
+                            <p class="testimonial-quote">
+                                "Dijital dönüşüm sürecimizde Sanayikapısı bizim için önemli bir 
+                                çözüm ortağı oldu."
+                            </p>
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/2.jpg" 
+                                 alt="Mehmet Demir" class="author-avatar">
+                            <div class="author-info">
+                                <h4>Mehmet Demir</h4>
+                                <p>123 Teknoloji A.Ş. - CTO</p>
                             </div>
                         </div>
                     </div>
@@ -1067,56 +1334,22 @@
             </div>
         </section>
 
-        <section class="trust-indicators">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Güvenilir İş Ortağınız</h2>
-                    <p class="section-description">Sektör liderleri tarafından tercih edilen ve onaylanan platform</p>
-                </div>
-                <div class="partners-grid">
-                    <div class="partner">
-                        <img src="https://via.placeholder.com/150x50" alt="Partner 1">
-                    </div>
-                    <div class="partner">
-                        <img src="https://via.placeholder.com/150x50" alt="Partner 2">
-                    </div>
-                    <div class="partner">
-                        <img src="https://via.placeholder.com/150x50" alt="Partner 3">
-                    </div>
-                    <div class="partner">
-                        <img src="https://via.placeholder.com/150x50" alt="Partner 4">
-                    </div>
-                </div>
-                <div class="certificates">
-                    <div class="certificate">
-                        <img src="https://via.placeholder.com/80" alt="ISO 27001">
-                        <span>ISO 27001</span>
-                    </div>
-                    <div class="certificate">
-                        <img src="https://via.placeholder.com/80" alt="ISO 9001">
-                        <span>ISO 9001</span>
-                    </div>
-                    <div class="certificate">
-                        <img src="https://via.placeholder.com/80" alt="TÜRKAK">
-                        <span>TÜRKAK</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+        <!-- CTA Section -->
         <section class="cta">
             <div class="container">
-                <div class="cta-content">
-                    <h2>Hemen Ücretsiz Deneyin</h2>
-                    <p>30 gün boyunca tüm premium özelliklere ücretsiz erişim</p>
+                <div class="cta-content" data-aos="fade-up">
+                    <h2 class="cta-title">Hemen Ücretsiz Deneyin</h2>
+                    <p class="cta-description">
+                        30 gün boyunca tüm premium özelliklere ücretsiz erişim
+                    </p>
                     <div class="cta-buttons">
-                        <a href="#" class="btn btn-primary">
+                        <a href="/register" class="btn btn-white">
                             <i class="fas fa-rocket"></i>
                             Ücretsiz Başla
                         </a>
-                        <a href="#" class="btn btn-outline">
+                        <a href="#contact" class="btn btn-outline-white">
                             <i class="fas fa-headset"></i>
-                            Demo Talep Et
+                            İletişime Geç
                         </a>
                     </div>
                 </div>
@@ -1124,18 +1357,20 @@
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-column">
+                <div class="footer-brand">
                     <a href="/" class="footer-logo">
                         <div class="logo-icon">SK</div>
                         <span>sanayikapısı</span>
                     </a>
                     <p class="footer-description">
-                        Türkiye'nin lider endüstriyel B2B platformu. Profesyonel üretim çözümleri ve tedarik zinciri yönetimi.
+                        Türkiye'nin lider endüstriyel B2B platformu. Profesyonel üretim çözümleri ve 
+                        tedarik zinciri yönetimi için güvenilir çözüm ortağınız.
                     </p>
-                    <div class="social-links">
+                    <div class="footer-social">
                         <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
@@ -1143,69 +1378,207 @@
                     </div>
                 </div>
                 
-                <div class="footer-column">
+                <div>
                     <h3 class="footer-title">Hızlı Erişim</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Ana Sayfa</a></li>
-                        <li><a href="#">Hakkımızda</a></li>
-                        <li><a href="#">Ürünler</a></li>
-                        <li><a href="#">Hizmetler</a></li>
-                        <li><a href="#">İletişim</a></li>
+                        <li>
+                            <a href="/">
+                                <i class="fas fa-chevron-right"></i>
+                                Ana Sayfa
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/about">
+                                <i class="fas fa-chevron-right"></i>
+                                Hakkımızda
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/products">
+                                <i class="fas fa-chevron-right"></i>
+                                Ürünler
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/services">
+                                <i class="fas fa-chevron-right"></i>
+                                Hizmetler
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/contact">
+                                <i class="fas fa-chevron-right"></i>
+                                İletişim
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
-                <div class="footer-column">
+                <div>
                     <h3 class="footer-title">Hizmetler</h3>
                     <ul class="footer-links">
-                        <li><a href="#">E-Sanayi</a></li>
-                        <li><a href="#">Hazır Ürünler</a></li>
-                        <li><a href="#">CAD Dosyaları</a></li>
-                        <li><a href="#">İnovasyon Hub</a></li>
-                        <li><a href="#">Tedarikçi Portalı</a></li>
+                        <li>
+                            <a href="/e-sanayi">
+                                <i class="fas fa-chevron-right"></i>
+                                E-Sanayi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/products">
+                                <i class="fas fa-chevron-right"></i>
+                                Hazır Ürünler
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/cad">
+                                <i class="fas fa-chevron-right"></i>
+                                CAD Dosyaları
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/innovation">
+                                <i class="fas fa-chevron-right"></i>
+                                İnovasyon Hub
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/supplier">
+                                <i class="fas fa-chevron-right"></i>
+                                Tedarikçi Portalı
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
-                <div class="footer-column">
+                <div>
                     <h3 class="footer-title">İletişim</h3>
-                    <ul class="footer-contact">
+                    <ul class="footer-links">
                         <li>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Merkez Mah. Sanayi Cad. No:123<br>34000 İstanbul, Türkiye</span>
+                            <a href="#">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Merkez Mah. Sanayi Cad. No:123<br>34000 İstanbul
+                            </a>
                         </li>
                         <li>
-                            <i class="fas fa-phone"></i>
-                            <span>+90 (212) 123 45 67</span>
+                            <a href="tel:+902121234567">
+                                <i class="fas fa-phone"></i>
+                                +90 (212) 123 45 67
+                            </a>
                         </li>
                         <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>info@sanayikapisi.com</span>
+                            <a href="mailto:info@sanayikapisi.com">
+                                <i class="fas fa-envelope"></i>
+                                info@sanayikapisi.com
+                            </a>
                         </li>
                     </ul>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <div class="footer-copyright">
                     © 2024 Sanayi Kapısı. Tüm hakları saklıdır.
                 </div>
                 <div class="footer-legal">
-                    <a href="#">Gizlilik Politikası</a>
-                    <a href="#">Kullanım Şartları</a>
-                    <a href="#">KVKK</a>
+                    <a href="/privacy">Gizlilik Politikası</a>
+                    <a href="/terms">Kullanım Şartları</a>
+                    <a href="/kvkk">KVKK</a>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
-        window.addEventListener('load', () => {
-            const loadingScreen = document.querySelector('.loading-screen');
-            loadingScreen.classList.add('fade-out');
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
         });
 
+        // Particles.js Configuration
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: '#4338ca'
+                },
+                shape: {
+                    type: 'circle'
+                },
+                opacity: {
+                    value: 0.5,
+                    random: false
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#4338ca',
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'grab'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 140,
+                        line_linked: {
+                            opacity: 1
+                        }
+                    },
+                    push: {
+                        particles_nb: 4
+                    }
+                }
+            },
+            retina_detect: true
+        });
+
+        // Mobile Menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+            mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
+            mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+        });
+
+        // Header Scroll Effect
         const header = document.querySelector('.header');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -1215,15 +1588,34 @@
             }
         });
 
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        const mobileMenu = document.querySelector('.mobile-menu');
-        
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('active');
-            mobileMenuBtn.querySelector('i').classList.toggle('fa-bars');
-            mobileMenuBtn.querySelector('i').classList.toggle('fa-times');
+        // Step Connector Animation
+        const stepConnector = document.querySelector('.step-connector');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.5
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    stepConnector.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        observer.observe(stepConnector);
+
+        // Loading Screen
+        window.addEventListener('load', () => {
+            const loading = document.getElementById('loading');
+            loading.style.opacity = '0';
+            setTimeout(() => {
+                loading.style.display = 'none';
+            }, 500);
         });
 
+        // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -1233,44 +1625,42 @@
                         behavior: 'smooth',
                         block: 'start'
                     });
+                    // Close mobile menu if open
+                    mobileMenu.classList.remove('active');
+                    mobileMenuBtn.querySelector('i').classList.add('fa-bars');
+                    mobileMenuBtn.querySelector('i').classList.remove('fa-times');
                 }
             });
         });
 
-        const animateValue = (element, start, end, duration) => {
+        // Stats Counter Animation
+        function animateValue(element, start, end, duration) {
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const value = Math.floor(progress * (end - start) + start);
-                
-                if (end >= 1000) {
-                    element.textContent = (value/1000).toFixed(1) + 'K+';
-                } else {
-                    element.textContent = value + 'M+';
-                }
-                
+                element.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString() + '+';
                 if (progress < 1) {
                     window.requestAnimationFrame(step);
                 }
             };
             window.requestAnimationFrame(step);
-        };
+        }
 
+        // Animate stats when they come into view
+        const statNumbers = document.querySelectorAll('.stat-number');
         const statsObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const statNumber = entry.target;
-                    const value = parseInt(statNumber.getAttribute('data-value'));
-                    animateValue(statNumber, 0, value, 2000);
-                    statsObserver.unobserve(statNumber);
+                    const target = entry.target;
+                    const value = parseInt(target.textContent);
+                    animateValue(target, 0, value, 2000);
+                    statsObserver.unobserve(target);
                 }
             });
-        }, {
-            threshold: 0.5
-        });
+        }, { threshold: 0.5 });
 
-        document.querySelectorAll('.stat-number').forEach(stat => {
+        statNumbers.forEach(stat => {
             statsObserver.observe(stat);
         });
     </script>
