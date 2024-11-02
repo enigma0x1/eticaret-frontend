@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sanayi Kapısı - Üretici ve Profesyonel Üyelik">
+    <title>Üye Ol - Sanayi Kapısı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --accent: #06b6d4;
+            --background: #ffffff;
+            --surface: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem;
+        }
+
+        .signup-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .step.active {
+            color: var(--primary);
+        }
+
+        .step-number {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            font-weight: 600;
+            border: 2px solid currentColor;
+        }
+
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .step-divider {
+            width: 4rem;
+            height: 2px;
+            background: var(--surface);
+            margin: 0 1rem;
+        }
+
+        .signup-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-types {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .user-type {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .user-type:hover {
+            transform: translateY(-5px);
+        }
+
+        .user-type.selected {
+            border-color: var(--primary);
+            background: var(--surface);
+        }
+
+        .user-type-icon {
+            width: 4rem;
+            height: 4rem;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .user-type h3 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .user-type p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .form-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-secondary);
+            background: white;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .user-types {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-steps">
+            <div class="step active">
+                <div class="step-number">1</div>
+                <span>Hesap Türü</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <span>Bilgiler</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <span>Onay</span>
+            </div>
+        </div>
+
+        <div class="signup-content">
+            <!-- Step 1: User Type Selection -->
+            <div class="step-content active" id="step1">
+                <div class="user-types">
+                    <div class="user-type" onclick="selectUserType('uretici')">
+                        <div class="user-type-icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <h3>Üretici</h3>
+                        <p>Üretim kapasitenizi sergileyin, yeni müşterilere ulaşın ve işinizi büyütün</p>
+                    </div>
+                    <div class="user-type" onclick="selectUserType('profesyonel')">
+                        <div class="user-type-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>Profesyonel</h3>
+                        <p>Güvenilir üreticilere ulaşın, teklifler alın ve projelerinizi hayata geçirin</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Form -->
+            <div class="step-content" id="step2">
+                <div class="form-container">
+                    <form id="signupForm">
+                        <!-- Form fields will be dynamically loaded based on user type -->
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 3: Confirmation -->
+            <div class="step-content" id="step3">
+                <div class="form-container">
+                    <h3>Hesabınız Oluşturuldu!</h3>
+                    <p>E-posta adresinize gönderilen aktivasyon linkine tıklayarak hesabınızı aktif edebilirsiniz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let selectedType = '';
+
+        function selectUserType(type) {
+            selectedType = type;
+            document.querySelectorAll('.user-type').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            setTimeout(() => {
+                goToStep(2);
+                loadForm(type);
+            }, 500);
+        }
+
+        function loadForm(type) {
+            const form = document.getElementById('signupForm');
+            const fields = type === 'uretici' ? getUreticiFields() : getProfesyonelFields();
+            
+            form.innerHTML = fields + `
+                <div class="buttons">
+                    <button type="button" class="btn btn-outline" onclick="goToStep(1)">
+                        <i class="fas fa-arrow-left"></i>
+                        Geri
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i>
+                        Devam Et
+                    </button>
+                </div>
+            `;
+
+            form.onsubmit = handleSubmit;
+        }
+
+        function getUreticiFields() {
+            return `
+                <div class="form-group">
+                    <label class="form-label">Firma Adı*</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Vergi Numarası*</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Yetkili Ad Soyad*</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">E-posta*</label>
+                    <input type="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Şifre*</label>
+                    <input type="password" class="form-input" required>
+                </div>
+            `;
+        }
+
+        function getProfesyonelFields() {
+            return `
+                <div class="form-group">
+                    <label class="form-label">Ad Soyad*</label>
+                    <input type="text" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Firma Adı</label>
+                    <input type="text" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">E-posta*</label>
+                    <input type="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Şifre*</label>
+                    <input type="password" class="form-input" required>
+                </div>
+            `;
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            goToStep(3);
+        }
+
+        function goToStep(step) {
+            document.querySelectorAll('.step-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(`step${step}`).classList.add('active');
+
+            document.querySelectorAll('.step').forEach((el, index) => {
+                if (index < step) {
+                    el.classList.add('active');
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+
+            currentStep = step;
+        }
+    </script>
+</body>
+</html>
