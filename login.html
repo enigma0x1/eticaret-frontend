@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sanayi Kapısı - Üretici ve Profesyonel Üyelik">
-    <meta name="keywords" content="sanayi, endüstri, B2B, üretici kayıt, profesyonel kayıt">
+    <meta name="description" content="Sanayi Kapısı - Üretici ve Profesyonel Giriş Portalı">
+    <meta name="keywords" content="sanayi, endüstri, B2B, üretici girişi, profesyonel giriş">
     <meta name="author" content="Sanayi Kapısı">
-    <title>Üye Ol - Sanayi Kapısı</title>
+    <title>Giriş Portalı - Sanayi Kapısı</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -45,17 +45,21 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        body {
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
+        html {
+            scroll-behavior: smooth;
         }
 
-        .signup-container {
-            max-width: 1200px;
+        body {
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: var(--max-width);
             margin: 0 auto;
-            padding: calc(var(--header-height) + 2rem) 2rem 4rem;
+            padding: 0 2rem;
         }
 
         .header {
@@ -68,12 +72,15 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-md);
         }
 
         .header-container {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            padding: 0 2rem;
             height: 100%;
             display: flex;
             align-items: center;
@@ -101,6 +108,67 @@
             color: white;
         }
 
+        .nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: var(--surface);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .btn-outline {
+            color: var(--text-primary);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--surface);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-portal {
+            min-height: 100vh;
+            padding: calc(var(--header-height) + 2rem) 0 4rem;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
+        }
+
         .section-header {
             text-align: center;
             max-width: 800px;
@@ -120,345 +188,238 @@
         .section-description {
             color: var(--text-secondary);
             font-size: 1.125rem;
+            margin-bottom: 2rem;
         }
 
-        .signup-options {
+        .login-options {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
             margin-bottom: 4rem;
         }
 
-        .signup-card {
+        .login-card {
             background: white;
             padding: 2.5rem;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-lg);
+            text-align: center;
             transition: var(--transition);
             border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .signup-card:hover {
+        .login-card:hover {
             transform: translateY(-5px);
         }
 
-        .signup-form {
-            display: none;
+        .login-icon {
+            width: 5rem;
+            height: 5rem;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
         }
 
-        .signup-form.active {
-            display: block;
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
         }
 
-        .form-group {
+        .login-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .features-list {
+            text-align: left;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .features-list i {
+            color: var(--success);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-4 {
             margin-bottom: 1.5rem;
         }
 
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .signup-type {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .type-btn {
-            flex: 1;
-            padding: 1rem;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: var(--radius-md);
-            background: white;
-            color: var(--text-secondary);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .type-btn.active {
-            background: var(--gradient-primary);
-            color: white;
-            border-color: transparent;
-        }
-
-        .type-btn:hover:not(.active) {
-            background: var(--surface);
-            color: var(--primary);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .terms {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .terms a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .terms a:hover {
-            text-decoration: underline;
-        }
-
-        .error-message {
-            color: var(--error);
-            font-size: 0.875rem;
-            margin-top: 0.5rem;
-            display: none;
-        }
-
         @media (max-width: 768px) {
-            .signup-options {
+            .login-options {
                 grid-template-columns: 1fr;
+            }
+
+            .nav {
+                display: none;
             }
         }
     </style>
 </head>
 <body>
     <header class="header">
-        <div class="header-container">
+        <div class="container header-container">
             <a href="/" class="logo">
                 <div class="logo-icon">SK</div>
                 <span>sanayikapısı</span>
             </a>
+            <nav class="nav">
+                <a href="/#features" class="nav-link">Özellikler</a>
+                <a href="/#how-it-works" class="nav-link">Nasıl Çalışır?</a>
+                <a href="/#testimonials" class="nav-link">Referanslar</a>
+                <a href="/#blog" class="nav-link">Blog</a>
+                <a href="/#contact" class="nav-link">İletişim</a>
+            </nav>
         </div>
     </header>
 
-    <div class="signup-container">
-        <div class="section-header">
-            <h1 class="section-title">Ücretsiz Üye Olun</h1>
-            <p class="section-description">
-                Size en uygun hesap türünü seçin ve Sanayi Kapısı'nın avantajlarından hemen yararlanmaya başlayın
-            </p>
-        </div>
-
-        <div class="signup-options">
-            <div class="signup-card">
-                <div class="signup-type">
-                    <button class="type-btn active" data-type="uretici">
-                        <i class="fas fa-industry"></i>
-                        Üretici
-                    </button>
-                    <button class="type-btn" data-type="profesyonel">
-                        <i class="fas fa-user-tie"></i>
-                        Profesyonel
-                    </button>
-                </div>
-
-                <form id="ureticiForm" class="signup-form active">
-                    <div class="form-group">
-                        <label class="form-label">Firma Adı*</label>
-                        <input type="text" class="form-input" required>
-                        <div class="error-message">Firma adı gereklidir</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Vergi Numarası*</label>
-                        <input type="text" class="form-input" required pattern="\d{10}">
-                        <div class="error-message">Geçerli bir vergi numarası giriniz</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Yetkili Ad Soyad*</label>
-                        <input type="text" class="form-input" required>
-                        <div class="error-message">Yetkili adı gereklidir</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">E-posta*</label>
-                        <input type="email" class="form-input" required>
-                        <div class="error-message">Geçerli bir e-posta adresi giriniz</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Telefon*</label>
-                        <input type="tel" class="form-input" required pattern="[0-9]{10}">
-                        <div class="error-message">Geçerli bir telefon numarası giriniz</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Şifre*</label>
-                        <input type="password" class="form-input" required minlength="8">
-                        <div class="error-message">Şifre en az 8 karakter olmalıdır</div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i>
-                        Üretici Hesabı Oluştur
-                    </button>
-                </form>
-
-                <form id="profesyonelForm" class="signup-form">
-                    <div class="form-group">
-                        <label class="form-label">Ad Soyad*</label>
-                        <input type="text" class="form-input" required>
-                        <div class="error-message">Ad soyad gereklidir</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Firma Adı</label>
-                        <input type="text" class="form-input">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Pozisyon</label>
-                        <input type="text" class="form-input">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">E-posta*</label>
-                        <input type="email" class="form-input" required>
-                        <div class="error-message">Geçerli bir e-posta adresi giriniz</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Telefon*</label>
-                        <input type="tel" class="form-input" required pattern="[0-9]{10}">
-                        <div class="error-message">Geçerli bir telefon numarası giriniz</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Şifre*</label>
-                        <input type="password" class="form-input" required minlength="8">
-                        <div class="error-message">Şifre en az 8 karakter olmalıdır</div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-user-plus"></i>
-                        Profesyonel Hesap Oluştur
-                    </button>
-                </form>
-
-                <p class="terms">
-                    Üye olarak <a href="/terms">Kullanım Şartları</a>, 
-                    <a href="/privacy">Gizlilik Politikası</a> ve 
-                    <a href="/kvkk">KVKK</a>'yı kabul etmiş olursunuz
+    <main class="login-portal">
+        <div class="container">
+            <div class="section-header">
+                <h1 class="section-title">Giriş Portalı</h1>
+                <p class="section-description">
+                    İhtiyacınıza en uygun hesap türünü seçin ve Sanayi Kapısı'nın avantajlarından yararlanın
                 </p>
             </div>
+
+            <div class="login-options">
+                <div class="login-card">
+                    <div class="login-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h2 class="login-title">Üretici Girişi</h2>
+                    <p class="login-description">
+                        Üretim kapasitenizi değerlendirin, yeni müşterilere ulaşın ve işinizi büyütün
+                    </p>
+                    <ul class="features-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Üretim kapasitenizi sergileyin</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Yeni iş fırsatları yakalayın</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Atıl kapasitenizi değerlendirin</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Profesyonel alıcılara ulaşın</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Teklif ve sipariş yönetimi</span>
+                        </li>
+                    </ul>
+                    <a href="/uretici-login" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Üretici Girişi
+                    </a>
+                </div>
+
+                <div class="login-card">
+                    <div class="login-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h2 class="login-title">Profesyonel Girişi</h2>
+                    <p class="login-description">
+                        Güvenilir üreticilere ulaşın, teklifler alın ve projelerinizi hayata geçirin
+                    </p>
+                    <ul class="features-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Onaylı üreticilerle çalışın</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Hızlı teklif alın</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Kalite ve fiyat karşılaştırın</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Tedarik sürecinizi yönetin</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Proje takibi yapın</span>
+                        </li>
+                    </ul>
+                    <a href="/profesyonel-login" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Profesyonel Girişi
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <p class="mb-4">Henüz üye değil misiniz?</p>
+                <a href="/register" class="btn btn-outline">
+                    <i class="fas fa-user-plus"></i>
+                    Hemen Ücretsiz Üye Olun
+                </a>
+            </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        // Form switch functionality
-        const typeBtns = document.querySelectorAll('.type-btn');
-        const forms = document.querySelectorAll('.signup-form');
+        // Header scroll effect
+        const header = document.querySelector('.header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
 
-        typeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Remove active class from all buttons and forms
-                typeBtns.forEach(b => b.classList.remove('active'));
-                forms.forEach(f => f.classList.remove('active'));
-
-                // Add active class to clicked button and corresponding form
-                btn.classList.add('active');
-                const formType = btn.dataset.type;
-                document.getElementById(`${formType}Form`).classList.add('active');
+        // Card hover animation
+        const loginCards = document.querySelectorAll('.login-card');
+        loginCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
             });
         });
 
-        // Form validation
-        const forms = document.querySelectorAll('form');
-        forms.forEach(form => {
-            form.addEventListener('submit', (e) => {
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                // Reset error messages
-                form.querySelectorAll('.error-message').forEach(error => {
-                    error.style.display = 'none';
-                });
-
-                // Validate required fields
-                let isValid = true;
-                form.querySelectorAll('input[required]').forEach(input => {
-                    if (!input.value) {
-                        isValid = false;
-                        input.nextElementSibling.style.display = 'block';
-                    }
-
-                    // Validate patterns
-                    if (input.pattern && !new RegExp(input.pattern).test(input.value)) {
-                        isValid = false;
-                        input.nextElementSibling.style.display = 'block';
-                    }
-                });
-
-                if (isValid) {
-                    // Here you would typically send the form data to your server
-                    console.log('Form submitted:', new FormData(form));
-                    alert('Kayıt başarılı! Yönlendiriliyorsunuz...');
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
-            });
-        });
-
-        // Input validation on change
-        document.querySelectorAll('.form-input').forEach(input => {
-            input.addEventListener('input', () => {
-                const errorMessage = input.nextElementSibling;
-                if (input.required && !input.value) {
-                    errorMessage.style.display = 'block';
-                } else if (input.pattern && !new RegExp(input.pattern).test(input.value)) {
-                    errorMessage.style.display = 'block';
-                } else {
-                    errorMessage.style.display = 'none';
-                }
-            });
-        });
-
-        // Password strength indicator could be added here
-        document.querySelectorAll('input[type="password"]').forEach(input => {
-            input.addEventListener('input', () => {
-                // Add password strength logic here
             });
         });
     </script>
