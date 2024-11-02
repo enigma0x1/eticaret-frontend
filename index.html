@@ -58,7 +58,6 @@
             padding: 0 2rem;
         }
 
-        /* Header Styles */
         .header {
             position: fixed;
             top: 0;
@@ -94,154 +93,6 @@
             color: var(--text-primary);
         }
 
-        /* Footer Styles */
-        .footer {
-            background: var(--surface);
-            padding: 6rem 0 2rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1.5fr;
-            gap: 4rem;
-            margin-bottom: 4rem;
-        }
-        
-        .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-        }
-        
-        .footer-description {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .social-link {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: var(--radius-md);
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        
-        .social-link:hover {
-            background: var(--gradient-primary);
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .footer-title {
-            font-size: 1.125rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--text-primary);
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 0.75rem;
-        }
-        
-        .footer-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .footer-links a:hover {
-            color: var(--primary);
-            padding-left: 0.5rem;
-        }
-        
-        .footer-contact {
-            list-style: none;
-        }
-        
-        .footer-contact li {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: var(--text-secondary);
-        }
-        
-        .footer-contact i {
-            color: var(--primary);
-        }
-        
-        .footer-bottom {
-            padding-top: 2rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .footer-copyright {
-            color: var(--text-secondary);
-        }
-        
-        .footer-legal {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        .footer-legal a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .footer-legal a:hover {
-            color: var(--primary);
-        }
-        
-        @media (max-width: 1200px) {
-            .footer-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .footer-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-        
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
-            }
-        
-            .footer-legal {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
         .logo-icon {
             width: 2.5rem;
             height: 2.5rem;
@@ -310,7 +161,6 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* Hero Section */
         .hero {
             padding-top: calc(var(--header-height) + 4rem);
             padding-bottom: 6rem;
@@ -425,7 +275,6 @@
             font-weight: 500;
         }
 
-        /* Features Section */
         .features {
             padding: 8rem 0;
             background: var(--surface);
@@ -454,22 +303,9 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 4 sütunlu grid */
+            grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
             margin-top: 4rem;
-        }
-        
-        /* Responsive tasarım için medya sorguları */
-        @media (max-width: 1200px) {
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr); /* Tablet için 2 sütun */
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .features-grid {
-                grid-template-columns: 1fr; /* Mobil için tek sütun */
-            }
         }
 
         .feature-card {
@@ -530,144 +366,285 @@
             line-height: 1.6;
         }
 
-        @media (max-width: 768px) {
-            .nav, .auth-buttons {
-                display: none;
-            }
-
-            .hero-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
+        .how-it-works {
+            padding: 8rem 0;
+            background: var(--background);
         }
-    </style>
-</head>
-<body>
-    <header class="header">
-        <div class="container header-container">
-            <a href="/" class="logo">
-                <div class="logo-icon">SK</div>
-                <span>sanayikapısı</span>
-            </a>
-            <nav class="nav">
-                <a href="#features" class="nav-link">Özellikler</a>
-                <a href="#how-it-works" class="nav-link">Nasıl Çalışır?</a>
-                <a href="#testimonials" class="nav-link">Referanslar</a>
-                <a href="#blog" class="nav-link">Blog</a>
-                <a href="#contact" class="nav-link">İletişim</a>
-            </nav>
-            <div class="auth-buttons">
-                <a href="/login" class="btn btn-outline">
-                    <i class="fas fa-sign-in-alt"></i>
-                    Giriş Yap
-                </a>
-                <a href="/register" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    Ücretsiz Başla
-                </a>
-            </div>
-        </div>
-    </header>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-badge">
-                        <i class="fas fa-star"></i>
-                        Türkiye'nin Lider Sanayi Platformu
-                    </div>
-                    <h1 class="hero-title">
-                        Endüstriyel Üretimin<br>
-                        Dijital Geleceği
-                    </h1>
-                    <p class="hero-description">
-                        65.000+ ürün ve 1500+ tedarikçi ile profesyonel üretim çözümleri sunan, 
-                        Türkiye'nin en kapsamlı endüstriyel B2B platformu
-                    </p>
-                    <div class="hero-buttons">
-                        <a href="/register" class="btn btn-primary">
-                            <i class="fas fa-rocket"></i>
-                            Hemen Başla
-                        </a>
-                        <a href="#demo" class="btn btn-outline">
-                            <i class="fas fa-play"></i>
-                            Demo İzle
-                        </a>
-                    </div>
-                    <div class="hero-stats">
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="65000">65K+</div>
-                            <div class="stat-label">Toplam Ürün</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="1500">1.5K+</div>
-                            <div class="stat-label">Aktif Tedarikçi</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-number" data-value="50">50M+</div>
-                            <div class="stat-label">Yatırım Hacmi</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin-top: 4rem;
+        }
 
-        <section class="features" id="features">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Neler Sunuyoruz?</h2>
-                    <p class="section-description">
-                        Endüstriyel üretim süreçlerinizi dijitalleştirin, verimliliğinizi artırın
-                    </p>
-                </div>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-industry"></i>
-                        </div>
-                        <h3 class="feature-title">E-Sanayi</h3>
-                        <p class="feature-description">
-                            50.000+ ürün, 1000+ tedarikçi ile profesyonel üretim çözümleri
-                        </p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-box-open"></i>
-                        </div>
-                        <h3 class="feature-title">Hazır Ürünler</h3>
-                        <p class="feature-description">
-                            10.000+ ürün, 500+ üretici ile doğrudan fabrikadan tedarik
-                        </p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-drafting-compass"></i>
-                        </div>
-                        <h3 class="feature-title">CAD Dosyaları</h3>
-                        <p class="feature-description">
-                            25.000+ teknik çizim ve 3D model ile tasarım desteği
-                        </p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <h3 class="feature-title">İnovasyon Hub</h3>
-                        <p class="feature-description">
-                            200+ aktif proje, 50M+ yatırım hacmi ile inovasyon desteği
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        .step {
+            text-align: center;
+            position: relative;
+        }
 
-        <!-- JavaScript -->
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 4rem;
+            right: -1.5rem;
+            width: 3rem;
+            height: 2px;
+            background: var(--gradient-primary);
+        }
+
+        .step-number {
+            width: 3rem;
+            height: 3rem;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 0 auto 2rem;
+        }
+
+        .step-icon {
+            width: 5rem;
+            height: 5rem;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .step:hover .step-icon {
+            transform: translateY(-5px);
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .testimonials {
+            padding: 8rem 0;
+            background: var(--surface);
+        }
+
+        .testimonials-slider {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .testimonial {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .testimonial:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .testimonial-content {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .testimonial-content i {
+            color: var(--primary);
+            font-size: 2rem;
+            opacity: 0.2;
+            position: absolute;
+            top: -1rem;
+            left: -1rem;
+        }
+
+                    .testimonial-author {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .testimonial-author img {
+                width: 4rem;
+                height: 4rem;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .testimonial-author h4 {
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+
+            .testimonial-author p {
+                color: var(--text-secondary);
+                font-size: 0.875rem;
+            }
+
+            .trust-indicators {
+                padding: 6rem 0;
+                background: var(--background);
+            }
+
+            .partners-grid {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 3rem;
+                align-items: center;
+                margin-top: 4rem;
+            }
+
+            .partner {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                background: var(--surface);
+                border-radius: var(--radius-lg);
+                transition: var(--transition);
+            }
+
+            .partner:hover {
+                transform: translateY(-5px);
+                box-shadow: var(--shadow-md);
+            }
+
+            .partner img {
+                max-width: 100%;
+                height: auto;
+                filter: grayscale(100%);
+                opacity: 0.7;
+                transition: var(--transition);
+            }
+
+            .partner:hover img {
+                filter: grayscale(0%);
+                opacity: 1;
+            }
+
+            .certificates {
+                display: flex;
+                justify-content: center;
+                gap: 3rem;
+                margin-top: 4rem;
+            }
+
+            .certificate {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .certificate img {
+                width: 5rem;
+                height: 5rem;
+                object-fit: contain;
+            }
+
+            .certificate span {
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+
+            .cta {
+                padding: 8rem 0;
+                background: var(--gradient-primary);
+                color: white;
+                text-align: center;
+            }
+
+            .cta-content {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .cta-content h2 {
+                font-size: clamp(2rem, 3vw, 2.5rem);
+                margin-bottom: 1rem;
+                font-weight: 800;
+            }
+
+            .cta-content p {
+                font-size: 1.25rem;
+                margin-bottom: 3rem;
+                opacity: 0.9;
+            }
+
+            .cta-buttons {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+            }
+
+            .cta .btn-primary {
+                background: white;
+                color: var(--primary);
+            }
+
+            .cta .btn-outline {
+                border-color: white;
+                color: white;
+            }
+
+            @media (max-width: 1200px) {
+                .features-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+
+                .partners-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+
+            @media (max-width: 768px) {
+                .nav, .auth-buttons {
+                    display: none;
+                }
+
+                .hero-stats {
+                    grid-template-columns: 1fr;
+                }
+
+                .features-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .steps {
+                    grid-template-columns: 1fr;
+                }
+
+                .step:not(:last-child)::after {
+                    display: none;
+                }
+
+                .testimonials-slider {
+                    grid-template-columns: 1fr;
+                }
+
+                .partners-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .certificates {
+                    flex-direction: column;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Mevcut header ve hero section'ları aynı kalacak -->
+        <!-- Features section'dan sonra aşağıdaki kodları ekleyin -->
+
         <script>
-            // Header Scroll Effect
             const header = document.querySelector('.header');
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
@@ -677,7 +654,6 @@
                 }
             });
 
-            // Smooth Scroll
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -691,28 +667,6 @@
                 });
             });
 
-            // Feature Cards Animation
-            const cards = document.querySelectorAll('.feature-card');
-            const cardObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                        cardObserver.unobserve(entry.target);
-                    }
-                });
-            }, {
-                threshold: 0.1
-            });
-
-            cards.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-                cardObserver.observe(card);
-            });
-
-            // Stats Animation
             const animateValue = (element, start, end, duration) => {
                 let startTimestamp = null;
                 const step = (timestamp) => {
@@ -750,79 +704,5 @@
                 statsObserver.observe(stat);
             });
         </script>
-        <!-- Main kapanış tag'inden önce ekleyin -->
-        <footer class="footer">
-            <div class="container">
-                <div class="footer-grid">
-                    <div class="footer-column">
-                        <a href="/" class="footer-logo">
-                            <div class="logo-icon">SK</div>
-                            <span>sanayikapısı</span>
-                        </a>
-                        <p class="footer-description">
-                            Türkiye'nin lider endüstriyel B2B platformu. Profesyonel üretim çözümleri ve tedarik zinciri yönetimi.
-                        </p>
-                        <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
-                    
-                    <div class="footer-column">
-                        <h3 class="footer-title">Hızlı Erişim</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">Ana Sayfa</a></li>
-                            <li><a href="#">Hakkımızda</a></li>
-                            <li><a href="#">Ürünler</a></li>
-                            <li><a href="#">Hizmetler</a></li>
-                            <li><a href="#">İletişim</a></li>
-                        </ul>
-                    </div>
-        
-                    <div class="footer-column">
-                        <h3 class="footer-title">Hizmetler</h3>
-                        <ul class="footer-links">
-                            <li><a href="#">E-Sanayi</a></li>
-                            <li><a href="#">Hazır Ürünler</a></li>
-                            <li><a href="#">CAD Dosyaları</a></li>
-                            <li><a href="#">İnovasyon Hub</a></li>
-                            <li><a href="#">Tedarikçi Portalı</a></li>
-                        </ul>
-                    </div>
-        
-                    <div class="footer-column">
-                        <h3 class="footer-title">İletişim</h3>
-                        <ul class="footer-contact">
-                            <li>
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Merkez Mah. Sanayi Cad. No:123<br>34000 İstanbul, Türkiye</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-phone"></i>
-                                <span>+90 (212) 123 45 67</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-envelope"></i>
-                                <span>info@sanayikapisi.com</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="footer-bottom">
-                    <div class="footer-copyright">
-                        © 2024 Sanayi Kapısı. Tüm hakları saklıdır.
-                    </div>
-                    <div class="footer-legal">
-                        <a href="#">Gizlilik Politikası</a>
-                        <a href="#">Kullanım Şartları</a>
-                        <a href="#">KVKK</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    </main>
-</body>
+    </body>
 </html>
