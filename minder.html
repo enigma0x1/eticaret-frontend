@@ -3,41 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minder | Startup Ekip Eşleştirme Platformu</title>
+    <title>Yetenek Kapısı | Profesyonel Yetenek Eşleştirme Platformu</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            /* Modern Renk Paleti */
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #13131f;
-            --bg-card: #1c1c27;
-            --accent-primary: #7857ff;
-            --accent-secondary: #4f46e5;
-            --accent-tertiary: #3ccf91;
+            /* Kurumsal Renk Paleti */
+            --primary-dark: #1a237e;  /* Koyu Lacivert */
+            --primary-main: #303f9f;  /* Ana Lacivert */
+            --primary-light: #3f51b5; /* Açık Lacivert */
+            --secondary-dark: #c41162; /* Koyu Kırmızı */
+            --secondary-main: #e91e63; /* Ana Kırmızı */
+            --secondary-light: #f48fb1; /* Açık Kırmızı */
+            
+            /* Nötr Renkler */
+            --bg-dark: #0a1929;      /* Koyu Arkaplan */
+            --bg-main: #0f2942;      /* Ana Arkaplan */
+            --bg-light: #173a5e;     /* Açık Arkaplan */
             --text-primary: #ffffff;
-            --text-secondary: #94a3b8;
-            --success: #3ccf91;
-            --warning: #fbbf24;
-            --danger: #ef4444;
+            --text-secondary: #b0bec5;
+            
+            /* Başarı/Hata Renkleri */
+            --success: #00c853;
+            --warning: #ffd600;
+            --error: #d50000;
             
             /* Gradyanlar */
-            --gradient-primary: linear-gradient(135deg, #7857ff, #4f46e5);
-            --gradient-success: linear-gradient(135deg, #3ccf91, #2fb344);
-            --gradient-danger: linear-gradient(135deg, #ef4444, #dc2626);
-            --gradient-card: linear-gradient(145deg, rgba(28,28,39,0.9), rgba(28,28,39,0.4));
+            --gradient-primary: linear-gradient(135deg, var(--primary-main), var(--primary-light));
+            --gradient-secondary: linear-gradient(135deg, var(--secondary-main), var(--secondary-light));
+            --gradient-dark: linear-gradient(135deg, var(--bg-dark), var(--bg-main));
             
             /* Gölgeler */
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+            --shadow-xl: 0 12px 32px rgba(0,0,0,0.25);
             
             /* Border Radius */
             --radius-sm: 8px;
             --radius-md: 12px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            
+            /* Animasyon */
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            
+            /* Z-index Katmanları */
+            --z-modal: 1000;
+            --z-popup: 900;
+            --z-header: 800;
+            --z-card: 700;
         }
 
         * {
@@ -48,7 +66,7 @@
         }
 
         body {
-            background: var(--bg-primary);
+            background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -56,612 +74,513 @@
             align-items: center;
             padding: 20px;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(120,87,255,0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(79,70,229,0.1) 0%, transparent 20%);
+                radial-gradient(circle at 20% 20%, rgba(48, 63, 159, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 80% 80%, rgba(233, 30, 99, 0.1) 0%, transparent 30%);
         }
 
-        .phone-container {
-            width: 375px;
-            height: 812px;
-            background: var(--bg-secondary);
+        /* Ana Container */
+        .app-container {
+            width: 100%;
+            max-width: 1440px;
+            height: 90vh;
+            background: var(--bg-main);
             border-radius: var(--radius-xl);
-            position: relative;
             overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            border: 8px solid #1a1a24;
-            backdrop-filter: blur(20px);
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            box-shadow: var(--shadow-xl);
+            position: relative;
         }
 
-        .phone-header {
-            padding: 40px 20px 20px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+        /* Sidebar */
+        .sidebar {
+            background: var(--gradient-dark);
+            padding: 24px;
+            border-right: 1px solid rgba(255,255,255,0.1);
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+        }
+
+        .logo-container {
+            display: flex;
             align-items: center;
-            position: relative;
-            z-index: 2;
-            backdrop-filter: blur(10px);
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 32px;
         }
 
         .logo {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.5px;
         }
 
-        .settings-btn {
+        .logo-icon {
             width: 40px;
             height: 40px;
+            background: var(--gradient-primary);
             border-radius: var(--radius-md);
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
-            color: var(--text-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 20px;
+            color: white;
         }
 
-        .settings-btn:hover {
+        /* Profil Bölümü */
+        .profile-section {
+            padding: 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .profile-info p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Filtreler */
+        .filters-section {
+            flex-grow: 1;
+        }
+
+        .filter-group {
+            margin-bottom: 24px;
+        }
+
+        .filter-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-option {
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-option:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+
+        .filter-option.active {
+            background: var(--primary-main);
+            color: white;
+        }
+
+        /* Ana İçerik */
+        .main-content {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-button.primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .action-button.secondary {
             background: rgba(255,255,255,0.1);
             color: var(--text-primary);
-            transform: translateY(-2px);
         }
 
-        .card-stack {
-            position: relative;
-            height: calc(100% - 180px);
-            padding: 20px;
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Kart Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            padding: 12px;
             perspective: 1000px;
         }
 
-        .card {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            height: calc(100% - 40px);
-            background: var(--gradient-card);
+        .talent-card {
+            background: rgba(255,255,255,0.05);
             border-radius: var(--radius-lg);
-            padding: 20px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-            cursor: grab;
-            user-select: none;
-            touch-action: none;
-            backdrop-filter: blur(10px);
+            overflow: hidden;
+            transition: var(--transition-normal);
             transform-style: preserve-3d;
+            cursor: pointer;
         }
 
-        .card:hover {
-            transform: translateY(-5px) scale(1.02);
+        .talent-card:hover {
+            transform: translateY(-5px) rotateX(5deg);
             box-shadow: var(--shadow-lg);
         }
 
-        .card-image {
-            width: 100%;
-            height: 55%;
-            border-radius: var(--radius-md);
-            margin-bottom: 15px;
+        .card-cover {
+            height: 160px;
+            background: var(--gradient-primary);
             position: relative;
             overflow: hidden;
         }
 
-        .card-image img {
+        .card-cover img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.3s ease;
+            opacity: 0.7;
+            transition: var(--transition-normal);
         }
 
-        .card:hover .card-image img {
+        .talent-card:hover .card-cover img {
             transform: scale(1.05);
-        }
-
-        .card-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0,0,0,0.75);
-            padding: 8px 16px;
-            border-radius: var(--radius-xl);
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-primary);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.1);
+            opacity: 0.9;
         }
 
         .card-content {
-            padding: 5px 0;
-            height: calc(45% - 15px);
-            display: flex;
-            flex-direction: column;
+            padding: 20px;
         }
 
         .card-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: 600;
             color: var(--text-primary);
-            line-height: 1.2;
+            margin-bottom: 8px;
         }
 
-        .card-description {
+        .card-subtitle {
             font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 15px;
-            line-height: 1.6;
-            flex-grow: 1;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-primary) var(--bg-card);
-        }
-
-        .card-description::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .card-description::-webkit-scrollbar-track {
-            background: var(--bg-card);
-        }
-
-        .card-description::-webkit-scrollbar-thumb {
-            background: var(--accent-primary);
-            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
         }
 
         .card-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .tag {
-            padding: 6px 12px;
-            border-radius: var(--radius-md);
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-primary);
+            padding: 4px 12px;
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: all 0.3s ease;
-        }
-
-        .tag:hover {
-            background: var(--accent-primary);
-            transform: translateY(-2px);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            color: var(--text-secondary);
         }
 
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        .team-info {
+        .card-stats {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            gap: 16px;
         }
 
-        .team-size {
+        .stat {
             display: flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: var(--radius-md);
+            gap: 4px;
             font-size: 12px;
-            font-weight: 500;
-            color: var(--text-primary);
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .action-buttons {
-            position: fixed;
-            bottom: 40px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 0 20px;
-            z-index: 2;
-        }
-
-        .action-button {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .action-button:hover {
-            transform: translateY(-5px);
-        }
-
-        .button-reject {
-            background: var(--gradient-danger);
-            color: white;
-        }
-
-        .button-accept {
-            background: var(--gradient-success);
-            color: white;
-        }
-
-        .swipe-info {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 32px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 16px 32px;
-            border-radius: var(--radius-lg);
-            backdrop-filter: blur(8px);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .swipe-info.like {
-            color: var(--success);
-            border: 4px solid var(--success);
-            background: rgba(60, 207, 145, 0.1);
-            transform: translate(-50%, -50%) rotate(-15deg);
-        }
-
-        .swipe-info.nope {
-            color: var(--danger);
-            border: 4px solid var(--danger);
-            background: rgba(239, 68, 68, 0.1);
-            transform: translate(-50%, -50%) rotate(15deg);
-        }
-
-        .match-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(10, 10, 15, 0.95);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.5s ease;
-            backdrop-filter: blur(8px);
-        }
-
-        .match-overlay.visible {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .match-content {
-            text-align: center;
-            padding: 40px;
-            border-radius: var(--radius-lg);
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(20px);
-            animation: scaleIn 0.5s ease forwards;
-        }
-
-        @keyframes scaleIn {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .match-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .match-subtitle {
             color: var(--text-secondary);
-            margin-bottom: 40px;
-            font-size: 16px;
-            line-height: 1.6;
         }
 
-        .match-buttons {
-            display: flex;
-            gap: 20px;
-        }
-
-        .match-button {
-            padding: 12px 24px;
-            border-radius: var(--radius-lg);
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .match-button:hover {
-            transform: translateY(-3px);
-        }
-
-        .match-button.primary {
+        .card-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
+            cursor: pointer;
+            transition: var(--transition-normal);
         }
 
-        .match-button.secondary {
-            background: rgba(255,255,255,0.1);
-            color: var(--text-primary);
-            border: 1px solid rgba(255,255,255,0.1);
+        .card-action:hover {
+            transform: scale(1.1);
         }
 
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        /* Animasyonlar */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .floating {
-            animation: float 6s ease-in-out infinite;
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Özel Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-main);
         }
     </style>
 </head>
 <body>
-    <div class="phone-container">
-        <div class="phone-header">
-            <div class="logo">Minder</div>
-            <button class="settings-btn">
-                <i class="fas fa-sliders-h"></i>
-            </button>
-        </div>
-        
-        <div class="card-stack" id="cardStack">
-            <!-- Kartlar dinamik olarak eklenecek -->
-        </div>
-
-        <div class="action-buttons">
-            <button class="action-button button-reject" onclick="handleReject()">
-                <i class="fas fa-times"></i>
-            </button>
-            <button class="action-button button-accept" onclick="handleAccept()">
-                <i class="fas fa-check"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="match-overlay" id="matchOverlay">
-        <div class="match-content">
-            <h1  class="match-title">Eşleşme!</h1>
-            <p class="match-subtitle">
-                Harika! Karşılıklı bir eşleşme yakaladınız.<br>
-                Hemen iletişime geçin ve projeyi konuşmaya başlayın!
-            </p>
-            <div class="match-buttons">
-                <button class="match-button primary">
-                    <i class="fas fa-comment-alt"></i>
-                    Mesaj Gönder
-                </button>
-                <button class="match-button secondary" onclick="closeMatch()">
-                    <i class="fas fa-sync"></i>
-                    Aramaya Devam Et
-                </button>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">YK</div>
+                <div class="logo">Yetenek Kapısı</div>
             </div>
-        </div>
-    </div>
 
-    <script>
-        const projects = [
-            {
-                id: 1,
-                title: "Yapay Zeka Destekli Sağlık Asistanı",
-                description: "Erken hastalık teşhisi için makine öğrenimi ve büyük veri analitiği kullanan yenilikçi bir sağlık platformu geliştiriyoruz. Projemiz şu an MVP aşamasında ve güçlü bir teknik ekip arıyoruz.",
-                image: "https://source.unsplash.com/random/800x600/?ai,health",
-                teamSize: "4-6 Kişi",
-                lookingFor: ["ML Mühendisi", "Backend Dev", "UI/UX Tasarımcı"],
-                tags: ["Sağlık", "Yapay Zeka", "Machine Learning"]
-            },
-            {
-                id: 2,
-                title: "EkoTakip",
-                description: "Kişisel karbon ayak izini takip eden ve oyunlaştırma elementleri ile sürdürülebilir yaşamı teşvik eden mobil uygulama. Çevre dostu bir gelecek için teknoloji kullanıyoruz.",
-                image: "https://source.unsplash.com/random/800x600/?nature,technology",
-                teamSize: "3-5 Kişi",
-                lookingFor: ["Mobile Dev", "Frontend Dev", "Çevre Uzmanı"],
-                tags: ["Sürdürülebilirlik", "Mobil", "IoT"]
-            },
-            {
-                id: 3,
-                title: "CryptoWallet Pro",
-                description: "Gelişmiş güvenlik özellikleri ve DeFi entegrasyonu ile yeni nesil kripto cüzdan. Blockchain teknolojisini herkes için erişilebilir kılmayı hedefliyoruz.",
-                image: "https://source.unsplash.com/random/800x600/?cryptocurrency,technology",
-                teamSize: "5-7 Kişi",
-                lookingFor: ["Blockchain Dev", "Güvenlik Uzmanı", "Frontend Dev"],
-                tags: ["Kripto", "Blockchain", "Fintech"]
-            },
-            {
-                id: 4,
-                title: "AkıllıTarım",
-                description: "IoT sensörleri ve yapay zeka ile tarımsal verimliliği artıran akıllı tarım çözümü. Çiftçilere real-time veri ve öneriler sunuyoruz.",
-                image: "https://source.unsplash.com/random/800x600/?agriculture,technology",
-                teamSize: "4-6 Kişi",
-                lookingFor: ["IoT Uzmanı", "Veri Bilimci", "Mobil Dev"],
-                tags: ["AgriTech", "IoT", "Yapay Zeka"]
-            }
-        ];
-
-        let currentIndex = 0;
-
-        function createCard(project) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = `
-                <div class="card-image">
-                    <img src="${project.image}" alt="${project.title}">
-                    <div class="card-badge">
-                        <i class="fas fa-users"></i> ${project.teamSize}
+            <div class="profile-section">
+                <div class="profile-header">
+                    <img src="https://randomuser.me/api/portraits/men/1.jpg" 
+                         alt="Profil" class="profile-avatar">
+                    <div class="profile-info">
+                        <h3>Ahmet Yılmaz</h3>
+                        <p>Senior Developer</p>
                     </div>
                 </div>
-                <div class="card-content">
-                    <h2 class="card-title">${project.title}</h2>
-                    <p class="card-description">${project.description}</p>
-                    <div class="card-tags">
-                        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                    </div>
-                    <div class="card-footer">
-                        <div class="team-info">
-                            <span class="team-size">
-                                <i class="fas fa-search"></i>
-                                Aranan: ${project.lookingFor.length} kişi
-                            </span>
+            </div>
+
+            <div class="filters-section">
+                <div class="filter-group">
+                    <h4 class="filter-title">Kategoriler</h4>
+                    <div class="filter-options">
+                        <div class="filter-option active">
+                            <i class="fas fa-laptop-code"></i>
+                            Yazılım Geliştirme
+                        </div>
+                        <div class="filter-option">
+                            <i class="fas fa-paint-brush"></i>
+                            UI/UX Tasarım
+                        </div>
+                        <div class="filter-option">
+                            <i class="fas fa-chart-line"></i>
+                            Veri Bilimi
+                        </div>
+                        <div class="filter-option">
+                            <i class="fas fa-mobile-alt"></i>
+                            Mobil Geliştirme
                         </div>
                     </div>
                 </div>
-            `;
 
-            let startX;
-            let currentX;
-            let isDragging = false;
+                <div class="filter-group">
+                    <h4 class="filter-title">Deneyim Seviyesi</h4>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <i class="fas fa-seedling"></i>
+                            Junior
+                        </div>
+                        <div class="filter-option active">
+                            <i class="fas fa-tree"></i>
+                            Senior
+                        </div>
+                        <div class="filter-option">
+                            <i class="fas fa-star"></i>
+                            Lead
+                        </div>
+                    </div>
+                </div>
 
-            function startDragging(e) {
-                isDragging = true;
-                startX = (e.type === 'mousedown') ? e.clientX : e.touches[0].clientX;
-                currentX = startX;
-                card.style.transition = 'none';
-            }
+                <div class="filter-group">
+                    <h4 class="filter-title">Çalışma Şekli</h4>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <i class="fas fa-building"></i>
+                            Tam Zamanlı
+                        </div>
+                        <div class="filter-option active">
+                            <i class="fas fa-project-diagram"></i>
+                            Proje Bazlı
+                        </div>
+                        <div class="filter-option">
+                            <i class="fas fa-home"></i>
+                            Uzaktan
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
 
-            function drag(e) {
-                if (!isDragging) return;
+        <!-- Ana İçerik -->
+        <main class="main-content">
+            <div class="content-header">
+                <div class="header-title">
+                    <h1>Yetenekler</h1>
+                    <p>Projenize uygun yetenekleri keşfedin</p>
+                </div>
+                <div class="header-actions">
+                    <button class="action-button secondary">
+                        <i class="fas fa-filter"></i>
+                        Filtrele
+                    </button>
+                    <button class="action-button primary">
+                        <i class="fas fa-plus"></i>
+                        Yeni İlan
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-grid">
+                <!-- Yetenek Kartları -->
+                <div class="talent-card animate-fade-in" style="animation-delay: 0.1s">
+                    <div class="card-cover">
+                        <img src="https://source.unsplash.com/random/400x200/?coding" alt="Yazılım">
+                    </div>
+                    <div class="card-content">
+                        <h3 class="card-title">Full Stack Developer</h3>
+                        <p class="card-subtitle">5+ yıl deneyimli, MERN stack uzmanı</p>
+                        <div class="card-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">Node.js</span>
+                            <span class="tag">MongoDB</span>
+                            <span class="tag">AWS</span>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-stats">
+                                <div class="stat">
+                                    <i class="fas fa-star"></i>
+                                    4.9
+                                </div>
+                                <div class="stat">
+                                    <i class="fas fa-briefcase"></i>
+                                    12 Proje
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diğer kartlar benzer şekilde -->
                 
-                e.preventDefault();
-                currentX = (e.type === 'mousemove') ? e.clientX : e.touches[0].clientX;
-                const deltaX = currentX - startX;
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Kart animasyonları ve interaktif özellikler için JavaScript
+        document.querySelectorAll('.talent-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
                 
-                card.style.transform = `translateX(${deltaX}px) rotate(${deltaX * 0.1}deg)`;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
                 
-                const swipeInfo = document.createElement('div');
-                swipeInfo.className = `swipe-info ${deltaX > 0 ? 'like' : 'nope'}`;
-                swipeInfo.textContent = deltaX > 0 ? 'İLGİLENİYORUM' : 'GEÇÇ';
-                swipeInfo.style.opacity = Math.min(Math.abs(deltaX) / 100, 1);
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
                 
-                const existingInfo = card.querySelector('.swipe-info');
-                if (existingInfo) existingInfo.remove();
-                
-                card.appendChild(swipeInfo);
-            }
+                card.style.transform = `
+                    perspective(1000px)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
+                    scale3d(1.05, 1.05, 1.05)
+                `;
+            });
 
-            function stopDragging() {
-                if (!isDragging) return;
-                
-                isDragging = false;
-                card.style.transition = 'all 0.3s ease';
-                const deltaX = currentX - startX;
-                
-                if (Math.abs(deltaX) > 100) {
-                    const direction = deltaX > 0 ? 1 : -1;
-                    card.style.transform = `translateX(${direction * window.innerWidth}px) rotate(${deltaX * 0.1}deg)`;
-                    setTimeout(() => {
-                        card.remove();
-                        if (deltaX > 0) handleAccept();
-                        else handleReject();
-                    }, 300);
-                } else {
-                    card.style.transform = '';
-                }
-                
-                const swipeInfo = card.querySelector('.swipe-info');
-                if (swipeInfo) swipeInfo.remove();
-            }
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
 
-            card.addEventListener('mousedown', startDragging);
-            card.addEventListener('touchstart', startDragging);
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('touchmove', drag);
-            document.addEventListener('mouseup', stopDragging);
-            document.addEventListener('touchend', stopDragging);
-
-            return card;
-        }
-
-        function loadCards() {
-            const cardStack = document.getElementById('cardStack');
-            cardStack.innerHTML = '';
-            
-            for (let i = 0; i < 3; i++) {
-                if (currentIndex + i < projects.length) {
-                    const card = createCard(projects[currentIndex + i]);
-                    card.style.zIndex = 1000 - i;
-                    card.style.transform = `scale(${1 - i * 0.05}) translateY(${i * 20}px)`;
-                    card.style.opacity = 1 - i * 0.2;
-                    cardStack.appendChild(card);
-                }
-            }
-        }
-
-        function handleAccept() {
-            currentIndex++;
-            if (Math.random() > 0.5) showMatch();
-            loadCards();
-        }
-
-        function handleReject() {
-            currentIndex++;
-            loadCards();
-        }
-
-        function showMatch() {
-            const overlay = document.getElementById('matchOverlay');
-            overlay.classList.add('visible');
-        }
-
-        function closeMatch() {
-            const overlay = document.getElementById('matchOverlay');
-            overlay.classList.remove('visible');
-        }
-
-        // Başlangıç yüklemesi
-        loadCards();
-
-        // Klavye kontrolleri
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') handleReject();
-            if (e.key === 'ArrowRight') handleAccept();
+        // Filtre seçenekleri için toggle
+        document.querySelectorAll('.filter-option').forEach(option => {
+            option.addEventListener('click', () => {
+                option.classList.toggle('active');
+            });
         });
     </script>
 </body>
