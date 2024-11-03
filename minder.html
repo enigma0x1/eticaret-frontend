@@ -3,70 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yetenek Kapısı | Profesyonel Yetenek Eşleştirme Platformu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>StartPump | Startup Ekip Eşleştirme Platformu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            /* Kurumsal Renk Paleti */
-            --primary-dark: #1a237e;  /* Koyu Lacivert */
-            --primary-main: #303f9f;  /* Ana Lacivert */
-            --primary-light: #3f51b5; /* Açık Lacivert */
-            --secondary-dark: #c41162; /* Koyu Kırmızı */
-            --secondary-main: #e91e63; /* Ana Kırmızı */
-            --secondary-light: #f48fb1; /* Açık Kırmızı */
+            /* Ana Renkler */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #13131f;
+            --bg-card: #1c1c27;
             
-            /* Nötr Renkler */
-            --bg-dark: #0a1929;      /* Koyu Arkaplan */
-            --bg-main: #0f2942;      /* Ana Arkaplan */
-            --bg-light: #173a5e;     /* Açık Arkaplan */
+            /* Aksan Renkleri */
+            --accent-primary: #FF3366;  /* Startup'ı temsil eden canlı kırmızı */
+            --accent-secondary: #6C72FF; /* Teknoloji'yi temsil eden mavi */
+            --accent-tertiary: #33FF99;  /* Büyüme'yi temsil eden yeşil */
+            
+            /* Metin Renkleri */
             --text-primary: #ffffff;
-            --text-secondary: #b0bec5;
+            --text-secondary: #94a3b8;
             
-            /* Başarı/Hata Renkleri */
-            --success: #00c853;
-            --warning: #ffd600;
-            --error: #d50000;
+            /* Durum Renkleri */
+            --success: #33FF99;
+            --warning: #FFB800;
+            --danger: #FF3366;
             
             /* Gradyanlar */
-            --gradient-primary: linear-gradient(135deg, var(--primary-main), var(--primary-light));
-            --gradient-secondary: linear-gradient(135deg, var(--secondary-main), var(--secondary-light));
-            --gradient-dark: linear-gradient(135deg, var(--bg-dark), var(--bg-main));
+            --gradient-primary: linear-gradient(135deg, var(--accent-primary), #FF8C66);
+            --gradient-secondary: linear-gradient(135deg, var(--accent-secondary), #33FF99);
+            --gradient-card: linear-gradient(145deg, rgba(28,28,39,0.95), rgba(28,28,39,0.85));
             
             /* Gölgeler */
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.15);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
-            --shadow-xl: 0 12px 32px rgba(0,0,0,0.25);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
             
             /* Border Radius */
             --radius-sm: 8px;
             --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
             
             /* Animasyon */
             --transition-fast: 0.2s ease;
             --transition-normal: 0.3s ease;
             --transition-slow: 0.5s ease;
-            
-            /* Z-index Katmanları */
-            --z-modal: 1000;
-            --z-popup: 900;
-            --z-header: 800;
-            --z-card: 700;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            background: var(--bg-dark);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -74,513 +66,720 @@
             align-items: center;
             padding: 20px;
             background-image: 
-                radial-gradient(circle at 20% 20%, rgba(48, 63, 159, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 80% 80%, rgba(233, 30, 99, 0.1) 0%, transparent 30%);
+                radial-gradient(circle at 10% 20%, rgba(255,51,102,0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(108,114,255,0.1) 0%, transparent 20%);
         }
 
-        /* Ana Container */
-        .app-container {
-            width: 100%;
-            max-width: 1440px;
-            height: 90vh;
-            background: var(--bg-main);
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: var(--bg-secondary);
             border-radius: var(--radius-xl);
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: 320px 1fr;
-            box-shadow: var(--shadow-xl);
             position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg),
+                       0 0 0 1px rgba(255,255,255,0.1);
+            border: 8px solid #1a1a24;
+            backdrop-filter: blur(20px);
         }
 
-        /* Sidebar */
-        .sidebar {
-            background: var(--gradient-dark);
-            padding: 24px;
-            border-right: 1px solid rgba(255,255,255,0.1);
+        .phone-header {
+            padding: 40px 20px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             display: flex;
             flex-direction: column;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
         }
 
-        .logo-container {
+        .header-top {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            padding: 12px;
-            margin-bottom: 32px;
+            margin-bottom: 10px;
         }
 
         .logo {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 28px;
+            font-weight: 800;
             background: var(--gradient-primary);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            letter-spacing: -0.5px;
+            position: relative;
         }
 
-        .logo-icon {
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            opacity: 0.5;
+        }
+
+        .settings-btn {
             width: 40px;
             height: 40px;
-            background: var(--gradient-primary);
             border-radius: var(--radius-md);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
-            color: white;
-        }
-
-        /* Profil Bölümü */
-        .profile-section {
-            padding: 16px;
-            background: rgba(255,255,255,0.05);
-            border-radius: var(--radius-lg);
-            margin-bottom: 24px;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .profile-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .profile-info h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .profile-info p {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        /* Filtreler */
-        .filters-section {
-            flex-grow: 1;
-        }
-
-        .filter-group {
-            margin-bottom: 24px;
-        }
-
-        .filter-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .filter-options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .filter-option {
-            padding: 10px 16px;
-            background: rgba(255,255,255,0.05);
-            border-radius: var(--radius-md);
-            color: var(--text-primary);
             cursor: pointer;
             transition: var(--transition-normal);
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
-        .filter-option:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateX(5px);
-        }
-
-        .filter-option.active {
-            background: var(--primary-main);
-            color: white;
-        }
-
-        /* Ana İçerik */
-        .main-content {
-            padding: 24px;
-            overflow-y: auto;
-        }
-
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .header-title h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .header-title p {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .action-button {
-            padding: 10px 20px;
-            border-radius: var(--radius-md);
-            border: none;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition-normal);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .action-button.primary {
-            background: var(--gradient-primary);
-            color: white;
-        }
-
-        .action-button.secondary {
+        .settings-btn:hover {
             background: rgba(255,255,255,0.1);
             color: var(--text-primary);
-        }
-
-        .action-button:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
         }
 
-        /* Kart Grid */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-            padding: 12px;
-            perspective: 1000px;
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 5px 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
-        .talent-card {
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category {
+            padding: 8px 16px;
             background: rgba(255,255,255,0.05);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: var(--transition-normal);
-            transform-style: preserve-3d;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-xl);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
             cursor: pointer;
+            transition: var(--transition-normal);
         }
 
-        .talent-card:hover {
-            transform: translateY(-5px) rotateX(5deg);
+        .category.active {
+            background: var(--gradient-primary);
+            color: var(--text-primary);
+            border-color: transparent;
+        }
+
+        .category:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-stack {
+            position: relative;
+            height: calc(100% - 180px);
+            padding: 20px;
+            perspective: 2000px;
+        }
+
+        .card {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: calc(100% - 40px);
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: var(--transition-normal);
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
             box-shadow: var(--shadow-lg);
         }
 
-        .card-cover {
-            height: 160px;
-            background: var(--gradient-primary);
+        .card-image {
+            width: 100%;
+            height: 50%;
+            border-radius: var(--radius-md);
+            margin-bottom: 15px;
             position: relative;
             overflow: hidden;
         }
 
-        .card-cover img {
+        .card-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.7;
             transition: var(--transition-normal);
         }
 
-        .talent-card:hover .card-cover img {
+        .card:hover .card-image img {
             transform: scale(1.05);
-            opacity: 0.9;
+        }
+
+        .card-badges {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            background: rgba(0,0,0,0.75);
+            border-radius: var(--radius-xl);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge i {
+            font-size: 10px;
+        }
+
+        .funding-badge {
+            background: rgba(51,255,153,0.2);
+            color: var(--success);
+        }
+
+        .team-badge {
+            background: rgba(108,114,255,0.2);
+            color: var(--accent-secondary);
         }
 
         .card-content {
-            padding: 20px;
+            height: 50%;
+            display: flex;
+            flex-direction: column;
         }
 
         .card-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            line-height: 1.2;
         }
 
-        .card-subtitle {
+        .card-description {
             font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 16px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+            flex-grow: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-primary) var(--bg-card);
         }
 
         .card-tags {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 15px;
         }
 
         .tag {
-            padding: 4px 12px;
-            background: rgba(255,255,255,0.1);
-            border-radius: var(--radius-sm);
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
             font-size: 12px;
-            color: var(--text-secondary);
+            font-weight: 500;
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .tag:hover {
+            background: var(--accent-primary);
+            transform: translateY(-2px);
         }
 
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
 
-        .card-stats {
+        .team-info {
             display: flex;
-            gap: 16px;
+            flex-direction: column;
+            gap: 5px;
         }
 
-        .stat {
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        .team-title {
             font-size: 12px;
             color: var(--text-secondary);
         }
 
-        .card-action {
-            width: 36px;
-            height: 36px;
+        .team-roles {
+            display: flex;
+            gap: 8px;
+        }
+
+        .role-tag {
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--accent-secondary);
+            background: rgba(108,114,255,0.1);
+            border: 1px solid rgba(108,114,255,0.2);
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+            z-index: 2;
+        }
+
+        .action-button {
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
-            background: var(--gradient-primary);
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            font-size: 24px;
             cursor: pointer;
+            transition: var(--transition-normal);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .action-button:hover {
+            transform: translateY(-5px);
+        }
+
+        .button-reject {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        .button-accept {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .swipe-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 16px 32px;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(8px);
+            opacity: 0;
             transition: var(--transition-normal);
         }
 
-        .card-action:hover {
-            transform: scale(1.1);
+        .swipe-info.like {
+            color: var(--success);
+            border: 4px solid var(--success);
+            background: rgba(51,255,153,0.1);
+            transform: translate(-50%, -50%) rotate(-15deg);
         }
 
-        /* Animasyonlar */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .swipe-info.nope {
+            color: var(--danger);
+            border: 4px solid var(--danger);
+            background: rgba(255,51,102,0.1);
+            transform: translate(-50%, -50%) rotate(15deg);
         }
 
-        .animate-fade-in {
-            animation: fadeIn 0.5s ease forwards;
+        .match-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10,10,15,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition-slow);
+            backdrop-filter: blur(8px);
         }
 
-        /* Özel Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .match-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
+        .match-content {
+            text-align: center;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            animation: scaleIn 0.5s ease forwards;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-light);
-            border-radius: var(--radius-sm);
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-main);
+        .match-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .match-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .match-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .match-button {
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .match-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .match-button.primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .match-button.secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="logo-container">
-                <div class="logo-icon">YK</div>
-                <div class="logo">Yetenek Kapısı</div>
+    <div class="phone-container">
+        <div class="phone-header">
+            <div class="header-top">
+                <div class="logo">StartPump</div>
+                <button class="settings-btn">
+                    <i class="fas fa-sliders-h"></i>
+                </button>
             </div>
-
-            <div class="profile-section">
-                <div class="profile-header">
-                    <img src="https://randomuser.me/api/portraits/men/1.jpg" 
-                         alt="Profil" class="profile-avatar">
-                    <div class="profile-info">
-                        <h3>Ahmet Yılmaz</h3>
-                        <p>Senior Developer</p>
-                    </div>
-                </div>
+            <div class="categories">
+                <div class="category active">Tümü</div>
+                <div class="category">Tech</div>
+                <div class="category">FinTech</div>
+                <div class="category">E-ticaret</div>
+                <div class="category">Sağlık</div>
+                <div class="category">Yapay Zeka</div>
+                <div class="category">IoT</div>
             </div>
+        </div>
+        
+        <div class="card-stack" id="cardStack">
+            <!-- Kartlar dinamik olarak eklenecek -->
+        </div>
 
-            <div class="filters-section">
-                <div class="filter-group">
-                    <h4 class="filter-title">Kategoriler</h4>
-                    <div class="filter-options">
-                        <div class="filter-option active">
-                            <i class="fas fa-laptop-code"></i>
-                            Yazılım Geliştirme
-                        </div>
-                        <div class="filter-option">
-                            <i class="fas fa-paint-brush"></i>
-                            UI/UX Tasarım
-                        </div>
-                        <div class="filter-option">
-                            <i class="fas fa-chart-line"></i>
-                            Veri Bilimi
-                        </div>
-                        <div class="filter-option">
-                            <i class="fas fa-mobile-alt"></i>
-                            Mobil Geliştirme
-                        </div>
-                    </div>
-                </div>
+        <div class="action-buttons">
+            <button class="action-button button-reject" onclick="handleReject()">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="action-button button-accept" onclick="handleAccept()">
+                <i class="fas fa-check"></i>
+            </button>
+        </div>
+    </div>
 
-                <div class="filter-group">
-                    <h4 class="filter-title">Deneyim Seviyesi</h4>
-                    <div class="filter-options">
-                        <div class="filter-option">
-                            <i class="fas fa-seedling"></i>
-                            Junior
-                        </div>
-                        <div class="filter-option active">
-                            <i class="fas fa-tree"></i>
-                            Senior
-                        </div>
-                        <div class="filter-option">
-                            <i class="fas fa-star"></i>
-                            Lead
-                        </div>
-                    </div>
-                </div>
-
-                <div class="filter-group">
-                    <h4 class="filter-title">Çalışma Şekli</h4>
-                    <div class="filter-options">
-                        <div class="filter-option">
-                            <i class="fas fa-building"></i>
-                            Tam Zamanlı
-                        </div>
-                        <div class="filter-option active">
-                            <i class="fas fa-project-diagram"></i>
-                            Proje Bazlı
-                        </div>
-                        <div class="filter-option">
-                            <i class="fas fa-home"></i>
-                            Uzaktan
-                        </div>
-                    </div>
-                </div>
+    <div class="match-overlay" id="matchOverlay">
+        <div class="match-content">
+            <h1 class="match-title">Eşleşme!</h1>
+            <p class="match-subtitle">
+                Harika! Karşılıklı bir eşleşme yakaladınız.<br>
+                Hemen iletişime geçin ve projeyi konuşmaya başlayın!
+            </p>
+            <div class="match-buttons">
+                <button class="match-button primary">
+                    <i class="fas fa-comment-alt"></i>
+                    Mesaj Gönder
+                </button>
+                <button class="match-button secondary" onclick="closeMatch()">
+                    <i class="fas fa-sync"></i>
+                    Aramaya Devam Et
+                </button>
             </div>
-        </aside>
-
-        <!-- Ana İçerik -->
-        <main class="main-content">
-            <div class="content-header">
-                <div class="header-title">
-                    <h1>Yetenekler</h1>
-                    <p>Projenize uygun yetenekleri keşfedin</p>
-                </div>
-                <div class="header-actions">
-                    <button class="action-button secondary">
-                        <i class="fas fa-filter"></i>
-                        Filtrele
-                    </button>
-                    <button class="action-button primary">
-                        <i class="fas fa-plus"></i>
-                        Yeni İlan
-                    </button>
-                </div>
-            </div>
-
-            <div class="card-grid">
-                <!-- Yetenek Kartları -->
-                <div class="talent-card animate-fade-in" style="animation-delay: 0.1s">
-                    <div class="card-cover">
-                        <img src="https://source.unsplash.com/random/400x200/?coding" alt="Yazılım">
-                    </div>
-                    <div class="card-content">
-                        <h3 class="card-title">Full Stack Developer</h3>
-                        <p class="card-subtitle">5+ yıl deneyimli, MERN stack uzmanı</p>
-                        <div class="card-tags">
-                            <span class="tag">React</span>
-                            <span class="tag">Node.js</span>
-                            <span class="tag">MongoDB</span>
-                            <span class="tag">AWS</span>
-                        </div>
-                        <div class="card-footer">
-                            <div class="card-stats">
-                                <div class="stat">
-                                    <i class="fas fa-star"></i>
-                                    4.9
-                                </div>
-                                <div class="stat">
-                                    <i class="fas fa-briefcase"></i>
-                                    12 Proje
-                                </div>
-                            </div>
-                            <div class="card-action">
-                                <i class="fas fa-arrow-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Diğer kartlar benzer şekilde -->
-                
-            </div>
-        </main>
+        </div>
     </div>
 
     <script>
-        // Kart animasyonları ve interaktif özellikler için JavaScript
-        document.querySelectorAll('.talent-card').forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+        const projects = [
+            {
+                id: 1,
+                title: "AI Sağlık Asistanı",
+                description: "Yapay zeka destekli sağlık asistanı ile erken teşhis ve kişiselleştirilmiş sağlık önerileri. Sağlık sektörünü demokratikleştirmeyi hedefliyoruz.",
+                image: "https://source.unsplash.com/random/800x600/?medical,technology",
+                funding: "₺2M",
+                teamSize: "4-6",
+                lookingFor: ["ML Engineer", "Backend", "UI/UX"],
+                tags: ["Sağlık", "AI", "ML"],
+                category: "Sağlık"
+            },
+            {
+                id: 2,
                 
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = (y - centerY) / 20;
-                const rotateY = (centerX - x) / 20;
-                
-                card.style.transform = `
-                    perspective(1000px)
-                    rotateX(${rotateX}deg)
-                    rotateY(${rotateY}deg)
-                    scale3d(1.05, 1.05, 1.05)
-                `;
-            });
+                title: "FinTech Revolución",
+                description: "Yeni nesil finansal teknoloji platformu. Blockchain tabanlı ödeme sistemleri ve akıllı kontratlar ile finansal işlemleri demokratikleştiriyoruz.",
+                image: "https://source.unsplash.com/random/800x600/?finance,technology",
+                funding: "₺5M",
+                teamSize: "5-7",
+                lookingFor: ["Blockchain Dev", "Full-stack", "Finance Expert"],
+                tags: ["FinTech", "Blockchain", "DeFi"],
+                category: "FinTech"
+            },
+            {
+                id: 3,
+                title: "EkoSistem",
+                description: "IoT sensörleri ve yapay zeka ile akıllı tarım çözümleri. Sürdürülebilir tarım için teknoloji geliştiriyoruz.",
+                image: "https://source.unsplash.com/random/800x600/?agriculture,technology",
+                funding: "₺3M",
+                teamSize: "3-5",
+                lookingFor: ["IoT Expert", "Data Scientist", "Mobile Dev"],
+                tags: ["AgriTech", "IoT", "AI"],
+                category: "IoT"
+            }
+        ];
 
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = '';
+        let currentIndex = 0;
+        let currentCategory = "Tümü";
+
+        // Kategori seçimi
+        document.querySelectorAll('.category').forEach(category => {
+            category.addEventListener('click', () => {
+                document.querySelector('.category.active').classList.remove('active');
+                category.classList.add('active');
+                currentCategory = category.textContent;
+                currentIndex = 0;
+                loadCards();
             });
         });
 
-        // Filtre seçenekleri için toggle
-        document.querySelectorAll('.filter-option').forEach(option => {
-            option.addEventListener('click', () => {
-                option.classList.toggle('active');
-            });
+        function createCard(project) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-image">
+                    <img src="${project.image}" alt="${project.title}">
+                    <div class="card-badges">
+                        <div class="badge funding-badge">
+                            <i class="fas fa-coins"></i>
+                            ${project.funding}
+                        </div>
+                        <div class="badge team-badge">
+                            <i class="fas fa-users"></i>
+                            ${project.teamSize}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">${project.title}</h2>
+                    <p class="card-description">${project.description}</p>
+                    <div class="card-tags">
+                        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div class="card-footer">
+                        <div class="team-info">
+                            <span class="team-title">Aranan Roller:</span>
+                            <div class="team-roles">
+                                ${project.lookingFor.map(role => `<span class="role-tag">${role}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let startX;
+            let currentX;
+            let isDragging = false;
+
+            function startDragging(e) {
+                isDragging = true;
+                startX = (e.type === 'mousedown') ? e.clientX : e.touches[0].clientX;
+                currentX = startX;
+                card.style.transition = 'none';
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                
+                e.preventDefault();
+                currentX = (e.type === 'mousemove') ? e.clientX : e.touches[0].clientX;
+                const deltaX = currentX - startX;
+                
+                card.style.transform = `translateX(${deltaX}px) rotate(${deltaX * 0.1}deg)`;
+                
+                const swipeInfo = document.createElement('div');
+                swipeInfo.className = `swipe-info ${deltaX > 0 ? 'like' : 'nope'}`;
+                swipeInfo.textContent = deltaX > 0 ? 'İLGİLENİYORUM' : 'GEÇÇ';
+                swipeInfo.style.opacity = Math.min(Math.abs(deltaX) / 100, 1);
+                
+                const existingInfo = card.querySelector('.swipe-info');
+                if (existingInfo) existingInfo.remove();
+                
+                card.appendChild(swipeInfo);
+            }
+
+            function stopDragging() {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                card.style.transition = 'all 0.3s ease';
+                const deltaX = currentX - startX;
+                
+                if (Math.abs(deltaX) > 100) {
+                    const direction = deltaX > 0 ? 1 : -1;
+                    card.style.transform = `translateX(${direction * window.innerWidth}px) rotate(${deltaX * 0.1}deg)`;
+                    setTimeout(() => {
+                        card.remove();
+                        if (deltaX > 0) handleAccept();
+                        else handleReject();
+                    }, 300);
+                } else {
+                    card.style.transform = '';
+                }
+                
+                const swipeInfo = card.querySelector('.swipe-info');
+                if (swipeInfo) swipeInfo.remove();
+            }
+
+            card.addEventListener('mousedown', startDragging);
+            card.addEventListener('touchstart', startDragging);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', stopDragging);
+            document.addEventListener('touchend', stopDragging);
+
+            return card;
+        }
+
+        function loadCards() {
+            const cardStack = document.getElementById('cardStack');
+            cardStack.innerHTML = '';
+            
+            const filteredProjects = currentCategory === "Tümü" 
+                ? projects 
+                : projects.filter(p => p.category === currentCategory);
+            
+            for (let i = 0; i < 3; i++) {
+                if (currentIndex + i < filteredProjects.length) {
+                    const card = createCard(filteredProjects[currentIndex + i]);
+                    card.style.zIndex = 1000 - i;
+                    card.style.transform = `scale(${1 - i * 0.05}) translateY(${i * 20}px)`;
+                    card.style.opacity = 1 - i * 0.2;
+                    cardStack.appendChild(card);
+                }
+            }
+        }
+
+        function handleAccept() {
+            currentIndex++;
+            if (Math.random() > 0.5) showMatch();
+            loadCards();
+        }
+
+        function handleReject() {
+            currentIndex++;
+            loadCards();
+        }
+
+        function showMatch() {
+            const overlay = document.getElementById('matchOverlay');
+            overlay.classList.add('visible');
+        }
+
+        function closeMatch() {
+            const overlay = document.getElementById('matchOverlay');
+            overlay.classList.remove('visible');
+        }
+
+        // Başlangıç yüklemesi
+        loadCards();
+
+        // Klavye kontrolleri
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') handleReject();
+            if (e.key === 'ArrowRight') handleAccept();
         });
     </script>
 </body>
