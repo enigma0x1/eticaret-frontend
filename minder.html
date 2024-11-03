@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minder | Startup Ekip Eşleştirme Platformu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Modern Renk Paleti */
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #13131f;
+            --bg-card: #1c1c27;
+            --accent-primary: #7857ff;
+            --accent-secondary: #4f46e5;
+            --accent-tertiary: #3ccf91;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --success: #3ccf91;
+            --warning: #fbbf24;
+            --danger: #ef4444;
+            
+            /* Gradyanlar */
+            --gradient-primary: linear-gradient(135deg, #7857ff, #4f46e5);
+            --gradient-success: linear-gradient(135deg, #3ccf91, #2fb344);
+            --gradient-danger: linear-gradient(135deg, #ef4444, #dc2626);
+            --gradient-card: linear-gradient(145deg, rgba(28,28,39,0.9), rgba(28,28,39,0.4));
+            
+            /* Gölgeler */
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 28px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(120,87,255,0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(79,70,229,0.1) 0%, transparent 20%);
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 8px solid #1a1a24;
+            backdrop-filter: blur(20px);
+        }
+
+        .phone-header {
+            padding: 40px 20px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .settings-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .settings-btn:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .card-stack {
+            position: relative;
+            height: calc(100% - 180px);
+            padding: 20px;
+            perspective: 1000px;
+        }
+
+        .card {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: calc(100% - 40px);
+            background: var(--gradient-card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 55%;
+            border-radius: var(--radius-md);
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.75);
+            padding: 8px 16px;
+            border-radius: var(--radius-xl);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .card-content {
+            padding: 5px 0;
+            height: calc(45% - 15px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.6;
+            flex-grow: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-primary) var(--bg-card);
+        }
+
+        .card-description::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .card-description::-webkit-scrollbar-track {
+            background: var(--bg-card);
+        }
+
+        .card-description::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: var(--radius-sm);
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .team-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team-size {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .action-buttons {
+            position: fixed;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+            z-index: 2;
+        }
+
+        .action-button {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .action-button:hover {
+            transform: translateY(-5px);
+        }
+
+        .button-reject {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        .button-accept {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .swipe-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 16px 32px;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .swipe-info.like {
+            color: var(--success);
+            border: 4px solid var(--success);
+            background: rgba(60, 207, 145, 0.1);
+            transform: translate(-50%, -50%) rotate(-15deg);
+        }
+
+        .swipe-info.nope {
+            color: var(--danger);
+            border: 4px solid var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+            transform: translate(-50%, -50%) rotate(15deg);
+        }
+
+        .match-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 15, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(8px);
+        }
+
+        .match-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .match-content {
+            text-align: center;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            animation: scaleIn 0.5s ease forwards;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .match-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .match-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .match-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .match-button {
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .match-button:hover {
+            transform: translateY(-3px);
+        }
+
+        .match-button.primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .match-button.secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <div class="phone-header">
+            <div class="logo">Minder</div>
+            <button class="settings-btn">
+                <i class="fas fa-sliders-h"></i>
+            </button>
+        </div>
+        
+        <div class="card-stack" id="cardStack">
+            <!-- Kartlar dinamik olarak eklenecek -->
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-button button-reject" onclick="handleReject()">
+                <i class="fas fa-times"></i>
+            </button>
+            <button class="action-button button-accept" onclick="handleAccept()">
+                <i class="fas fa-check"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="match-overlay" id="matchOverlay">
+        <div class="match-content">
+            <h1  class="match-title">Eşleşme!</h1>
+            <p class="match-subtitle">
+                Harika! Karşılıklı bir eşleşme yakaladınız.<br>
+                Hemen iletişime geçin ve projeyi konuşmaya başlayın!
+            </p>
+            <div class="match-buttons">
+                <button class="match-button primary">
+                    <i class="fas fa-comment-alt"></i>
+                    Mesaj Gönder
+                </button>
+                <button class="match-button secondary" onclick="closeMatch()">
+                    <i class="fas fa-sync"></i>
+                    Aramaya Devam Et
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const projects = [
+            {
+                id: 1,
+                title: "Yapay Zeka Destekli Sağlık Asistanı",
+                description: "Erken hastalık teşhisi için makine öğrenimi ve büyük veri analitiği kullanan yenilikçi bir sağlık platformu geliştiriyoruz. Projemiz şu an MVP aşamasında ve güçlü bir teknik ekip arıyoruz.",
+                image: "https://source.unsplash.com/random/800x600/?ai,health",
+                teamSize: "4-6 Kişi",
+                lookingFor: ["ML Mühendisi", "Backend Dev", "UI/UX Tasarımcı"],
+                tags: ["Sağlık", "Yapay Zeka", "Machine Learning"]
+            },
+            {
+                id: 2,
+                title: "EkoTakip",
+                description: "Kişisel karbon ayak izini takip eden ve oyunlaştırma elementleri ile sürdürülebilir yaşamı teşvik eden mobil uygulama. Çevre dostu bir gelecek için teknoloji kullanıyoruz.",
+                image: "https://source.unsplash.com/random/800x600/?nature,technology",
+                teamSize: "3-5 Kişi",
+                lookingFor: ["Mobile Dev", "Frontend Dev", "Çevre Uzmanı"],
+                tags: ["Sürdürülebilirlik", "Mobil", "IoT"]
+            },
+            {
+                id: 3,
+                title: "CryptoWallet Pro",
+                description: "Gelişmiş güvenlik özellikleri ve DeFi entegrasyonu ile yeni nesil kripto cüzdan. Blockchain teknolojisini herkes için erişilebilir kılmayı hedefliyoruz.",
+                image: "https://source.unsplash.com/random/800x600/?cryptocurrency,technology",
+                teamSize: "5-7 Kişi",
+                lookingFor: ["Blockchain Dev", "Güvenlik Uzmanı", "Frontend Dev"],
+                tags: ["Kripto", "Blockchain", "Fintech"]
+            },
+            {
+                id: 4,
+                title: "AkıllıTarım",
+                description: "IoT sensörleri ve yapay zeka ile tarımsal verimliliği artıran akıllı tarım çözümü. Çiftçilere real-time veri ve öneriler sunuyoruz.",
+                image: "https://source.unsplash.com/random/800x600/?agriculture,technology",
+                teamSize: "4-6 Kişi",
+                lookingFor: ["IoT Uzmanı", "Veri Bilimci", "Mobil Dev"],
+                tags: ["AgriTech", "IoT", "Yapay Zeka"]
+            }
+        ];
+
+        let currentIndex = 0;
+
+        function createCard(project) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
+                <div class="card-image">
+                    <img src="${project.image}" alt="${project.title}">
+                    <div class="card-badge">
+                        <i class="fas fa-users"></i> ${project.teamSize}
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title">${project.title}</h2>
+                    <p class="card-description">${project.description}</p>
+                    <div class="card-tags">
+                        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div class="card-footer">
+                        <div class="team-info">
+                            <span class="team-size">
+                                <i class="fas fa-search"></i>
+                                Aranan: ${project.lookingFor.length} kişi
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let startX;
+            let currentX;
+            let isDragging = false;
+
+            function startDragging(e) {
+                isDragging = true;
+                startX = (e.type === 'mousedown') ? e.clientX : e.touches[0].clientX;
+                currentX = startX;
+                card.style.transition = 'none';
+            }
+
+            function drag(e) {
+                if (!isDragging) return;
+                
+                e.preventDefault();
+                currentX = (e.type === 'mousemove') ? e.clientX : e.touches[0].clientX;
+                const deltaX = currentX - startX;
+                
+                card.style.transform = `translateX(${deltaX}px) rotate(${deltaX * 0.1}deg)`;
+                
+                const swipeInfo = document.createElement('div');
+                swipeInfo.className = `swipe-info ${deltaX > 0 ? 'like' : 'nope'}`;
+                swipeInfo.textContent = deltaX > 0 ? 'İLGİLENİYORUM' : 'GEÇÇ';
+                swipeInfo.style.opacity = Math.min(Math.abs(deltaX) / 100, 1);
+                
+                const existingInfo = card.querySelector('.swipe-info');
+                if (existingInfo) existingInfo.remove();
+                
+                card.appendChild(swipeInfo);
+            }
+
+            function stopDragging() {
+                if (!isDragging) return;
+                
+                isDragging = false;
+                card.style.transition = 'all 0.3s ease';
+                const deltaX = currentX - startX;
+                
+                if (Math.abs(deltaX) > 100) {
+                    const direction = deltaX > 0 ? 1 : -1;
+                    card.style.transform = `translateX(${direction * window.innerWidth}px) rotate(${deltaX * 0.1}deg)`;
+                    setTimeout(() => {
+                        card.remove();
+                        if (deltaX > 0) handleAccept();
+                        else handleReject();
+                    }, 300);
+                } else {
+                    card.style.transform = '';
+                }
+                
+                const swipeInfo = card.querySelector('.swipe-info');
+                if (swipeInfo) swipeInfo.remove();
+            }
+
+            card.addEventListener('mousedown', startDragging);
+            card.addEventListener('touchstart', startDragging);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('mouseup', stopDragging);
+            document.addEventListener('touchend', stopDragging);
+
+            return card;
+        }
+
+        function loadCards() {
+            const cardStack = document.getElementById('cardStack');
+            cardStack.innerHTML = '';
+            
+            for (let i = 0; i < 3; i++) {
+                if (currentIndex + i < projects.length) {
+                    const card = createCard(projects[currentIndex + i]);
+                    card.style.zIndex = 1000 - i;
+                    card.style.transform = `scale(${1 - i * 0.05}) translateY(${i * 20}px)`;
+                    card.style.opacity = 1 - i * 0.2;
+                    cardStack.appendChild(card);
+                }
+            }
+        }
+
+        function handleAccept() {
+            currentIndex++;
+            if (Math.random() > 0.5) showMatch();
+            loadCards();
+        }
+
+        function handleReject() {
+            currentIndex++;
+            loadCards();
+        }
+
+        function showMatch() {
+            const overlay = document.getElementById('matchOverlay');
+            overlay.classList.add('visible');
+        }
+
+        function closeMatch() {
+            const overlay = document.getElementById('matchOverlay');
+            overlay.classList.remove('visible');
+        }
+
+        // Başlangıç yüklemesi
+        loadCards();
+
+        // Klavye kontrolleri
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') handleReject();
+            if (e.key === 'ArrowRight') handleAccept();
+        });
+    </script>
+</body>
+</html>
