@@ -433,49 +433,56 @@
                 userType: localStorage.getItem('userType'),
                 userData: localStorage.getItem('userData')
             });
-
-            // Auth kontrolü
-            const isAuth = await AuthManager.checkAuthAndRedirect();
-            if (!isAuth) return;
-
-            // Kartlara tıklama olayı
-            document.querySelectorAll('.category-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const href = card.getAttribute('data-href');
-                    if (href) window.location.href = href;
-                });
-            });
-
-            // Kullanıcı bilgilerini göster
-            const userData = AuthManager.getUserData();
-            if (userData) {
-                const userNameElement = document.createElement('span');
-                userNameElement.className = 'user-name';
-                userNameElement.textContent = userData.companyName || userData.fullName;
-                document.querySelector('.user-menu').prepend(userNameElement);
+    
+            const token = localStorage.getItem('token');
+            const userType = localStorage.getItem('userType');
+    
+            if (!token || userType !== 'manufacturer') {
+                console.log('Token veya userType geçersiz');
+                window.location.replace('/ureticiLogin');
+                return;
             }
-
-            // History kontrolü
-            window.history.pushState(null, document.title, window.location.href);
-            window.addEventListener('popstate', function() {
-                window.history.pushState(null, document.title, window.location.href);
-            });
-
-            // Visibility kontrolü
-            document.addEventListener('visibilitychange', function() {
-                if (document.visibilityState === 'visible') {
-                    if (!AuthManager.isAuthenticated()) {
-                        AuthManager.logout();
+    
+            try {
+                // Token doğrulama isteği
+                const response = await fetch('https://eticaret-glif.onrender.com/api/manufacturer/auth/verify-token', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
                     }
+                });
+    
+                console.log('Token doğrulama yanıtı:', await response.clone().json());
+    
+                if (!response.ok) {
+                    console.log('Token geçersiz');
+                    localStorage.clear();
+                    window.location.replace('/ureticiLogin');
+                    return;
                 }
-            });
-
-            // Storage kontrolü
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'token' && !e.newValue) {
-                    AuthManager.logout();
+    
+                // Kartlara tıklama olayı
+                document.querySelectorAll('.category-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const href = card.getAttribute('data-href');
+                        if (href) window.location.href = href;
+                    });
+                });
+    
+                // Kullanıcı bilgilerini göster
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (userData) {
+                    const userNameElement = document.createElement('span');
+                    userNameElement.className = 'user-name';
+                    userNameElement.textContent = userData.companyName || userData.fullName;
+                    document.querySelector('.user-menu').prepend(userNameElement);
                 }
-            });
+    
+            } catch (error) {
+                console.error('Auth check error:', error);
+                localStorage.clear();
+                window.location.replace('/ureticiLogin');
+            }
         });
     </script>
 </body>
