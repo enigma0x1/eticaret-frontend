@@ -563,20 +563,24 @@
                 });
         
                 const data = await response.json();
+                console.log('Register response:', data); // Debug için
         
                 if (response.ok) {
-                    // Auth verilerini kaydet
-                    AuthManager.setUserData(data.token, selectedType, data.manufacturer);
-                    
+                    // Token ve kullanıcı bilgilerini kaydet
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userType', 'manufacturer');
+                    localStorage.setItem('userData', JSON.stringify(data.manufacturer));
+        
                     showMessage('success', 'Kayıt başarılı! Yönlendiriliyorsunuz...');
                     
                     setTimeout(() => {
-                        window.location.href = '/dashboard';
+                        window.location.href = '/categoryDashboard';
                     }, 1500);
                 } else {
-                    showMessage('error', data.message || 'Bir hata oluştu');
+                    showMessage('error', data.message || 'Kayıt işlemi başarısız oldu');
                 }
             } catch (error) {
+                console.error('Registration error:', error);
                 showMessage('error', 'Sunucu ile bağlantı kurulamadı');
             } finally {
                 setLoading(false, submitButton);
