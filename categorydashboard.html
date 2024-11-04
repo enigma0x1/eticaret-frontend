@@ -91,6 +91,7 @@
             gap: 10px;
             transition: var(--transition-base);
         }
+
         .user-name {
             color: var(--text-primary);
             font-weight: 500;
@@ -145,7 +146,8 @@
             gap: 20px;
             padding: 20px;
         }
-                /* Category Card Styles */
+
+        /* Category Card Styles */
         .category-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
@@ -280,10 +282,7 @@
             margin-top: auto;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        /* Import footer styles from index.html */
-        /* Footer styles buraya eklenecek */
-        </style>
+    </style>
 </head>
 <body>
     <header class="header">
@@ -425,25 +424,35 @@
         </div>
     </main>
 
-    <!-- Footer'ı buraya ekleyelim -->
-    [Index.html'den footer kısmını buraya ekleyin]
-
     <script src="auth.js"></script>
     <script>
-        // Kartlara tıklama olayı
-        document.querySelectorAll('.category-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const href = card.getAttribute('data-href');
-                if (href) window.location.href = href;
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Debug için localStorage içeriğini konsola yazdıralım
+            console.log('LocalStorage içeriği:', {
+                token: localStorage.getItem('token'),
+                userType: localStorage.getItem('userType'),
+                userData: localStorage.getItem('userData')
             });
-        });
 
-        // Token kontrolü
-        (function() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                window.location.replace('login');
-                return;
+            // Auth kontrolü
+            const isAuth = await AuthManager.checkAuthAndRedirect();
+            if (!isAuth) return;
+
+            // Kartlara tıklama olayı
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const href = card.getAttribute('data-href');
+                    if (href) window.location.href = href;
+                });
+            });
+
+            // Kullanıcı bilgilerini göster
+            const userData = AuthManager.getUserData();
+            if (userData) {
+                const userNameElement = document.createElement('span');
+                userNameElement.className = 'user-name';
+                userNameElement.textContent = userData.companyName || userData.fullName;
+                document.querySelector('.user-menu').prepend(userNameElement);
             }
 
             // History kontrolü
@@ -455,8 +464,8 @@
             // Visibility kontrolü
             document.addEventListener('visibilitychange', function() {
                 if (document.visibilityState === 'visible') {
-                    if (!localStorage.getItem('token')) {
-                        window.location.replace('login');
+                    if (!AuthManager.isAuthenticated()) {
+                        AuthManager.logout();
                     }
                 }
             });
@@ -464,35 +473,9 @@
             // Storage kontrolü
             window.addEventListener('storage', function(e) {
                 if (e.key === 'token' && !e.newValue) {
-                    window.location.replace('login');
+                    AuthManager.logout();
                 }
             });
-        })();
-    </script>
-    // CategoryDashboard sayfasının script kısmı
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Auth kontrolü
-            const isAuth = await AuthManager.checkAuthAndRedirect();
-            if (!isAuth) return;
-    
-            // Kartlara tıklama olayı
-            document.querySelectorAll('.category-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    const href = card.getAttribute('data-href');
-                    if (href) window.location.href = href;
-                });
-            });
-    
-            // Header'da kullanıcı bilgilerini göster
-            const userData = AuthManager.getUserData();
-            if (userData) {
-                // Kullanıcı adını veya firma adını header'da göster
-                const userNameElement = document.createElement('span');
-                userNameElement.className = 'user-name';
-                userNameElement.textContent = userData.companyName || userData.fullName;
-                document.querySelector('.user-menu').prepend(userNameElement);
-            }
         });
     </script>
 </body>
