@@ -91,6 +91,14 @@
             gap: 10px;
             transition: var(--transition-base);
         }
+        .user-name {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-right: 15px;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
 
         .producer-button:hover {
             transform: translateY(-2px);
@@ -460,6 +468,32 @@
                 }
             });
         })();
+    </script>
+    // CategoryDashboard sayfasının script kısmı
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Auth kontrolü
+            const isAuth = await AuthManager.checkAuthAndRedirect();
+            if (!isAuth) return;
+    
+            // Kartlara tıklama olayı
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const href = card.getAttribute('data-href');
+                    if (href) window.location.href = href;
+                });
+            });
+    
+            // Header'da kullanıcı bilgilerini göster
+            const userData = AuthManager.getUserData();
+            if (userData) {
+                // Kullanıcı adını veya firma adını header'da göster
+                const userNameElement = document.createElement('span');
+                userNameElement.className = 'user-name';
+                userNameElement.textContent = userData.companyName || userData.fullName;
+                document.querySelector('.user-menu').prepend(userNameElement);
+            }
+        });
     </script>
 </body>
 </html>
