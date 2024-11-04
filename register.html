@@ -545,13 +545,12 @@
             const form = e.target;
             const submitButton = form.querySelector('button[type="submit"]');
             
-            // Loading durumunu başlat
             setLoading(true, submitButton);
             
             try {
                 const formData = new FormData(form);
                 const formDataObj = Object.fromEntries(formData);
-
+        
                 const response = await fetch('https://eticaret-glif.onrender.com/api/manufacturer/auth/register', {
                     method: 'POST',
                     headers: {
@@ -562,12 +561,18 @@
                         userType: selectedType
                     })
                 });
-
+        
                 const data = await response.json();
-
+        
                 if (response.ok) {
+                    // Auth verilerini kaydet
+                    AuthManager.setUserData(data.token, selectedType, data.manufacturer);
+                    
                     showMessage('success', 'Kayıt başarılı! Yönlendiriliyorsunuz...');
-                    setTimeout(() => goToStep(3), 1000);
+                    
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
                 } else {
                     showMessage('error', data.message || 'Bir hata oluştu');
                 }
@@ -577,7 +582,6 @@
                 setLoading(false, submitButton);
             }
         }
-
         function setLoading(isLoading, button) {
             if (isLoading) {
                 button.disabled = true;
