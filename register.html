@@ -1,369 +1,27 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sanayi Kapısı - Üretici ve Profesyonel Üyelik">
-    <title>Üye Ol - Sanayi Kapısı</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #7c3aed;
-            --accent: #06b6d4;
-            --background: #ffffff;
-            --surface: #f8fafc;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --error: #dc2626;
-            --success: #16a34a;
-            --warning: #ca8a04;
-            --info: #0891b2;
-            --gradient-primary: linear-gradient(135deg, var(--primary), var(--secondary));
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            display: flex;
-            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%);
-        }
-
-        .signup-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: auto;
-            padding: 2rem;
-        }
-
-        .progress-container {
-            max-width: 600px;
-            margin: 0 auto 3rem;
-            position: relative;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: #e2e8f0;
-            border-radius: 2px;
-            margin: 2rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            background: var(--gradient-primary);
-            transition: width 0.5s ease;
-            border-radius: 2px;
-        }
-
-        .progress-steps {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin-bottom: 1rem;
-        }
-
-        .step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .step-circle {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            margin-bottom: 0.5rem;
-        }
-
-        .step.active .step-circle {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
-        }
-
-        .step.completed .step-circle {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
-
-        .step-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .step.active .step-label {
-            color: var(--primary);
-        }
-
-        .signup-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .step-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .step-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .user-types {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .user-type {
-            background: white;
-            padding: 2rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .user-type:hover {
-            transform: translateY(-5px);
-        }
-
-        .user-type.selected {
-            border-color: var(--primary);
-            background: var(--surface);
-        }
-
-        .user-type-icon {
-            width: 4rem;
-            height: 4rem;
-            background: var(--gradient-primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            color: white;
-            font-size: 1.5rem;
-        }
-
-        .user-type h3 {
-            color: var(--text-primary);
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
-        }
-
-        .user-type p {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            line-height: 1.6;
-        }
-
-        .form-container {
-            background: white;
-            padding: 2.5rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            border-radius: var(--radius-md);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .form-input.error {
-            border-color: var(--error);
-        }
-
-        .form-error-message {
-            color: var(--error);
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: var(--radius-md);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .alert-success {
-            background-color: #dcfce7;
-            color: var(--success);
-            border: 1px solid #86efac;
-        }
-
-        .alert-error {
-            background-color: #fee2e2;
-            color: var(--error);
-            border: 1px solid #fca5a5;
-        }
-
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            text-decoration: none;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-outline {
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            color: var(--text-secondary);
-            background: white;
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        @media (max-width: 768px) {
-            .user-types {
-                grid-template-columns: 1fr;
-            }
-
-            .progress-steps {
-                flex-direction: column;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .progress-bar {
-                display: none;
-            }
-
-            .step {
-                flex-direction: row;
-                width: 100%;
-                gap: 1rem;
-            }
-
-            .step-circle {
-                margin-bottom: 0;
-            }
-        }
-    </style>
-</head>
 <body>
-    <div class="signup-container">
+    <div class="register-container">
         <div class="progress-container">
             <div class="progress-steps">
-                <div class="step active">
+                <div class="progress-line">
+                    <div class="progress-line-fill" id="progressLine"></div>
+                </div>
+                <div class="step active" data-step="1">
                     <div class="step-circle">1</div>
-                    <span class="step-label">Hesap Türü</span>
+                    <div class="step-label">Hesap Türü</div>
                 </div>
-                <div class="step">
+                <div class="step" data-step="2">
                     <div class="step-circle">2</div>
-                    <span class="step-label">Bilgiler</span>
+                    <div class="step-label">Bilgiler</div>
                 </div>
-                <div class="step">
+                <div class="step" data-step="3">
                     <div class="step-circle">3</div>
-                    <span class="step-label">Onay</span>
+                    <div class="step-label">Onay</div>
                 </div>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" style="width: 0%"></div>
             </div>
         </div>
 
-        <div class="signup-content">
-            <!-- Step 1: User Type Selection -->
+        <div class="content-container">
+            <!-- Step 1: Hesap Türü Seçimi -->
             <div class="step-content active" id="step1">
                 <div class="user-types">
                     <div class="user-type" onclick="selectUserType('uretici')">
@@ -385,23 +43,16 @@
 
             <!-- Step 2: Form -->
             <div class="step-content" id="step2">
-                <div class="form-container">
-                    <form id="signupForm">
-                        <!-- Form fields will be dynamically loaded -->
-                    </form>
-                </div>
+                <form id="registrationForm" onsubmit="handleSubmit(event)">
+                    <!-- Form fields will be dynamically loaded -->
+                </form>
             </div>
 
-            <!-- Step 3: Confirmation -->
+            <!-- Step 3: Onay -->
             <div class="step-content" id="step3">
-                <div class="form-container">
-                    <div class="text-center">
-                        <div class="success-icon">
-                            <i class="fas fa-check-circle fa-3x" style="color: var(--success)"></i>
-                        </div>
-                        <h3>Hesabınız Oluşturuldu!</h3>
-                        <p>E-posta adresinize gönderilen aktivasyon linkine tıklayarak hesabınızı aktif edebilirsiniz.</p>
-                    </div>
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    Hesabınız başarıyla oluşturuldu! Lütfen e-posta adresinizi kontrol edin.
                 </div>
             </div>
         </div>
@@ -412,20 +63,17 @@
         let selectedType = '';
 
         function updateProgress(step) {
-            const progressFill = document.querySelector('.progress-fill');
             const progress = ((step - 1) / 2) * 100;
-            progressFill.style.width = `${progress}%`;
+            document.getElementById('progressLine').style.width = `${progress}%`;
 
             // Update steps
-            document.querySelectorAll('.step').forEach((el, index) => {
-                if (index + 1 < step) {
-                    el.classList.add('completed');
-                    el.classList.remove('active');
-                } else if (index + 1 === step) {
+            document.querySelectorAll('.step').forEach(el => {
+                const stepNum = parseInt(el.dataset.step);
+                el.classList.remove('active', 'completed');
+                if (stepNum === step) {
                     el.classList.add('active');
-                    el.classList.remove('completed');
-                } else {
-                    el.classList.remove('active', 'completed');
+                } else if (stepNum < step) {
+                    el.classList.add('completed');
                 }
             });
         }
@@ -440,13 +88,13 @@
             setTimeout(() => {
                 goToStep(2);
                 loadForm(type);
-            }, 500);
+            }, 400);
         }
 
         function loadForm(type) {
-            const form = document.getElementById('signupForm');
+            const form = document.getElementById('registrationForm');
             const fields = type === 'uretici' ? getUreticiFields() : getProfesyonelFields();
-
+            
             form.innerHTML = fields + `
                 <div class="buttons">
                     <button type="button" class="btn btn-outline" onclick="goToStep(1)">
@@ -459,8 +107,6 @@
                     </button>
                 </div>
             `;
-
-            form.onsubmit = handleSubmit;
         }
 
         function getUreticiFields() {
@@ -471,23 +117,11 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Vergi Numarası*</label>
-                    <input type="text" name="taxNumber" class="form-input" required pattern="[0-9]{10}" title="10 haneli vergi numarası">
+                    <input type="text" name="taxNumber" class="form-input" required pattern="[0-9]{10}">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Yetkili Ad Soyad*</label>
                     <input type="text" name="fullName" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Telefon*</label>
-                    <input type="tel" name="phone" class="form-input" required pattern="[0-9]{10}" title="Başında 0 olmadan 10 haneli telefon numarası">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Adres*</label>
-                    <textarea name="address" class="form-input" required rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Faaliyet Alanı*</label>
-                    <input type="text" name="businessArea" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">E-posta*</label>
@@ -496,10 +130,6 @@
                 <div class="form-group">
                     <label class="form-label">Şifre*</label>
                     <input type="password" name="password" class="form-input" required minlength="6">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Şifre Tekrar*</label>
-                    <input type="password" name="passwordConfirm" class="form-input" required minlength="6">
                 </div>
             `;
         }
@@ -511,12 +141,194 @@
                     <input type="text" name="fullName" class="form-input" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Firma Adı</label>
-                    <input type="text" name="companyName" class="form-input">
+                    <label class="form-label">E-posta*</label>
+                    <input type="email" name="email" class="form-input" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Telefon*</label>
-                    <input type="tel" name="phone" class="form-input" required pattern="[0-9]{10}" title="Başında 0 olmadan 10 haneli telefon numarası">
+                    <label class="form-label">Şifre*</label>
+                    <input type="password" name="password" class="form-input" required minlength="6">
+                </div>
+            `;
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('https://eticaret-glif.onrender.com/api/manufacturer/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(Object.fromEntries(formData))
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    goToStep(3);
+                } else {
+                    showError(data.message || 'Bir hata oluştu');
+                }
+            } catch (error) {
+                showError('Sunucu ile bağlantı kurulamadı');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-check"></i> Devam Et';
+            }
+        }
+
+        function showError(message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-error';
+            alert.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            document.querySelector('.step-content.active').insertBefore(
+                alert,
+                document.querySelector('.step-content.active').firstChild
+            );
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function goToStep(step) {
+            document.querySelectorAll('.step-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            document.getElementById(`step${step}`).classList.add('active');
+            currentStep = step;
+            updateProgress(step);
+        }
+    </script>
+</body>
+</html>
+<body>
+    <div class="register-container">
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-line">
+                    <div class="progress-line-fill" id="progressLine"></div>
+                </div>
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Hesap Türü</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Bilgiler</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Onay</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-container">
+            <!-- Step 1: Hesap Türü Seçimi -->
+            <div class="step-content active" id="step1">
+                <div class="user-types">
+                    <div class="user-type" onclick="selectUserType('uretici')">
+                        <div class="user-type-icon">
+                            <i class="fas fa-industry"></i>
+                        </div>
+                        <h3>Üretici</h3>
+                        <p>Üretim kapasitenizi sergileyin, yeni müşterilere ulaşın ve işinizi büyütün</p>
+                    </div>
+                    <div class="user-type" onclick="selectUserType('profesyonel')">
+                        <div class="user-type-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>Profesyonel</h3>
+                        <p>Güvenilir üreticilere ulaşın, teklifler alın ve projelerinizi hayata geçirin</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Form -->
+            <div class="step-content" id="step2">
+                <form id="registrationForm" onsubmit="handleSubmit(event)">
+                    <!-- Form fields will be dynamically loaded -->
+                </form>
+            </div>
+
+            <!-- Step 3: Onay -->
+            <div class="step-content" id="step3">
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    Hesabınız başarıyla oluşturuldu! Lütfen e-posta adresinizi kontrol edin.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let selectedType = '';
+
+        function updateProgress(step) {
+            const progress = ((step - 1) / 2) * 100;
+            document.getElementById('progressLine').style.width = `${progress}%`;
+
+            // Update steps
+            document.querySelectorAll('.step').forEach(el => {
+                const stepNum = parseInt(el.dataset.step);
+                el.classList.remove('active', 'completed');
+                if (stepNum === step) {
+                    el.classList.add('active');
+                } else if (stepNum < step) {
+                    el.classList.add('completed');
+                }
+            });
+        }
+
+        function selectUserType(type) {
+            selectedType = type;
+            document.querySelectorAll('.user-type').forEach(el => {
+                el.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            setTimeout(() => {
+                goToStep(2);
+                loadForm(type);
+            }, 400);
+        }
+
+        function loadForm(type) {
+            const form = document.getElementById('registrationForm');
+            const fields = type === 'uretici' ? getUreticiFields() : getProfesyonelFields();
+            
+            form.innerHTML = fields + `
+                <div class="buttons">
+                    <button type="button" class="btn btn-outline" onclick="goToStep(1)">
+                        <i class="fas fa-arrow-left"></i>
+                        Geri
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i>
+                        Devam Et
+                    </button>
+                </div>
+            `;
+        }
+
+        function getUreticiFields() {
+            return `
+                <div class="form-group">
+                    <label class="form-label">Firma Adı*</label>
+                    <input type="text" name="companyName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Vergi Numarası*</label>
+                    <input type="text" name="taxNumber" class="form-input" required pattern="[0-9]{10}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Yetkili Ad Soyad*</label>
+                    <input type="text" name="fullName" class="form-input" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">E-posta*</label>
@@ -526,142 +338,67 @@
                     <label class="form-label">Şifre*</label>
                     <input type="password" name="password" class="form-input" required minlength="6">
                 </div>
+            `;
+        }
+
+        function getProfesyonelFields() {
+            return `
                 <div class="form-group">
-                    <label class="form-label">Şifre Tekrar*</label>
-                    <input type="password" name="passwordConfirm" class="form-input" required minlength="6">
+                    <label class="form-label">Ad Soyad*</label>
+                    <input type="text" name="fullName" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">E-posta*</label>
+                    <input type="email" name="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Şifre*</label>
+                    <input type="password" name="password" class="form-input" required minlength="6">
                 </div>
             `;
         }
 
         async function handleSubmit(e) {
             e.preventDefault();
-            setLoading(true);
-
-            const formData = new FormData(e.target);
-            const formDataObj = Object.fromEntries(formData.entries());
-
-            // Form doğrulama
-            const errors = validateForm(formDataObj);
-            if (Object.keys(errors).length > 0) {
-                showErrors(errors);
-                setLoading(false);
-                return;
-            }
+            const form = e.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
 
             try {
+                const formData = new FormData(form);
                 const response = await fetch('https://eticaret-glif.onrender.com/api/manufacturer/auth/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        email: formDataObj.email,
-                        password: formDataObj.password,
-                        companyName: formDataObj.companyName,
-                        taxNumber: selectedType === 'uretici' ? formDataObj.taxNumber : undefined,
-                        contactName: formDataObj.fullName,
-                        phone: formDataObj.phone,
-                        address: formDataObj.address,
-                        businessArea: formDataObj.businessArea
-                    })
+                    body: JSON.stringify(Object.fromEntries(formData))
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
                     goToStep(3);
-                    showSuccessMessage('Kayıt başarılı! Lütfen e-posta adresinizi kontrol edin.');
                 } else {
-                    showErrorMessage(data.message || 'Kayıt sırasında bir hata oluştu.');
+                    showError(data.message || 'Bir hata oluştu');
                 }
             } catch (error) {
-                showErrorMessage('Sunucu ile bağlantı kurulamadı.');
-                console.error('Error:', error);
+                showError('Sunucu ile bağlantı kurulamadı');
             } finally {
-                setLoading(false);
-            }
-        }
-
-        function validateForm(formData) {
-            const errors = {};
-
-            // Email doğrulama
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(formData.email)) {
-                errors.email = 'Geçerli bir e-posta adresi giriniz';
-            }
-
-            // Şifre doğrulama
-            if (formData.password.length < 6) {
-                errors.password = 'Şifre en az 6 karakter olmalıdır';
-            }
-
-            if (formData.password !== formData.passwordConfirm) {
-                errors.passwordConfirm = 'Şifreler eşleşmiyor';
-            }
-
-            // Vergi numarası doğrulama (üretici için)
-            if (selectedType === 'uretici') {
-                if (!/^[0-9]{10}$/.test(formData.taxNumber)) {
-                    errors.taxNumber = 'Geçerli bir vergi numarası giriniz (10 haneli)';
-                }
-            }
-
-            // Telefon doğrulama
-            if (!/^[0-9]{10}$/.test(formData.phone)) {
-                errors.phone = 'Geçerli bir telefon numarası giriniz (10 haneli)';
-            }
-
-            return errors;
-        }
-
-        function showErrors(errors) {
-            // Önce tüm hata mesajlarını temizle
-            document.querySelectorAll('.form-error-message').forEach(el => el.remove());
-            document.querySelectorAll('.form-input').forEach(el => el.classList.remove('error'));
-
-            // Her hata için ilgili input'a hata sınıfı ve mesajı ekle
-            Object.entries(errors).forEach(([field, message]) => {
-                const input = document.querySelector(`[name="${field}"]`);
-                if (input) {
-                    input.classList.add('error');
-                    const errorDiv = document.createElement('div');
-                    errorDiv.className = 'form-error-message';
-                    errorDiv.textContent = message;
-                    input.parentNode.appendChild(errorDiv);
-                }
-            });
-        }
-
-        function showSuccessMessage(message) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-success';
-            alertDiv.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                ${message}
-            `;
-            document.querySelector('.form-container').prepend(alertDiv);
-        }
-
-        function showErrorMessage(message) {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'alert alert-error';
-            alertDiv.innerHTML = `
-                <i class="fas fa-exclamation-circle"></i>
-                ${message}
-            `;
-            document.querySelector('.form-container').prepend(alertDiv);
-        }
-
-        function setLoading(isLoading) {
-            const submitButton = document.querySelector('button[type="submit"]');
-            if (isLoading) {
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> İşleniyor...';
-            } else {
                 submitButton.disabled = false;
                 submitButton.innerHTML = '<i class="fas fa-check"></i> Devam Et';
             }
+        }
+
+        function showError(message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-error';
+            alert.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            document.querySelector('.step-content.active').insertBefore(
+                alert,
+                document.querySelector('.step-content.active').firstChild
+            );
+            setTimeout(() => alert.remove(), 5000);
         }
 
         function goToStep(step) {
@@ -669,9 +406,8 @@
                 el.classList.remove('active');
             });
             document.getElementById(`step${step}`).classList.add('active');
-
-            updateProgress(step);
             currentStep = step;
+            updateProgress(step);
         }
     </script>
 </body>
