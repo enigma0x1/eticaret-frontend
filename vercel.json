@@ -71,6 +71,10 @@
     {
       "source": "/settings",
       "destination": "/settings"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
