@@ -1047,9 +1047,15 @@
                 }
 
                 if (data.token) {
-                    localStorage.setItem('auth_token', data.token);
+                    localStorage.setItem('token', data.token); // token'ı kaydet
+                    localStorage.setItem('userType', 'manufacturer'); // userType'ı manufacturer olarak ayarla
                     if (remember) {
                         localStorage.setItem('rememberedEmail', email);
+                    }
+                    
+                    // Eğer API'den kullanıcı bilgileri de geliyorsa
+                    if (data.manufacturer) {
+                        localStorage.setItem('userData', JSON.stringify(data.manufacturer));
                     }
                 }
 
